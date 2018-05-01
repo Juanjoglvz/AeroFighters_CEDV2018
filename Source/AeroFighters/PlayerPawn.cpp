@@ -19,6 +19,7 @@ APlayerPawn::APlayerPawn()
 	if (StaticMeshAsset.Succeeded()) {
 		StaticMeshComponent->SetStaticMesh(StaticMeshAsset.Object);
 		StaticMeshComponent->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
+		StaticMeshComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	}
 	else
 	{
