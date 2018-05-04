@@ -32,7 +32,7 @@ void AStraightProjectile::Clone()
 	
 }
 
-void AStraightProjectile::ProjectileBehaviour()
+void AStraightProjectile::ProjectileBehaviour(float DeltaTime)
 {
 
 }

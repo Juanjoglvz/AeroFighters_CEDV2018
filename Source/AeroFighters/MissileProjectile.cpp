@@ -31,7 +31,7 @@ void AMissileProjectile::Clone()
 
 }
 
-void AMissileProjectile::ProjectileBehaviour()
+void AMissileProjectile::ProjectileBehaviour(float DeltaTime)
 {
 
 }

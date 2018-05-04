@@ -21,6 +21,6 @@ protected:
 	virtual void BeginPlay() override;
 
 	virtual void Clone() override;
-	virtual void ProjectileBehaviour() override;
+	virtual void ProjectileBehaviour(float DeltaTime) override;
 
 };

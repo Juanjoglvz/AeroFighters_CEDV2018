@@ -35,6 +35,6 @@ void AProjectile::Tick(float DeltaTime)
 	StaticMesh->SetWorldRotation(FRotator(90.f, 0.f, 0.f));
 
 	// Each projectile type has a different behaviour
-	ProjectileBehaviour();
+	ProjectileBehaviour(DeltaTime);
 }
 

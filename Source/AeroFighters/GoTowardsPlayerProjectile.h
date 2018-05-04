@@ -22,5 +22,8 @@ protected:
 	
 	virtual void Clone() override;
 
-	virtual void ProjectileBehaviour() override;
+	virtual void ProjectileBehaviour(float DeltaTime) override;
+
+private:
+	TWeakObjectPtr<APawn> PawnReference;
 };
