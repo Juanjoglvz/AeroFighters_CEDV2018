@@ -16,11 +16,9 @@ void AAsteroidManager::BeginPlay()
 {
 	Super::BeginPlay();
 
-	AAsteroid* a = GetWorld()->SpawnActor<AAsteroid>(AAsteroid::StaticClass());
-
-	Prototype = a;
+	AAsteroid* Prototype = GetWorld()->SpawnActor<AAsteroid>(AsteroidType);
 	
-	AAsteroid* nAst = a;
+	AAsteroid* nAst = Prototype;
 
 	for (int i = 0; i < AsteroidCount; i++)
 	{
@@ -39,7 +37,6 @@ void AAsteroidManager::BeginPlay()
 		nAst->SetRotationDriftSpeed(RotDriftSpeed);
 
 		nAst = Prototype->clone();
-
 	}
 	
 }

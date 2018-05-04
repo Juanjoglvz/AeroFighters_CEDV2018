@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Asteroid.h"
+#include "EnemyAsteroid.h"
 #include "GameFramework/Actor.h"
 #include "AsteroidManager.generated.h"
 
@@ -25,38 +26,41 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 
-	UPROPERTY(EditAnywhere, Category = "Intrinsic")
+	UPROPERTY(EditAnywhere, Category = "Decorative Asteroids")
 		int AsteroidCount;
 
-	UPROPERTY(EditAnywhere, Category = "Intrinsic")
+	UPROPERTY(EditAnywhere, Category = "Decorative Asteroids")
 		float XInfLimit;
 
-	UPROPERTY(EditAnywhere, Category = "Intrinsic")
+	UPROPERTY(EditAnywhere, Category = "Decorative Asteroids")
 		float XSupLimit;
 
-	UPROPERTY(EditAnywhere, Category = "Intrinsic")
+	UPROPERTY(EditAnywhere, Category = "Decorative Asteroids")
 		float YInfLimit;
 
-	UPROPERTY(EditAnywhere, Category = "Intrinsic")
+	UPROPERTY(EditAnywhere, Category = "Decorative Asteroids")
 		float YSupLimit;
 
-	UPROPERTY(EditAnywhere, Category = "Intrinsic")
+	UPROPERTY(EditAnywhere, Category = "Decorative Asteroids")
 		float ZInfLimit;
 
-	UPROPERTY(EditAnywhere, Category = "Intrinsic")
+	UPROPERTY(EditAnywhere, Category = "Decorative Asteroids")
 		float ZSupLimit;
 
-	UPROPERTY(EditAnywhere, Category = "Intrinsic")
+	UPROPERTY(EditAnywhere, Category = "Decorative Asteroids")
 		float InfScale;
 
-	UPROPERTY(EditAnywhere, Category = "Intrinsic")
+	UPROPERTY(EditAnywhere, Category = "Decorative Asteroids")
 		float SupScale;
 
-	UPROPERTY(EditAnywhere, Category = "Intrinsic")
+	UPROPERTY(EditAnywhere, Category = "Decorative Asteroids")
 		float RotDriftSup;
 
-	UPROPERTY(EditAnywhere, Category = "Intrinsic")
+	UPROPERTY(EditAnywhere, Category = "Decorative Asteroids")
 		float RotDriftSpeed;
+
+	UPROPERTY(EditAnywhere, Category = "Basic")
+		TSubclassOf<class AAsteroid> AsteroidType;
 
 private:
 	float RandomFloat(float a, float b);
