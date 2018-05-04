@@ -42,11 +42,24 @@ public:
 
 	//Skeletal Mesh 
 	UPROPERTY()
-		USkeletalMeshComponent* SkeletalMeshComponent;
+		UStaticMeshComponent* StaticMeshComponent;
 
 private:
 	UPROPERTY(EditAnywhere)
 		float MoveSpeed;
 	UPROPERTY(EditAnywhere)
 		FVector CameraSpeed;
+
+	//Variables for controlling the areas where the player can move to
+	UPROPERTY()
+		TWeakObjectPtr<AActor> TopMovableArea;
+	UPROPERTY()
+		TWeakObjectPtr<AActor> BottomMovableArea;
+	UPROPERTY()
+		TWeakObjectPtr<AActor> RightMovableArea;
+	UPROPERTY()
+		TWeakObjectPtr<AActor> LeftMovableArea;
+	//Function to see if posible to move
+	bool IsPosMoveX(FVector NewPos) const;
+	bool IsPosMoveY(FVector NewPos) const;
 };

@@ -11,12 +11,14 @@ APlayerPawn::APlayerPawn()
 	//Create components
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 
-	SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
+	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	//Set Skeletal Mesh
-	auto SkeletalMeshAsset = ConstructorHelpers::FObjectFinder<USkeletalMesh>(TEXT("SkeletalMesh'/Game/Assets/Ships/SimpleSpaceship'"));
+	auto StaticMeshAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Assets/Ships/Plane'"));
 
-	if (SkeletalMeshAsset.Succeeded()) {
-		SkeletalMeshComponent->SetSkeletalMesh(SkeletalMeshAsset.Object);
+	if (StaticMeshAsset.Succeeded()) {
+		StaticMeshComponent->SetStaticMesh(StaticMeshAsset.Object);
+		StaticMeshComponent->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
+		StaticMeshComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	}
 	else
 	{
@@ -35,6 +37,41 @@ APlayerPawn::APlayerPawn()
 void APlayerPawn::BeginPlay()
 {
 	Super::BeginPlay();
+
+	//Get The references to the borders
+	FString TopMovableAreaString = FString(TEXT("TopMovableArea"));
+	FString BottomMovableAreaString = FString(TEXT("BottomMovableArea"));
+	FString RightMovableAreaString = FString(TEXT("RightMovableArea"));
+	FString LeftMovableAreaString = FString(TEXT("LeftMovableArea"));
+	uint32 i = 0;
+	for (TActorIterator<AActor> itr(GetWorld()); itr; ++itr)
+	{
+		if (TopMovableAreaString.Equals(itr->GetName()))
+		{
+			this->TopMovableArea = *itr;
+			i++;
+		}
+		else if (BottomMovableAreaString.Equals(itr->GetName()))
+		{
+			this->BottomMovableArea = *itr;
+			i++;
+		}
+		else if (RightMovableAreaString.Equals(itr->GetName()))
+		{
+			this->RightMovableArea = *itr;
+			i++;
+		}
+		else if (LeftMovableAreaString.Equals(itr->GetName()))
+		{
+			this->LeftMovableArea = *itr;
+			i++;
+		}
+
+		if (i > 3)
+		{
+			break;
+		}
+	}
 	
 }
 
@@ -47,18 +84,29 @@ void APlayerPawn::Tick(float DeltaTime)
 	FVector NewLocation = GetActorLocation();
 
 	NewLocation += GetActorForwardVector() * CameraSpeed * DeltaTime;
+	FVector NewMovedLocationX = FVector(NewLocation.X, NewLocation.Y, NewLocation.Z);
+	FVector NewMovedLocationY = FVector(NewLocation.X, NewLocation.Y, NewLocation.Z);
 
 	//Handle movement based on our "MoveX" and "MoveY" axes
 	if (!MovementInput.IsZero())
 	{
 		//Scale our movement input axis values by 100 units per second
 		MovementInput = MovementInput.GetSafeNormal() * MoveSpeed;
-		NewLocation += GetActorForwardVector() * MovementInput.X * DeltaTime;
-		NewLocation += GetActorRightVector() * MovementInput.Y * DeltaTime;
+		NewMovedLocationX += GetActorForwardVector() * MovementInput.X * DeltaTime;
+		if (IsPosMoveX(NewMovedLocationX))
+		{
+			NewLocation.X = NewMovedLocationX.X;
+		}
+		NewMovedLocationY += GetActorRightVector() * MovementInput.Y * DeltaTime;
+		if (IsPosMoveY(NewMovedLocationY))
+		{
+			NewLocation.Y = NewMovedLocationY.Y;
+		}
 	}
+
+
 	SetActorLocation(NewLocation);
 	
-
 }
 
 // Called to bind functionality to input
@@ -80,6 +128,28 @@ void APlayerPawn::MoveForward(float AxisValue)
 void APlayerPawn::MoveRight(float AxisValue)
 {
 	MovementInput.Y = FMath::Clamp<float>(AxisValue, -1.0f, 1.0f);
+}
+
+bool APlayerPawn::IsPosMoveX(FVector NewPos) const
+{
+	//Check if possible to move in X axis
+	if (NewPos.X >= this->BottomMovableArea->GetActorLocation().X && NewPos.X <= this->TopMovableArea->GetActorLocation().X)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool APlayerPawn::IsPosMoveY(FVector NewPos) const
+{
+	//Check if possible to move in Y axis
+	if (NewPos.Y >= this->LeftMovableArea->GetActorLocation().Y && NewPos.Y <= this->RightMovableArea->GetActorLocation().Y)
+	{
+		return true;
+	}
+
+	return false;
 }
 
 void APlayerPawn::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit)
