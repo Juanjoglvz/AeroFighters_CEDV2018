@@ -12,8 +12,10 @@ AStraightProjectile::AStraightProjectile() : Super()
 
 	// Get StaticMesh associated with this projectile 
 	auto StaticMeshAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Assets/Projectile/BasicShot.BasicShot'"));
-	SetStaticMeshAsset(StaticMeshAsset.Object);
-	S
+	
+	if (StaticMeshAsset.Succeeded())
+		SetStaticMeshAsset(StaticMeshAsset.Object);
+	
 	SetSpeed(5.f);
 }
 
@@ -24,19 +26,13 @@ void AStraightProjectile::BeginPlay()
 	
 }
 
-// Called every frame
-void AStraightProjectile::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-	// Go Straight Movement
-	FVector NewLocation = StaticMesh->GetComponentLocation() + (StaticMesh->GetForwardVector() * GetSpeed() * DeltaTime);
-	StaticMesh->SetWorldLocation(NewLocation);
-	StaticMesh->SetWorldRotation(FRotator(90.f, 0.f, 0.f));
-}
 
 void AStraightProjectile::Clone()
 {
 	
 }
 
+void AStraightProjectile::ProjectileBehaviour()
+{
+
+}

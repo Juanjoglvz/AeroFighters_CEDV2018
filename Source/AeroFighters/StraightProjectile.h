@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Projectile.h"
+#include "EnemyProjectile.h"
 #include "StraightProjectile.generated.h"
 
 UCLASS()
-class AEROFIGHTERS_API AStraightProjectile : public AProjectile
+class AEROFIGHTERS_API AStraightProjectile : public AEnemyProjectile
 {
 	GENERATED_BODY()
 	
@@ -21,11 +21,6 @@ protected:
 	virtual void BeginPlay() override;
 
 	virtual void Clone() override;
+	virtual void ProjectileBehaviour() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;	
-
-private:
-	FVector ShotDirection;
 };

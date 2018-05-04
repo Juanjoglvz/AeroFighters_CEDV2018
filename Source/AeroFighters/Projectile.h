@@ -21,6 +21,8 @@ protected:
 
 	virtual void Clone() PURE_VIRTUAL(AProjectile::Clone, );
 
+	virtual void ProjectileBehaviour() PURE_VIRTUAL(AProjectile::ProjectileBehaviour, );
+
 	virtual void SetStaticMeshAsset (UStaticMesh* StaticMeshAsset);
 	 
 	UPROPERTY()

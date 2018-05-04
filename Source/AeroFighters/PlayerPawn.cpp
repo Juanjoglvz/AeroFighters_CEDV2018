@@ -2,7 +2,6 @@
 
 #include "PlayerPawn.h"
 
-
 // Sets default values
 APlayerPawn::APlayerPawn()
 {
@@ -24,9 +23,11 @@ APlayerPawn::APlayerPawn()
 		GEngine->AddOnScreenDebugMessage(2, 15.f, FColor::Red, TEXT("Ship Mesh didn't load correctly"));
 	}
 
-
 	//Take control of player
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
+
+	// Add OnHit function to OnActorHit event
+	OnActorHit.AddDynamic(this, &APlayerPawn::OnHit);
 
 }
 
@@ -81,3 +82,14 @@ void APlayerPawn::MoveRight(float AxisValue)
 	MovementInput.Y = FMath::Clamp<float>(AxisValue, -1.0f, 1.0f);
 }
 
+void APlayerPawn::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit)
+{
+	if (OtherActor)
+	{
+		if (OtherActor->GetClass()->IsChildOf(AEnemyProjectile::StaticClass()))
+		{
+			OtherActor->Destroy();
+			SelfActor->Destroy();
+		}
+	}
+}

@@ -29,5 +29,12 @@ void AProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// The basic movement (falling) is the same for all projectile types
+	FVector NewLocation = StaticMesh->GetComponentLocation() + (StaticMesh->GetForwardVector() * GetSpeed() * DeltaTime);
+	StaticMesh->SetWorldLocation(NewLocation);
+	StaticMesh->SetWorldRotation(FRotator(90.f, 0.f, 0.f));
+
+	// Each projectile type has a different behaviour
+	ProjectileBehaviour();
 }
 

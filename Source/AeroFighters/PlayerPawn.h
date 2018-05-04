@@ -4,6 +4,7 @@
 
 #include "Core.h"
 #include "Engine.h"
+#include "EnemyProjectile.h"
 #include "GameFramework/Pawn.h"
 #include "PlayerPawn.generated.h"
 
@@ -26,6 +27,11 @@ protected:
 	//Input Functions
 	void MoveForward(float AxisValue);
 	void MoveRight(float AxisValue);
+
+	UFUNCTION()
+	void OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit);
+
+	TSubclassOf<AEnemyProjectile> ProjectileClass;
 
 public:	
 	// Called every frame
