@@ -25,5 +25,6 @@ protected:
 	virtual void ProjectileBehaviour(float DeltaTime) override;
 
 private:
-	TWeakObjectPtr<APawn> PawnReference;
+	TWeakObjectPtr<ACharacter> CharacterReference;
+	FVector Direction;
 };

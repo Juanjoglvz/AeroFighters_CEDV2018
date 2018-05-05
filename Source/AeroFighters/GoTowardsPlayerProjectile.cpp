@@ -24,7 +24,8 @@ void AGoTowardsPlayerProjectile::BeginPlay()
 	Super::BeginPlay();
 	
 	// Get a reference to the pawn
-	PawnReference = GetWorld()->GetFirstPlayerController()->GetPawn();
+	CharacterReference = GetWorld()->GetFirstPlayerController()->GetCharacter();
+	Direction = CharacterReference->GetActorLocation() - StaticMesh->GetComponentLocation();
 }
 
 void AGoTowardsPlayerProjectile::Clone()
@@ -34,10 +35,10 @@ void AGoTowardsPlayerProjectile::Clone()
 void AGoTowardsPlayerProjectile::ProjectileBehaviour(float DeltaTime)
 {
 	// The projectile moves towards player
-	FVector Direction = PawnReference->GetActorLocation() - StaticMesh->GetComponentLocation();
-	FVector NewLocation = StaticMesh->GetComponentLocation() + (Direction * GetSpeed() * DeltaTime);
+	FVector NewLocation = StaticMesh->GetComponentLocation() + (Direction * GetSpeed() * DeltaTime * 0.01f);
 	StaticMesh->SetWorldLocation(NewLocation);
-	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, FString::Printf(TEXT("%f,%f,%f"), NewLocation.X, NewLocation.Y, NewLocation.Z));
-	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, FString::Printf(TEXT("%f,%f,%f"), PawnReference->GetActorLocation().X, PawnReference->GetActorLocation().Y, PawnReference->GetActorLocation().Z));
+	StaticMesh->SetWorldRotation(FRotator(-Direction.X, 0, 0));
+	// GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, FString::Printf(TEXT("%f,%f,%f"), NewLocation.X, NewLocation.Y, NewLocation.Z));
+	// GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, FString::Printf(TEXT("%f,%f,%f"), PawnReference->GetActorLocation().X, PawnReference->GetActorLocation().Y, PawnReference->GetActorLocation().Z));
 }
 
