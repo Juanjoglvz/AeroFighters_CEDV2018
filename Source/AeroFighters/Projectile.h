@@ -28,6 +28,10 @@ protected:
 	UPROPERTY()
 		UStaticMeshComponent* StaticMesh;
 	
+	// Reference to movable areas
+	UPROPERTY()
+		TWeakObjectPtr<AActor> BottomMovableArea;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;	

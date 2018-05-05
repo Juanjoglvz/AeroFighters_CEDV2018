@@ -26,8 +26,8 @@ protected:
 	void MoveForward(float AxisValue);
 	void MoveRight(float AxisValue);
 
-	UFUNCTION()
-		void OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit);
+	UFUNCTION(BlueprintCallable, Category="Overlap")
+		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor);
 
 	TSubclassOf<class AEnemyProjectile> ProjectileClass;
 
@@ -39,7 +39,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
 	//Skeletal Mesh 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly, Category="StaticMeshComponent")
 		UStaticMeshComponent* StaticMeshComponent;
 
 private:

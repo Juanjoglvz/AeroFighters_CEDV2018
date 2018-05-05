@@ -32,7 +32,8 @@ APlayerCharacter::APlayerCharacter()
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 
 	// Add OnHit function to OnActorHit event
-	OnActorHit.AddDynamic(this, &APlayerCharacter::OnHit);
+	GetCapsuleComponent()->bGenerateOverlapEvents = true;
+	GetCapsuleComponent()->SetCollisionProfileName(TEXT("OverlapAll"));
 }
 
 // Called when the game starts or when spawned
@@ -150,14 +151,14 @@ bool APlayerCharacter::IsPosMoveY(FVector NewPos) const
 	return false;
 }
 
-void APlayerCharacter::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit)
+void APlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor)
 {
 	if (OtherActor)
 	{
 		if (OtherActor->GetClass()->IsChildOf(AEnemyProjectile::StaticClass()))
 		{
 			OtherActor->Destroy();
-			SelfActor->Destroy();
+			this->Destroy();
 		}
 	}
 }
