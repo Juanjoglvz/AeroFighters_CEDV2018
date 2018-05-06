@@ -26,6 +26,12 @@ protected:
 	void MoveForward(float AxisValue);
 	void MoveRight(float AxisValue);
 
+	// Function called when character spawns a bomb
+	void ThrowABomb();
+
+	// Function called when character shots
+	void Shoot();
+
 	UFUNCTION(BlueprintCallable, Category="Overlap")
 		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor);
 

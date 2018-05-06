@@ -27,14 +27,23 @@ void AProjectile::BeginPlay()
 
 	// Get the references to movable areas. If projectile goes further these areas, it will be destroyed
 	FString BottomMovableAreaString = FString(TEXT("BottomMovableArea"));
-	
+	FString TopMovableAreaString = FString(TEXT("TopMovableArea"));
+	int Counter = 0;
 	for (TActorIterator<AActor> itr(GetWorld()); itr; ++itr)
 	{
 		if (BottomMovableAreaString.Equals(itr->GetName()))
 		{
 			this->BottomMovableArea = *itr;
-			break;
+			Counter++;
 		}
+		else if (TopMovableAreaString.Equals(itr->GetName()))
+		{
+			this->TopMovableArea = *itr;
+			Counter++;
+		}
+
+		if (Counter > 1)
+			break;
 	}
 	
 }
@@ -44,16 +53,6 @@ void AProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// The basic movement (falling) is the same for all projectile types
-	FVector NewLocation = StaticMesh->GetComponentLocation() + (StaticMesh->GetForwardVector() * GetSpeed() * DeltaTime);
-	StaticMesh->SetWorldLocation(NewLocation);
-	//StaticMesh->SetWorldRotation(FRotator(90.f, 0.f, 0.f));
-
-	// Check if the projectile has to be destroyed
-	if (StaticMesh->GetComponentLocation().X < BottomMovableArea->GetActorLocation().X)
-	{
-		this->Destroy();
-	}
 	// Each projectile type has a different behaviour
 	ProjectileBehaviour(DeltaTime);
 }

@@ -2,6 +2,7 @@
 
 #include "PlayerCharacter.h"
 #include "EnemyProjectile.h"
+#include "CharacterMissileProjectile.h"
 #include "Engine.h"
 
 
@@ -117,6 +118,8 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	//Bind Input functions
 	InputComponent->BindAxis("MoveForward", this, &APlayerCharacter::MoveForward);
 	InputComponent->BindAxis("MoveRight", this, &APlayerCharacter::MoveRight);
+	InputComponent->BindAction("Bomb", IE_Pressed, this, &APlayerCharacter::ThrowABomb);
+	InputComponent->BindAction("NormalShoot", IE_Pressed, this, &APlayerCharacter::Shoot);
 }
 
 void APlayerCharacter::MoveForward(float AxisValue)
@@ -127,6 +130,21 @@ void APlayerCharacter::MoveForward(float AxisValue)
 void APlayerCharacter::MoveRight(float AxisValue)
 {
 	MovementInput.Y = FMath::Clamp<float>(AxisValue, -1.0f, 1.0f);
+}
+
+void APlayerCharacter::ThrowABomb()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("F event"));
+	FVector Location = this->GetActorLocation();
+	FRotator Rotation(0.f, 0.f, 0.f);
+	FActorSpawnParameters SpawnInfo;
+	GetWorld()->SpawnActor <ACharacterMissileProjectile>(Location, Rotation, SpawnInfo);
+}
+
+void APlayerCharacter::Shoot()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, TEXT("Shoot"));
+
 }
 
 bool APlayerCharacter::IsPosMoveX(FVector NewPos) const
