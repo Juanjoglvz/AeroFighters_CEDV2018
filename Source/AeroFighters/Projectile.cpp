@@ -49,6 +49,11 @@ void AProjectile::Tick(float DeltaTime)
 	StaticMesh->SetWorldLocation(NewLocation);
 	//StaticMesh->SetWorldRotation(FRotator(90.f, 0.f, 0.f));
 
+	// Check if the projectile has to be destroyed
+	if (StaticMesh->GetComponentLocation().X < BottomMovableArea->GetActorLocation().X)
+	{
+		this->Destroy();
+	}
 	// Each projectile type has a different behaviour
 	ProjectileBehaviour(DeltaTime);
 }

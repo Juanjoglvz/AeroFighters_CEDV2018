@@ -38,7 +38,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
-	//Skeletal Mesh 
+	// Static Mesh 
 	UPROPERTY(BlueprintReadOnly, Category="StaticMeshComponent")
 		UStaticMeshComponent* StaticMeshComponent;
 

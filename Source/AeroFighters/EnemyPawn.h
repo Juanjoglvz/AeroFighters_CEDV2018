@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "PlayerPawn.generated.h"
+#include "EnemyPawn.generated.h"
 
 UCLASS()
-class AEROFIGHTERS_API APlayerPawn : public APawn
+class AEROFIGHTERS_API AEnemyPawn : public APawn
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this pawn's properties
-	APlayerPawn();
+	AEnemyPawn();
 
 protected:
 	// Called when the game starts or when spawned
@@ -26,4 +26,9 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	virtual void SetStaticMeshAsset(UStaticMesh* StaticMeshAsset);
+
+	// Enemy Static Mesh
+	UPROPERTY()
+		UStaticMeshComponent* StaticMeshComponent;
 };

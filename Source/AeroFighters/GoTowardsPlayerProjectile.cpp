@@ -37,12 +37,6 @@ void AGoTowardsPlayerProjectile::Clone()
 
 void AGoTowardsPlayerProjectile::ProjectileBehaviour(float DeltaTime)
 {
-	// Check if the projectile has to be destroyed
-	if (StaticMesh->GetComponentLocation().X < BottomMovableArea->GetActorLocation().X)
-	{
-		this->Destroy();
-	}
-
 	// The projectile moves towards player
 	FVector NewLocation = StaticMesh->GetComponentLocation() + (Direction * GetSpeed() * DeltaTime * 0.01f);
 	NewLocation.Z = 200.f;
