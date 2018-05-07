@@ -19,8 +19,6 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	virtual void Clone() PURE_VIRTUAL(AProjectile::Clone, );
-
 	virtual void ProjectileBehaviour(float DeltaTime) PURE_VIRTUAL(AProjectile::ProjectileBehaviour, );
 
 	virtual void SetStaticMeshAsset (UStaticMesh* StaticMeshAsset);

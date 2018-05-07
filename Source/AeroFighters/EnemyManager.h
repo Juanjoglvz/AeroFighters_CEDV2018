@@ -3,23 +3,23 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "EnemyPawn.h"
-#include "BasicEnemyPawn.generated.h"
+#include "GameFramework/Actor.h"
+#include "EnemyManager.generated.h"
 
 UCLASS()
-class AEROFIGHTERS_API ABasicEnemyPawn : public AEnemyPawn
+class AEROFIGHTERS_API AEnemyManager : public AActor
 {
 	GENERATED_BODY()
 	
-public:
-	ABasicEnemyPawn();
+public:	
+	// Sets default values for this actor's properties
+	AEnemyManager();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 };

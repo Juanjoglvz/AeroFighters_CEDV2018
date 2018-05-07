@@ -4,23 +4,25 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "EnemyProjectile.h"
-#include "StraightProjectile.generated.h"
+#include "PlayerProjectile.h"
+#include "PlayerMissile.generated.h"
 
 UCLASS()
-class AEROFIGHTERS_API AStraightProjectile : public AEnemyProjectile
+class AEROFIGHTERS_API APlayerMissile : public APlayerProjectile
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AStraightProjectile();
+	APlayerMissile();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	virtual void Clone() override;
-	virtual void ProjectileBehaviour(float DeltaTime) override;
+public:	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 
+	virtual void ProjectileBehaviour(float DeltaTime) override;
 };

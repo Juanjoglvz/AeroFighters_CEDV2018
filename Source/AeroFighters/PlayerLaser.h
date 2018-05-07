@@ -4,28 +4,21 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "EnemyProjectile.h"
-#include "GoTowardsPlayerProjectile.generated.h"
+#include "PlayerProjectile.h"
+#include "PlayerLaser.generated.h"
 
 UCLASS()
-class AEROFIGHTERS_API AGoTowardsPlayerProjectile : public AEnemyProjectile
+class AEROFIGHTERS_API APlayerLaser : public APlayerProjectile
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
-	AGoTowardsPlayerProjectile();
+	APlayerLaser();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	
-	virtual void Clone() override;
 
 	virtual void ProjectileBehaviour(float DeltaTime) override;
-
-private:
-	TWeakObjectPtr<ACharacter> CharacterReference;
-	FVector Direction;
-	FRotator EnemyRotation;
 };

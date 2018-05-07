@@ -2,7 +2,6 @@
 
 #include "PlayerCharacter.h"
 #include "EnemyProjectile.h"
-#include "CharacterMissileProjectile.h"
 #include "Engine.h"
 
 
@@ -138,7 +137,7 @@ void APlayerCharacter::ThrowABomb()
 	FVector Location = this->GetActorLocation();
 	FRotator Rotation(0.f, 0.f, 0.f);
 	FActorSpawnParameters SpawnInfo;
-	GetWorld()->SpawnActor <ACharacterMissileProjectile>(Location, Rotation, SpawnInfo);
+	//GetWorld()->SpawnActor <ACharacterMissileProjectile>(Location, Rotation, SpawnInfo);
 }
 
 void APlayerCharacter::Shoot()

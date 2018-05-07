@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "CharacterMissileProjectile.h"
+#include "PlayerMissile.h"
 #include "Engine.h"
 
 // Sets default values
-ACharacterMissileProjectile::ACharacterMissileProjectile()
+APlayerMissile::APlayerMissile()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -19,7 +19,7 @@ ACharacterMissileProjectile::ACharacterMissileProjectile()
 }
 
 // Called when the game starts or when spawned
-void ACharacterMissileProjectile::BeginPlay()
+void APlayerMissile::BeginPlay()
 {
 	Super::BeginPlay();
 	
@@ -32,18 +32,13 @@ void ACharacterMissileProjectile::BeginPlay()
 }
 
 // Called every frame
-void ACharacterMissileProjectile::Tick(float DeltaTime)
+void APlayerMissile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
 
-void ACharacterMissileProjectile::Clone()
-{
-
-}
-
-void ACharacterMissileProjectile::ProjectileBehaviour(float DeltaTime)
+void APlayerMissile::ProjectileBehaviour(float DeltaTime)
 {
 
 }
