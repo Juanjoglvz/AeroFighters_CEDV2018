@@ -3,18 +3,17 @@
 #pragma once
 
 #include "Core.h"
-#include "Engine.h"
-#include "GameFramework/Pawn.h"
-#include "PlayerPawn.generated.h"
+#include "GameFramework/Character.h"
+#include "PlayerCharacter.generated.h"
 
 UCLASS()
-class AEROFIGHTERS_API APlayerPawn : public APawn
+class AEROFIGHTERS_API APlayerCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this pawn's properties
-	APlayerPawn();
+	// Sets default values for this character's properties
+	APlayerCharacter();
 
 protected:
 	// Called when the game starts or when spawned
@@ -27,7 +26,16 @@ protected:
 	void MoveForward(float AxisValue);
 	void MoveRight(float AxisValue);
 
-	
+	// Function called when character spawns a bomb
+	void ThrowABomb();
+
+	// Function called when character shots
+	void Shoot();
+
+	UFUNCTION(BlueprintCallable, Category="Overlap")
+		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor);
+
+	TSubclassOf<class AEnemyProjectile> ProjectileClass;
 
 public:	
 	// Called every frame
@@ -35,9 +43,9 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	//Skeletal Mesh 
-	UPROPERTY()
+	
+	// Static Mesh 
+	UPROPERTY(BlueprintReadOnly, Category="StaticMeshComponent")
 		UStaticMeshComponent* StaticMeshComponent;
 
 private:
@@ -55,7 +63,9 @@ private:
 		TWeakObjectPtr<AActor> RightMovableArea;
 	UPROPERTY()
 		TWeakObjectPtr<AActor> LeftMovableArea;
+
 	//Function to see if posible to move
 	bool IsPosMoveX(FVector NewPos) const;
 	bool IsPosMoveY(FVector NewPos) const;
+
 };

@@ -1,12 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "PlayerPawn.h"
+#include "PlayerCharacter.h"
+#include "EnemyProjectile.h"
+#include "Engine.h"
 
 
 // Sets default values
-APlayerPawn::APlayerPawn()
+APlayerCharacter::APlayerCharacter()
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+ 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	//Create components
@@ -26,14 +28,16 @@ APlayerPawn::APlayerPawn()
 		GEngine->AddOnScreenDebugMessage(2, 15.f, FColor::Red, TEXT("Ship Mesh didn't load correctly"));
 	}
 
-
 	//Take control of player
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 
+	// Add OnHit function to OnActorHit event
+	GetCapsuleComponent()->bGenerateOverlapEvents = true;
+	GetCapsuleComponent()->SetCollisionProfileName(TEXT("OverlapAll"));
 }
 
 // Called when the game starts or when spawned
-void APlayerPawn::BeginPlay()
+void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -71,11 +75,10 @@ void APlayerPawn::BeginPlay()
 			break;
 		}
 	}
-	
 }
 
 // Called every frame
-void APlayerPawn::Tick(float DeltaTime)
+void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
@@ -103,33 +106,47 @@ void APlayerPawn::Tick(float DeltaTime)
 		}
 	}
 
-
 	SetActorLocation(NewLocation);
-	
 }
 
 // Called to bind functionality to input
-void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	//Bind Input functions
-	InputComponent->BindAxis("MoveForward", this, &APlayerPawn::MoveForward);
-	InputComponent->BindAxis("MoveRight", this, &APlayerPawn::MoveRight);
-
+	InputComponent->BindAxis("MoveForward", this, &APlayerCharacter::MoveForward);
+	InputComponent->BindAxis("MoveRight", this, &APlayerCharacter::MoveRight);
+	InputComponent->BindAction("Bomb", IE_Pressed, this, &APlayerCharacter::ThrowABomb);
+	InputComponent->BindAction("NormalShoot", IE_Pressed, this, &APlayerCharacter::Shoot);
 }
 
-void APlayerPawn::MoveForward(float AxisValue) 
+void APlayerCharacter::MoveForward(float AxisValue)
 {
 	MovementInput.X = FMath::Clamp<float>(AxisValue, -1.0f, 1.0f);
 }
 
-void APlayerPawn::MoveRight(float AxisValue)
+void APlayerCharacter::MoveRight(float AxisValue)
 {
 	MovementInput.Y = FMath::Clamp<float>(AxisValue, -1.0f, 1.0f);
 }
 
-bool APlayerPawn::IsPosMoveX(FVector NewPos) const
+void APlayerCharacter::ThrowABomb()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("F event"));
+	FVector Location = this->GetActorLocation();
+	FRotator Rotation(0.f, 0.f, 0.f);
+	FActorSpawnParameters SpawnInfo;
+	//GetWorld()->SpawnActor <ACharacterMissileProjectile>(Location, Rotation, SpawnInfo);
+}
+
+void APlayerCharacter::Shoot()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, TEXT("Shoot"));
+
+}
+
+bool APlayerCharacter::IsPosMoveX(FVector NewPos) const
 {
 	//Check if possible to move in X axis
 	if (NewPos.X >= this->BottomMovableArea->GetActorLocation().X && NewPos.X <= this->TopMovableArea->GetActorLocation().X)
@@ -140,7 +157,7 @@ bool APlayerPawn::IsPosMoveX(FVector NewPos) const
 	return false;
 }
 
-bool APlayerPawn::IsPosMoveY(FVector NewPos) const
+bool APlayerCharacter::IsPosMoveY(FVector NewPos) const
 {
 	//Check if possible to move in Y axis
 	if (NewPos.Y >= this->LeftMovableArea->GetActorLocation().Y && NewPos.Y <= this->RightMovableArea->GetActorLocation().Y)
@@ -149,4 +166,16 @@ bool APlayerPawn::IsPosMoveY(FVector NewPos) const
 	}
 
 	return false;
+}
+
+void APlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor)
+{
+	if (OtherActor)
+	{
+		if (OtherActor->GetClass()->IsChildOf(AEnemyProjectile::StaticClass()))
+		{
+			OtherActor->Destroy();
+			this->Destroy();
+		}
+	}
 }
