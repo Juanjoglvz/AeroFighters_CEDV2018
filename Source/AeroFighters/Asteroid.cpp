@@ -13,7 +13,7 @@ AAsteroid::AAsteroid() : RotationDrift(FRotator(0.0f, 0.0f, 0.0f)), RotationDrif
 
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	//Set Skeletal Mesh
-	auto StaticMeshAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Assets/Asteroid/Asteroid_Round.Asteroid_Round'"));
+	auto StaticMeshAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Assets/Projectile/Projectile.Projectile'"));
 
 	if (StaticMeshAsset.Succeeded()) {
 		StaticMeshComponent->SetStaticMesh(StaticMeshAsset.Object);
