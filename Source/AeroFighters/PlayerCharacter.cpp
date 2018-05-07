@@ -15,7 +15,7 @@ APlayerCharacter::APlayerCharacter()
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-	//Set Skeletal Mesh
+	//Set Static Mesh
 	auto StaticMeshAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Assets/Ships/Plane'"));
 
 	if (StaticMeshAsset.Succeeded()) {
@@ -92,7 +92,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 	//Handle movement based on our "MoveX" and "MoveY" axes
 	if (!MovementInput.IsZero())
 	{
-		//Scale our movement input axis values by 100 units per second
+		//Scale our movement input axis values by 1000 units per second
 		MovementInput = MovementInput.GetSafeNormal() * MoveSpeed;
 		NewMovedLocationX += GetActorForwardVector() * MovementInput.X * DeltaTime;
 		if (IsPosMoveX(NewMovedLocationX))

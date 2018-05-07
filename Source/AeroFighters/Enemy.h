@@ -2,37 +2,38 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include "Core.h"
 #include "Engine.h"
 #include "MoveBehaviour.h"
-#include "MoveRight.h"
 #include "GameFramework/Actor.h"
-#include "EnemyManager.generated.h"
+#include "Enemy.generated.h"
 
 UCLASS()
-class AEROFIGHTERS_API AEnemyManager : public AActor
+class AEROFIGHTERS_API AEnemy : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AEnemyManager();
+	AEnemy();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:
+public:	
+	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	//Set the mesh in runtime
+	void SetStaticMesh(UStaticMesh* mesh);
+	void SetMoveBehaviour(TSharedPtr<MoveBehaviour> move);
+
 private:
-	void SpawnEnemy(FVector location, FRotator rotation) const;
-
 	UPROPERTY()
-		UStaticMesh* BugShipMesh;
+		UStaticMeshComponent* StaticMeshComponent;
+	
+	TWeakPtr<MoveBehaviour> Movement;
 
-	TSharedPtr<MoveRight> MoveRightObject;
-
-	void Wave0() const;
-
+	FVector CameraSpeed;
 };
