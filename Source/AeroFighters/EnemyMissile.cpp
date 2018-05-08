@@ -34,15 +34,18 @@ void AEnemyMissile::BeginPlay()
 void AEnemyMissile::ProjectileBehaviour(float DeltaTime)
 {
 	// Get the movement direction
-	FVector Direction = CharacterReference->GetActorLocation() - StaticMesh->GetComponentLocation();
+	if (CharacterReference.Get() != nullptr)
+	{
+		FVector Direction = CharacterReference->GetActorLocation() - StaticMesh->GetComponentLocation();
 
-	// Rotate towards the player
-	FRotator EnemyRotation = FRotationMatrix::MakeFromX(Direction).Rotator();
-	StaticMesh->SetRelativeRotation(EnemyRotation, false, nullptr, ETeleportType::TeleportPhysics);
+		// Rotate towards the player
+		FRotator EnemyRotation = FRotationMatrix::MakeFromX(Direction).Rotator();
+		StaticMesh->SetRelativeRotation(EnemyRotation, false, nullptr, ETeleportType::TeleportPhysics);
 
-	// The projectile moves towards player
-	FVector NewLocation = StaticMesh->GetComponentLocation() + (Direction * GetSpeed() * DeltaTime * 0.0001f);
-	NewLocation.Z = 200.f;
-	StaticMesh->SetWorldLocation(NewLocation);
+		// The projectile moves towards player
+		FVector NewLocation = StaticMesh->GetComponentLocation() + (Direction * GetSpeed() * DeltaTime * 0.0001f);
+		NewLocation.Z = 200.f;
+		StaticMesh->SetWorldLocation(NewLocation);
+	}
 }
 

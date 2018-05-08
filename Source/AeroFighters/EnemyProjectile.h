@@ -23,6 +23,9 @@ protected:
 	UFUNCTION()
 	virtual void OnBomb();
 
+	UFUNCTION(BlueprintCallable, Category = "Hit")
+		virtual void OnHit(AActor* self, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;	

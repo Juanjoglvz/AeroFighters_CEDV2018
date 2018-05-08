@@ -2,14 +2,22 @@
 
 #include "EnemyProjectile.h"
 #include "Engine.h"
+#include "PlayerMissile.h"
+#include "PlayerLaser.h"
+#include "Components/CapsuleComponent.h"
 #include "PlayerCharacter.h"
 
 // Sets default values
 AEnemyProjectile::AEnemyProjectile() : Super()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	auto CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CapsuleComponent"));
+	CapsuleComponent->InitCapsuleSize(5.f, 5.f);
+	CapsuleComponent->SetCollisionProfileName(TEXT("Trigger"));
+	CapsuleComponent->SetupAttachment(RootComponent);
+	OnActorHit.AddDynamic(this, &AEnemyProjectile::OnHit);
 }
 
 // Called when the game starts or when spawned
@@ -51,4 +59,16 @@ void AEnemyProjectile::Tick(float DeltaTime)
 	StaticMesh->SetWorldLocation(NewLocation);
 	//StaticMesh->SetWorldRotation(FRotator(90.f, 0.f, 0.f));
 }
+
+void AEnemyProjectile::OnHit(AActor* self, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit)
+{
+	if (OtherActor)
+	{
+		if (OtherActor->GetClass()->IsChildOf(APlayerLaser::StaticClass()))
+		{
+			this->Destroy();
+		}
+	}
+}
+
 

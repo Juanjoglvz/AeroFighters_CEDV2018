@@ -31,8 +31,11 @@ protected:
 	// Function called when character spawns a bomb
 	void ThrowABomb();
 
-	// Function called when character shots
+	// Function called when character press the Shooting key
 	void Shoot();
+
+	// Function called when character releases the Shooting key
+	void StopShooting();
 
 	UFUNCTION(BlueprintCallable, Category="Overlap")
 		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor);
@@ -77,4 +80,5 @@ private:
 	bool IsPosMoveX(FVector NewPos) const;
 	bool IsPosMoveY(FVector NewPos) const;
 
+	bool b_IsShooting;
 };

@@ -8,7 +8,7 @@
 
 
 // Sets default values
-APlayerCharacter::APlayerCharacter() : NumberOfBombsAvailable{ 3 }, MoveSpeed{ 1000.f }, CameraSpeed{ 150.f, 0.f, 0.f }
+APlayerCharacter::APlayerCharacter() : NumberOfBombsAvailable{ 3 }, MoveSpeed{ 1000.f }, CameraSpeed{ 150.f, 0.f, 0.f }, b_IsShooting{ false }
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -109,6 +109,20 @@ void APlayerCharacter::Tick(float DeltaTime)
 	}
 
 	SetActorLocation(NewLocation);
+
+	// Check if player is shooting. If player is shooting, spawns projectiles.
+	if (b_IsShooting) 
+	{
+		FVector Location = this->GetActorLocation();
+		FRotator Rotation(0.f, 0.f, 0.f);
+		FActorSpawnParameters SpawnInfo;
+		for (int i = -1; i <= 1; i++)
+		{
+			Location += FVector(0.f, i * 60.f, 0.f);
+			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, TEXT("Shoot"));
+			GetWorld()->SpawnActor <APlayerLaser>(Location, Rotation, SpawnInfo);
+		}
+	}
 }
 
 // Called to bind functionality to input
@@ -121,6 +135,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	InputComponent->BindAxis("MoveRight", this, &APlayerCharacter::MoveRight);
 	InputComponent->BindAction("Bomb", IE_Pressed, this, &APlayerCharacter::ThrowABomb);
 	InputComponent->BindAction("NormalShoot", IE_Pressed, this, &APlayerCharacter::Shoot);
+	InputComponent->BindAction("NormalShoot", IE_Released, this, &APlayerCharacter::StopShooting);
 }
 
 void APlayerCharacter::MoveForward(float AxisValue)
@@ -146,15 +161,12 @@ void APlayerCharacter::ThrowABomb()
 
 void APlayerCharacter::Shoot()
 {
-	FVector Location = this->GetActorLocation();
-	FRotator Rotation(0.f, 0.f, 0.f);
-	FActorSpawnParameters SpawnInfo;
-	for (int i = -1; i <= 1; i++)
-	{
-		Location += FVector(0.f, i * 60.f, 0.f);
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, TEXT("Shoot"));
-		GetWorld()->SpawnActor <APlayerMissile>(Location, Rotation, SpawnInfo);
-	}
+	b_IsShooting = true;
+}
+
+void APlayerCharacter::StopShooting()
+{
+	b_IsShooting = false;
 }
 
 bool APlayerCharacter::IsPosMoveX(FVector NewPos) const
@@ -187,6 +199,7 @@ void APlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 		{
 			OtherActor->Destroy();
 			this->Destroy();
+			UGameplayStatics::SetGamePaused(this, true);
 		}
 	}
 }
