@@ -14,7 +14,8 @@ AEnemyMissile::AEnemyMissile()
 
 	if (StaticMeshAsset.Succeeded())
 		SetStaticMeshAsset(StaticMeshAsset.Object);
-	SetSpeed(5.f);
+	
+	SetSpeed(200.f);
 }
 
 // Called when the game starts or when spawned
@@ -22,22 +23,26 @@ void AEnemyMissile::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	// Get a reference to the pawn
+	// Get a reference to the character
 	CharacterReference = GetWorld()->GetFirstPlayerController()->GetCharacter();
-	Direction = CharacterReference->GetActorLocation() - StaticMesh->GetComponentLocation();
 
-	// Rotate towards the player
-	EnemyRotation = FRotationMatrix::MakeFromX(Direction).Rotator();
-	StaticMesh->SetRelativeRotation(EnemyRotation, false, nullptr, ETeleportType::TeleportPhysics);
+	// Scale the StaticMesh
+	StaticMesh->SetWorldScale3D(FVector(7.f, 7.f, 7.f));
+	StaticMesh->SetRelativeScale3D(FVector(7.f, 7.f, 7.f));
 }
 
 void AEnemyMissile::ProjectileBehaviour(float DeltaTime)
 {
+	// Get the movement direction
+	FVector Direction = CharacterReference->GetActorLocation() - StaticMesh->GetComponentLocation();
+
+	// Rotate towards the player
+	FRotator EnemyRotation = FRotationMatrix::MakeFromX(Direction).Rotator();
+	StaticMesh->SetRelativeRotation(EnemyRotation, false, nullptr, ETeleportType::TeleportPhysics);
+
 	// The projectile moves towards player
-	FVector NewLocation = StaticMesh->GetComponentLocation() + (Direction * GetSpeed() * DeltaTime * 0.01f);
+	FVector NewLocation = StaticMesh->GetComponentLocation() + (Direction * GetSpeed() * DeltaTime * 0.0001f);
 	NewLocation.Z = 200.f;
 	StaticMesh->SetWorldLocation(NewLocation);
-	// GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, FString::Printf(TEXT("%f,%f,%f"), NewLocation.X, NewLocation.Y, NewLocation.Z));
-	// GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, FString::Printf(TEXT("%f,%f,%f"), PawnReference->GetActorLocation().X, PawnReference->GetActorLocation().Y, PawnReference->GetActorLocation().Z));
 }
 

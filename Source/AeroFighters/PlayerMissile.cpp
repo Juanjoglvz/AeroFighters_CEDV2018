@@ -5,35 +5,28 @@
 #include "Engine.h"
 
 // Sets default values
-APlayerMissile::APlayerMissile()
+APlayerMissile::APlayerMissile() : Super()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	// Get StaticMesh associated with this projectile 
-	auto StaticMeshAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Assets/Projectile/BasicMissile.BasicMissile'"));
+	auto StaticMeshAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Assets/Projectile/BasicShot.BasicShot'"));
 
 	if (StaticMeshAsset.Succeeded())
 		SetStaticMeshAsset(StaticMeshAsset.Object);
 
-	SetSpeed(3.f);
+	SetSpeed(300.f);
 }
 
 // Called when the game starts or when spawned
 void APlayerMissile::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	// Resize projectile
 	StaticMesh->SetWorldScale3D(FVector(5.f, 5.f, 5.f));
 	StaticMesh->SetRelativeScale3D(FVector(5.f, 5.f, 5.f));
-}
-
-// Called every frame
-void APlayerMissile::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
 }
 
 // The behaviour is to find the nearest enemy and go for it

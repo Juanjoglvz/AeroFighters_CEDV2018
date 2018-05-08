@@ -24,6 +24,5 @@ protected:
 
 private:
 	TWeakObjectPtr<ACharacter> CharacterReference;
-	FVector Direction;
-	FRotator EnemyRotation;
+
 };

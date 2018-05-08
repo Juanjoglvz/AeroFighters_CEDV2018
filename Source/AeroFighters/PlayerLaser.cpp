@@ -16,7 +16,7 @@ APlayerLaser::APlayerLaser() : Super()
 	if (StaticMeshAsset.Succeeded())
 		SetStaticMeshAsset(StaticMeshAsset.Object);
 
-	SetSpeed(5.f);
+	SetSpeed(500.f);
 }
 
 // Called when the game starts or when spawned
