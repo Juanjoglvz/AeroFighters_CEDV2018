@@ -3,6 +3,8 @@
 #pragma once
 
 #include "Core.h"
+#include "DelegateCombinations.h"
+#include "Engine.h"
 #include "GameFramework/Character.h"
 #include "PlayerCharacter.generated.h"
 
@@ -48,6 +50,10 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category="StaticMeshComponent")
 		UStaticMeshComponent* StaticMeshComponent;
 
+	// Delegate needed to observer pattern
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDiscardEnemyShootsDelegate);
+	FDiscardEnemyShootsDelegate myDiscardEnemyShootsDelegate;
+
 private:
 	UPROPERTY(EditAnywhere)
 		float MoveSpeed;
@@ -63,6 +69,9 @@ private:
 		TWeakObjectPtr<AActor> RightMovableArea;
 	UPROPERTY()
 		TWeakObjectPtr<AActor> LeftMovableArea;
+
+	UPROPERTY(EditAnywhere)
+		unsigned int NumberOfBombsAvailable;
 
 	//Function to see if posible to move
 	bool IsPosMoveX(FVector NewPos) const;

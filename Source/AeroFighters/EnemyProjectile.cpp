@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "EnemyProjectile.h"
+#include "Engine.h"
+#include "PlayerCharacter.h"
 
 // Sets default values
 AEnemyProjectile::AEnemyProjectile()
@@ -14,9 +16,24 @@ AEnemyProjectile::AEnemyProjectile()
 void AEnemyProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	// Bind an action to destroy the projectile if the character spawns a bomb
+	// The action is a lambda function that destroys the projectile
+	APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetCharacter());
+	if (PlayerCharacter != nullptr)
+	{
+		PlayerCharacter->myDiscardEnemyShootsDelegate.AddDynamic(this, &AEnemyProjectile::OnBomb);
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, FString(TEXT("[EnemyProjectile.cpp] - PlayerCharacter is nullptr")));
+	}
 }
 
+void AEnemyProjectile::OnBomb()
+{
+	this->Destroy();
+}
 
 // Called every frame
 void AEnemyProjectile::Tick(float DeltaTime)

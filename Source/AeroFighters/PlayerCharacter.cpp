@@ -1,12 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "PlayerCharacter.h"
+#include "PlayerLaser.h"
 #include "EnemyProjectile.h"
+#include "PlayerMissile.h"
 #include "Engine.h"
 
 
 // Sets default values
-APlayerCharacter::APlayerCharacter()
+APlayerCharacter::APlayerCharacter() : NumberOfBombsAvailable{ 3 }, MoveSpeed{ 1000.f }, CameraSpeed{ 150.f, 0.f, 0.f }
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -131,19 +133,28 @@ void APlayerCharacter::MoveRight(float AxisValue)
 	MovementInput.Y = FMath::Clamp<float>(AxisValue, -1.0f, 1.0f);
 }
 
+// If character throw a bomb, all enemy projectiles will be destroyed
 void APlayerCharacter::ThrowABomb()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("F event"));
-	FVector Location = this->GetActorLocation();
-	FRotator Rotation(0.f, 0.f, 0.f);
-	FActorSpawnParameters SpawnInfo;
-	//GetWorld()->SpawnActor <ACharacterMissileProjectile>(Location, Rotation, SpawnInfo);
+	if (NumberOfBombsAvailable > 0)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("F event"));
+		myDiscardEnemyShootsDelegate.Broadcast();
+		NumberOfBombsAvailable--;
+	}
 }
 
 void APlayerCharacter::Shoot()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, TEXT("Shoot"));
-
+	FVector Location = this->GetActorLocation();
+	FRotator Rotation(0.f, 0.f, 0.f);
+	FActorSpawnParameters SpawnInfo;
+	for (int i = -1; i <= 1; i++)
+	{
+		Location += FVector(0.f, i * 60.f, 0.f);
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, TEXT("Shoot"));
+		GetWorld()->SpawnActor <APlayerMissile>(Location, Rotation, SpawnInfo);
+	}
 }
 
 bool APlayerCharacter::IsPosMoveX(FVector NewPos) const

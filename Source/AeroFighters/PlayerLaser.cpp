@@ -23,7 +23,8 @@ APlayerLaser::APlayerLaser() : Super()
 void APlayerLaser::BeginPlay()
 {
 	Super::BeginPlay();
-
+	StaticMesh->SetWorldScale3D(FVector(5.f, 5.f, 2.f));
+	StaticMesh->SetRelativeScale3D(FVector(5.f, 5.f, 2.f));
 }
 
 void APlayerLaser::ProjectileBehaviour(float DeltaTime)

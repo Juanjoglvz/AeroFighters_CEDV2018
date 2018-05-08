@@ -2,28 +2,34 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include "Core.h"
+#include "Engine.h"
 #include "GameFramework/Actor.h"
-#include "PlayerProjectile.h"
-#include "PlayerMissile.generated.h"
+#include "Enemy.generated.h"
 
 UCLASS()
-class AEROFIGHTERS_API APlayerMissile : public APlayerProjectile
+class AEROFIGHTERS_API AEnemy : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
-	APlayerMissile();
+	AEnemy();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	virtual void ProjectileBehaviour(float DeltaTime) override;
+	//Set the mesh in runtime
+	void SetStaticMesh(UStaticMesh* mesh);
 
+private:
+	UPROPERTY()
+		UStaticMeshComponent* StaticMeshComponent;
+
+	FVector CameraSpeed;
 };
