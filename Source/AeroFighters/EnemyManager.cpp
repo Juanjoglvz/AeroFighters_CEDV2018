@@ -5,7 +5,7 @@
 
 
 // Sets default values
-AEnemyManager::AEnemyManager() : Super()
+AEnemyManager::AEnemyManager() : Super(), SeparationLeft(100.f), SeparationRight(100.f), PositionXLeft(200.f), PositionXRight(200.f), MoveLeftSpeed(100.f), MoveRightSpeed(100.f)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -13,10 +13,6 @@ AEnemyManager::AEnemyManager() : Super()
 	//Get references to all the assets we need
 	auto BugShipAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Assets/Ships/BugShip'"));
 	this->BugShipMesh = BugShipAsset.Object;
-
-	//Create the behaviour objects
-	this->MoveRightObject = MakeShared<MoveRight>(100.f);
-	this->MoveLeftObject = MakeShared<MoveLeft>(100.f);
 
 }
 
@@ -60,8 +56,9 @@ void AEnemyManager::BeginPlay()
 		}
 	}
 
-
-	Wave0();
+	//Create the behaviour objects
+	this->MoveRightObject = MakeShared<MoveRight>(MoveRightSpeed);
+	this->MoveLeftObject = MakeShared<MoveLeft>(MoveLeftSpeed);
 
 }
 
@@ -84,17 +81,16 @@ AEnemy* AEnemyManager::SpawnEnemy(FVector location, FRotator rotation) const
 	return GetWorld()->SpawnActor<AEnemy>(location, rotation, spawnInfo);
 }
 
-void AEnemyManager::Wave0() const
+void AEnemyManager::Wave() const
 {
-	SpawnBug(FVector(this->LeftMovableArea->GetActorLocation().X + 200, -550.0f, 200.f), this->MoveRightObject);
-	SpawnBug(FVector(this->LeftMovableArea->GetActorLocation().X + 200, -650.0f, 200.f), this->MoveRightObject);
-	SpawnBug(FVector(this->LeftMovableArea->GetActorLocation().X + 200, -750.0f, 200.f), this->MoveRightObject);
-	SpawnBug(FVector(this->LeftMovableArea->GetActorLocation().X + 200, -850.0f, 200.f), this->MoveRightObject);
-	SpawnBug(FVector(this->LeftMovableArea->GetActorLocation().X + 200, -950.0f, 200.f), this->MoveRightObject);
+	double YpositionLeft{ -1000.f };
+	double YpositionRight{ 1000.f };
 
-	SpawnBug(FVector(this->LeftMovableArea->GetActorLocation().X + 300, 550.0f, 200.f), this->MoveLeftObject);
-	SpawnBug(FVector(this->LeftMovableArea->GetActorLocation().X + 300, 650.0f, 200.f), this->MoveLeftObject);
-	SpawnBug(FVector(this->LeftMovableArea->GetActorLocation().X + 300, 750.0f, 200.f), this->MoveLeftObject);
-	SpawnBug(FVector(this->LeftMovableArea->GetActorLocation().X + 300, 850.0f, 200.f), this->MoveLeftObject);
-	SpawnBug(FVector(this->LeftMovableArea->GetActorLocation().X + 300, 950.0f, 200.f), this->MoveLeftObject);
+	for (int i = 0; i < this->NumberLeft; i++, YpositionLeft -= SeparationLeft) {
+		SpawnBug(FVector( this->LeftMovableArea->GetActorLocation().X + PositionXLeft, YpositionLeft, 200.f ), this->MoveRightObject);
+	}
+
+	for (int i = 0; i < this->NumberRight; i++, YpositionRight += SeparationRight) {
+		SpawnBug(FVector( this->LeftMovableArea->GetActorLocation().X + PositionXRight, YpositionRight, 200.f ), this->MoveLeftObject);
+	}
 }

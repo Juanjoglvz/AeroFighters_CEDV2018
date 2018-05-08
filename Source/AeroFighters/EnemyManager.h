@@ -28,6 +28,32 @@ protected:
 public:
 	virtual void Tick(float DeltaTime) override;
 
+	//Variables for controlling wave spawning
+	UPROPERTY(EditAnywhere, Category = "Wave")
+		int NumberLeft;
+	UPROPERTY(EditAnywhere, Category = "Wave")
+		int NumberRight;
+	UPROPERTY(EditAnywhere, Category = "Wave")
+		int NumberTop;
+
+	UPROPERTY(EditAnywhere, Category = "Wave")
+		float SeparationLeft;
+	UPROPERTY(EditAnywhere, Category = "Wave")
+		float SeparationRight;
+	UPROPERTY(EditAnywhere, Category = "Wave")
+		float SeparationTop;
+
+	UPROPERTY(EditAnywhere, Category = "Wave")
+		float PositionXLeft;
+	UPROPERTY(EditAnywhere, Category = "Wave")
+		float PositionXRight;
+
+	//Variables for controlling wave behaviour
+	UPROPERTY(EditAnywhere, Category = "Wave")
+		float MoveRightSpeed;
+	UPROPERTY(EditAnywhere, Category = "Wave")
+		float MoveLeftSpeed;
+
 private:
 	//Variables for controlling the areas around the camera
 	UPROPERTY()
@@ -54,7 +80,8 @@ private:
 	TSharedPtr<MoveRight> MoveRightObject;
 	TSharedPtr<MoveLeft> MoveLeftObject;
 
-	//Waves
-	void Wave0() const;
+	//Wave
+	UFUNCTION(BlueprintCallable)
+		void Wave() const;
 
 };
