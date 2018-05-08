@@ -15,7 +15,8 @@ AEnemyManager::AEnemyManager() : Super()
 	this->BugShipMesh = BugShipAsset.Object;
 
 	//Create the behaviour objects
-	this->MoveRightObject = MakeShared<MoveRight>(1000.f);
+	this->MoveRightObject = MakeShared<MoveRight>(100.f);
+	this->MoveLeftObject = MakeShared<MoveLeft>(100.f);
 
 }
 
@@ -23,6 +24,42 @@ AEnemyManager::AEnemyManager() : Super()
 void AEnemyManager::BeginPlay()
 {
 	Super::BeginPlay();
+
+	//Get The references to the borders
+	FString TopMovableAreaString = FString(TEXT("TopMovableArea"));
+	FString BottomMovableAreaString = FString(TEXT("BottomMovableArea"));
+	FString RightMovableAreaString = FString(TEXT("RightMovableArea"));
+	FString LeftMovableAreaString = FString(TEXT("LeftMovableArea"));
+	uint32 i = 0;
+	for (TActorIterator<AActor> itr(GetWorld()); itr; ++itr)
+	{
+		if (TopMovableAreaString.Equals(itr->GetName()))
+		{
+			this->TopMovableArea = *itr;
+			i++;
+		}
+		else if (BottomMovableAreaString.Equals(itr->GetName()))
+		{
+			this->BottomMovableArea = *itr;
+			i++;
+		}
+		else if (RightMovableAreaString.Equals(itr->GetName()))
+		{
+			this->RightMovableArea = *itr;
+			i++;
+		}
+		else if (LeftMovableAreaString.Equals(itr->GetName()))
+		{
+			this->LeftMovableArea = *itr;
+			i++;
+		}
+
+		if (i > 3)
+		{
+			break;
+		}
+	}
+
 
 	Wave0();
 
@@ -33,19 +70,31 @@ void AEnemyManager::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AEnemyManager::SpawnEnemy(FVector location, FRotator rotation) const
+void AEnemyManager::SpawnBug(FVector location,  TSharedPtr<MoveBehaviour> Movement) const
+{
+	FRotator rotation = FRotator(0.0f, 90.0f, 0.0f);
+	AEnemy* EnemySpawned = SpawnEnemy(location, rotation);
+	EnemySpawned->SetStaticMesh(this->BugShipMesh);
+	EnemySpawned->SetMoveBehaviour(Movement);
+}
+
+AEnemy* AEnemyManager::SpawnEnemy(FVector location, FRotator rotation) const
 {
 	FActorSpawnParameters spawnInfo;
-	auto EnemySpawned = GetWorld()->SpawnActor<AEnemy>(location, rotation, spawnInfo);
-	EnemySpawned->SetStaticMesh(this->BugShipMesh);
-	EnemySpawned->SetMoveBehaviour(this->MoveRightObject);
+	return GetWorld()->SpawnActor<AEnemy>(location, rotation, spawnInfo);
 }
 
 void AEnemyManager::Wave0() const
 {
-	SpawnEnemy(FVector(300.f, -550.0f, 200.f), FRotator(0.0f, 90.0f, 0.0f));
-	SpawnEnemy(FVector(300.f, -650.0f, 200.f), FRotator(0.0f, 90.0f, 0.0f));
-	SpawnEnemy(FVector(300.f, -750.0f, 200.f), FRotator(0.0f, 90.0f, 0.0f));
-	SpawnEnemy(FVector(300.f, -850.0f, 200.f), FRotator(0.0f, 90.0f, 0.0f));
-	SpawnEnemy(FVector(300.f, -950.0f, 200.f), FRotator(0.0f, 90.0f, 0.0f));
+	SpawnBug(FVector(this->LeftMovableArea->GetActorLocation().X + 200, -550.0f, 200.f), this->MoveRightObject);
+	SpawnBug(FVector(this->LeftMovableArea->GetActorLocation().X + 200, -650.0f, 200.f), this->MoveRightObject);
+	SpawnBug(FVector(this->LeftMovableArea->GetActorLocation().X + 200, -750.0f, 200.f), this->MoveRightObject);
+	SpawnBug(FVector(this->LeftMovableArea->GetActorLocation().X + 200, -850.0f, 200.f), this->MoveRightObject);
+	SpawnBug(FVector(this->LeftMovableArea->GetActorLocation().X + 200, -950.0f, 200.f), this->MoveRightObject);
+
+	SpawnBug(FVector(this->LeftMovableArea->GetActorLocation().X + 300, 550.0f, 200.f), this->MoveLeftObject);
+	SpawnBug(FVector(this->LeftMovableArea->GetActorLocation().X + 300, 650.0f, 200.f), this->MoveLeftObject);
+	SpawnBug(FVector(this->LeftMovableArea->GetActorLocation().X + 300, 750.0f, 200.f), this->MoveLeftObject);
+	SpawnBug(FVector(this->LeftMovableArea->GetActorLocation().X + 300, 850.0f, 200.f), this->MoveLeftObject);
+	SpawnBug(FVector(this->LeftMovableArea->GetActorLocation().X + 300, 950.0f, 200.f), this->MoveLeftObject);
 }

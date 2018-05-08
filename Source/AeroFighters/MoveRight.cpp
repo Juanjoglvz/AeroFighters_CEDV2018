@@ -2,7 +2,7 @@
 
 #include "MoveRight.h"
 
-MoveRight::MoveRight(float MoveSpeed) : MoveSpeed(100.f)
+MoveRight::MoveRight(float MoveSpeed) : MoveSpeed(MoveSpeed)
 {
 }
 

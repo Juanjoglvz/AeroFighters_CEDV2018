@@ -85,7 +85,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 	//Move at the same rate as the camera
 	FVector NewLocation = GetActorLocation();
 
-	NewLocation += GetActorForwardVector() * CameraSpeed * DeltaTime;
+	NewLocation += CameraSpeed * DeltaTime;
 	FVector NewMovedLocationX = FVector(NewLocation.X, NewLocation.Y, NewLocation.Z);
 	FVector NewMovedLocationY = FVector(NewLocation.X, NewLocation.Y, NewLocation.Z);
 
