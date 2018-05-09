@@ -29,5 +29,4 @@ void APlayerLaser::BeginPlay()
 
 void APlayerLaser::ProjectileBehaviour(float DeltaTime)
 {
-
 }
