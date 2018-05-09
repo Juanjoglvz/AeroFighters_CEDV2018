@@ -4,12 +4,13 @@
 #include "Engine.h"
 
 // Sets default values
-AProjectile::AProjectile() 
+AProjectile::AProjectile() : Super()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
+	SetRootComponent(StaticMesh);
 }
 
 void AProjectile::SetStaticMeshAsset(UStaticMesh* StaticMeshAsset)

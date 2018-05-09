@@ -4,7 +4,7 @@
 
 
 // Sets default values
-APlayerProjectile::APlayerProjectile()
+APlayerProjectile::APlayerProjectile() : Super()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -30,7 +30,7 @@ void APlayerProjectile::Tick(float DeltaTime)
 	}
 
 	// The basic movement (go up) is the same for all player projectile types
-	FVector NewLocation = StaticMesh->GetComponentLocation() - (StaticMesh->GetForwardVector() * -1 * GetSpeed() * 100 * DeltaTime);
+	FVector NewLocation = StaticMesh->GetComponentLocation() - (StaticMesh->GetForwardVector() * -1 * GetSpeed() * DeltaTime);
 	StaticMesh->SetWorldLocation(NewLocation);
 	//StaticMesh->SetWorldRotation(FRotator(90.f, 0.f, 0.f));
 }

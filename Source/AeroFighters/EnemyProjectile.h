@@ -19,6 +19,12 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	
+	UFUNCTION()
+	virtual void OnBomb();
+
+	UFUNCTION(BlueprintCallable, Category = "Hit")
+		virtual void OnHit(AActor* self, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit);
 
 public:	
 	// Called every frame

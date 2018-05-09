@@ -3,6 +3,8 @@
 #pragma once
 
 #include "Core.h"
+#include "DelegateCombinations.h"
+#include "Engine.h"
 #include "GameFramework/Character.h"
 #include "PlayerCharacter.generated.h"
 
@@ -29,8 +31,11 @@ protected:
 	// Function called when character spawns a bomb
 	void ThrowABomb();
 
-	// Function called when character shots
+	// Function called when character press the Shooting key
 	void Shoot();
+
+	// Function called when character releases the Shooting key
+	void StopShooting();
 
 	UFUNCTION(BlueprintCallable, Category="Overlap")
 		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor);
@@ -48,6 +53,10 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category="StaticMeshComponent")
 		UStaticMeshComponent* StaticMeshComponent;
 
+	// Delegate needed to observer pattern
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDiscardEnemyShootsDelegate);
+	FDiscardEnemyShootsDelegate myDiscardEnemyShootsDelegate;
+
 private:
 	UPROPERTY(EditAnywhere)
 		float MoveSpeed;
@@ -64,8 +73,12 @@ private:
 	UPROPERTY()
 		TWeakObjectPtr<AActor> LeftMovableArea;
 
+	UPROPERTY(EditAnywhere)
+		unsigned int NumberOfBombsAvailable;
+
 	//Function to see if posible to move
 	bool IsPosMoveX(FVector NewPos) const;
 	bool IsPosMoveY(FVector NewPos) const;
 
+	bool b_IsShooting;
 };

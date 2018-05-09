@@ -16,14 +16,15 @@ APlayerLaser::APlayerLaser() : Super()
 	if (StaticMeshAsset.Succeeded())
 		SetStaticMeshAsset(StaticMeshAsset.Object);
 
-	SetSpeed(5.f);
+	SetSpeed(500.f);
 }
 
 // Called when the game starts or when spawned
 void APlayerLaser::BeginPlay()
 {
 	Super::BeginPlay();
-
+	StaticMesh->SetWorldScale3D(FVector(5.f, 5.f, 2.f));
+	StaticMesh->SetRelativeScale3D(FVector(5.f, 5.f, 2.f));
 }
 
 void APlayerLaser::ProjectileBehaviour(float DeltaTime)

@@ -16,9 +16,14 @@ public:
 	// Sets default values for this actor's properties
 	AEnemyLaser();
 
+	void SetDirection(FVector Direction_) { Direction = Direction_; }
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	virtual void ProjectileBehaviour(float DeltaTime) override;
+
+private:
+	FVector Direction;
 };
