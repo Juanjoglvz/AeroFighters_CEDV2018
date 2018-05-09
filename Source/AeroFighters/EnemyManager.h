@@ -66,7 +66,7 @@ private:
 		TWeakObjectPtr<AActor> LeftMovableArea;
 
 	//Functions to spawn the different types of enemies
-	void SpawnBug(FVector location, TSharedPtr<MoveBehaviour> Movement) const;
+	void SpawnBug(FVector location, UMoveBehaviour* Movement) const;
 
 
 	//General function for spawning any type of enemy
@@ -77,8 +77,10 @@ private:
 		UStaticMesh* BugShipMesh;
 
 	//Move behaviours
-	TSharedPtr<MoveRight> MoveRightObject;
-	TSharedPtr<MoveLeft> MoveLeftObject;
+	UPROPERTY()
+		UMoveRight* MoveRightObject;
+	UPROPERTY()
+		UMoveLeft* MoveLeftObject;
 
 	//Wave
 	UFUNCTION(BlueprintCallable)

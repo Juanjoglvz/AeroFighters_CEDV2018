@@ -2,6 +2,7 @@
 
 #include "MoveBehaviour.h"
 
-MoveBehaviour::MoveBehaviour()
+void UMoveBehaviour::SetSpeed(float MoveSpeed)
 {
+	this->MoveSpeed = MoveSpeed;
 }

@@ -33,10 +33,9 @@ void AEnemy::Tick(float DeltaTime)
 
 	NewLocation += CameraSpeed * DeltaTime;
 
-	if (Movement.IsValid())
+	if (IsValid(Movement))
 	{
-		TSharedPtr<MoveBehaviour> aux = Movement.Pin();
-		NewLocation = aux->Move(NewLocation, DeltaTime);
+		Movement->Move(NewLocation, DeltaTime, GetWorld());
 	}
 	SetActorLocation(NewLocation);
 }
@@ -47,7 +46,7 @@ void AEnemy::SetStaticMesh(UStaticMesh* Mesh)
 	StaticMeshComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 }
 
-void AEnemy::SetMoveBehaviour(TSharedPtr<MoveBehaviour> move)
+void AEnemy::SetMoveBehaviour(UMoveBehaviour* Move)
 {
-	this->Movement = move;
+	this->Movement = Move;
 }

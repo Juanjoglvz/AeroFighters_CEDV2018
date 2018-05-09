@@ -57,8 +57,10 @@ void AEnemyManager::BeginPlay()
 	}
 
 	//Create the behaviour objects
-	this->MoveRightObject = MakeShared<MoveRight>(MoveRightSpeed);
-	this->MoveLeftObject = MakeShared<MoveLeft>(MoveLeftSpeed);
+	this->MoveRightObject = NewObject<UMoveRight>();
+	MoveRightObject->SetSpeed(MoveRightSpeed);
+	this->MoveLeftObject = NewObject<UMoveLeft>();
+	MoveLeftObject->SetSpeed(MoveLeftSpeed);
 
 }
 
@@ -67,7 +69,7 @@ void AEnemyManager::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AEnemyManager::SpawnBug(FVector location,  TSharedPtr<MoveBehaviour> Movement) const
+void AEnemyManager::SpawnBug(FVector location,  UMoveBehaviour* Movement) const
 {
 	FRotator rotation = FRotator(0.0f, 90.0f, 0.0f);
 	AEnemy* EnemySpawned = SpawnEnemy(location, rotation);

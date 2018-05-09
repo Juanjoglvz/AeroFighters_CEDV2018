@@ -3,14 +3,23 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "EngineMinimal.h"
+#include "UObject/NoExportTypes.h"
+#include "MoveBehaviour.generated.h"
 
 /**
  * 
  */
-class AEROFIGHTERS_API MoveBehaviour
+UCLASS(Abstract)
+class AEROFIGHTERS_API UMoveBehaviour : public UObject
 {
-public:
-	MoveBehaviour();
+	GENERATED_BODY()
 
-	virtual FVector Move(FVector CurrentPosition, float DeltaTime) const = 0;
+public:
+	virtual void Move(FVector& CurrentPosition, float DeltaTime, UWorld* World) const PURE_VIRTUAL(UMoveBehaviour::Move, );
+
+	void SetSpeed(float MoveSpeed);
+
+protected:
+	float MoveSpeed;
 };

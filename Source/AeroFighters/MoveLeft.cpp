@@ -2,13 +2,15 @@
 
 #include "MoveLeft.h"
 
-MoveLeft::MoveLeft(float MoveSpeed) : MoveSpeed(MoveSpeed)
+UMoveLeft::UMoveLeft()
 {
 }
 
-FVector MoveLeft::Move(FVector CurrentPosition, float DeltaTime) const
+void UMoveLeft::Move(FVector& CurrentPosition, float DeltaTime, UWorld* World) const
 {
-	FVector NewPos(CurrentPosition.X, CurrentPosition.Y, CurrentPosition.Z);
+	FVector NewPos{ CurrentPosition.X, CurrentPosition.Y, CurrentPosition.Z };
 	NewPos.Y -= MoveSpeed * DeltaTime;
-	return NewPos;
+
+	CurrentPosition = NewPos;
 }
+

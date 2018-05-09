@@ -2,14 +2,14 @@
 
 #include "MoveRight.h"
 
-MoveRight::MoveRight(float MoveSpeed) : MoveSpeed(MoveSpeed)
+UMoveRight::UMoveRight()
 {
 }
 
-
-FVector MoveRight::Move(FVector CurrentPosition,float DeltaTime) const
+void UMoveRight::Move(FVector& CurrentPosition, float DeltaTime, UWorld* World) const
 {
-	FVector NewPos(CurrentPosition.X, CurrentPosition.Y, CurrentPosition.Z);
+	FVector NewPos{ CurrentPosition.X, CurrentPosition.Y, CurrentPosition.Z };
 	NewPos.Y += MoveSpeed * DeltaTime;
-	return NewPos;
+
+	CurrentPosition = NewPos;
 }

@@ -27,13 +27,16 @@ public:
 
 	//Set the mesh in runtime
 	void SetStaticMesh(UStaticMesh* mesh);
-	void SetMoveBehaviour(TSharedPtr<MoveBehaviour> move);
+
+	//Set the enemy behaviours
+	void SetMoveBehaviour(UMoveBehaviour* Move);
 
 private:
 	UPROPERTY()
 		UStaticMeshComponent* StaticMeshComponent;
 	
-	TWeakPtr<MoveBehaviour> Movement;
+	UPROPERTY()
+		UMoveBehaviour* Movement;
 
 	FVector CameraSpeed;
 };

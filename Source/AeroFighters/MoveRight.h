@@ -4,17 +4,20 @@
 
 #include "CoreMinimal.h"
 #include "MoveBehaviour.h"
+#include "MoveRight.generated.h"
 
 /**
  * 
  */
-class AEROFIGHTERS_API MoveRight : public MoveBehaviour
+UCLASS()
+class AEROFIGHTERS_API UMoveRight : public UMoveBehaviour
 {
+	GENERATED_BODY()
+	
 public:
-	MoveRight(float MoveSpeed);
+	UMoveRight();
 
-	FVector Move(FVector CurrentPosition, float DeltaTime) const override;
-
-private:
-	float MoveSpeed;
+	void Move(FVector& CurrentPosition, float DeltaTime, UWorld* World) const override;
+	
+	
 };
