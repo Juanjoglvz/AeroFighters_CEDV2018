@@ -64,6 +64,7 @@ void AEnemyProjectile::OnHit(AActor* self, AActor* OtherActor, FVector NormalImp
 {
 	if (OtherActor)
 	{
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, FString(TEXT("[EnemyProjectile.cpp] - OnHit")));
 		if (OtherActor->GetClass()->IsChildOf(APlayerLaser::StaticClass()))
 		{
 			this->Destroy();
