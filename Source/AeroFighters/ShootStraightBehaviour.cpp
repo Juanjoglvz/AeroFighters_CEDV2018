@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "EnemyLaser.h"
 #include "ShootStraightBehaviour.h"
+#include "EnemyLaser.h"
 #include "Engine.h"
 
 UShootStraightBehaviour::UShootStraightBehaviour()
