@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "EngineMinimal.h"
+#include "Engine.h"
 #include "UObject/NoExportTypes.h"
 #include "MoveBehaviour.generated.h"
 
@@ -16,10 +16,20 @@ class AEROFIGHTERS_API UMoveBehaviour : public UObject
 	GENERATED_BODY()
 
 public:
-	virtual void Move(FVector& CurrentPosition, float DeltaTime, UWorld* World) const PURE_VIRTUAL(UMoveBehaviour::Move, );
+	virtual void Move(FVector& CurrentPosition, float DeltaTime) PURE_VIRTUAL(UMoveBehaviour::Move, );
 
-	void SetSpeed(float MoveSpeed);
+	virtual void SetUp(float MoveSpeed, UWorld* World);
 
 protected:
 	float MoveSpeed;
+
+	//Variables for controlling the areas where the player can move to
+	UPROPERTY()
+		TWeakObjectPtr<AActor> TopMovableArea;
+	UPROPERTY()
+		TWeakObjectPtr<AActor> BottomMovableArea;
+	UPROPERTY()
+		TWeakObjectPtr<AActor> RightMovableArea;
+	UPROPERTY()
+		TWeakObjectPtr<AActor> LeftMovableArea;
 };

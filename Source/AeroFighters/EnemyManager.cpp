@@ -58,9 +58,9 @@ void AEnemyManager::BeginPlay()
 
 	//Create the behaviour objects
 	this->MoveRightObject = NewObject<UMoveRight>();
-	MoveRightObject->SetSpeed(MoveRightSpeed);
+	MoveRightObject->SetUp(MoveRightSpeed, GetWorld(), MoveRightMaxWaitingTime);
 	this->MoveLeftObject = NewObject<UMoveLeft>();
-	MoveLeftObject->SetSpeed(MoveLeftSpeed);
+	MoveLeftObject->SetUp(MoveLeftSpeed, GetWorld(), MoveLeftMaxWaitingTime);
 
 }
 

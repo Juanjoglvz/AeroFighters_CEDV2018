@@ -49,10 +49,14 @@ public:
 		float PositionXRight;
 
 	//Variables for controlling wave behaviour
-	UPROPERTY(EditAnywhere, Category = "Wave")
+	UPROPERTY(EditAnywhere, Category = "WaveBehaviour")
 		float MoveRightSpeed;
-	UPROPERTY(EditAnywhere, Category = "Wave")
+	UPROPERTY(EditAnywhere, Category = "WaveBehaviour")
 		float MoveLeftSpeed;
+	UPROPERTY(EditAnywhere, Category = "WaveBehaviour")
+		float MoveRightMaxWaitingTime;
+	UPROPERTY(EditAnywhere, Category = "WaveBehaviour")
+		float MoveLeftMaxWaitingTime;
 
 private:
 	//Variables for controlling the areas around the camera

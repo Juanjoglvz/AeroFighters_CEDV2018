@@ -33,7 +33,7 @@ void AEnemy::Tick(float DeltaTime)
 
 	if (IsValid(Movement))
 	{
-		Movement->Move(NewLocation, DeltaTime, GetWorld());
+		Movement->Move(NewLocation, DeltaTime);
 	}
 
 	SetActorLocation(NewLocation);
