@@ -19,7 +19,6 @@ AEnemy::AEnemy() : CameraSpeed{ 150.f, 0.f, 0.f }
 void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
 
 // Called every frame
@@ -31,6 +30,12 @@ void AEnemy::Tick(float DeltaTime)
 	FVector NewLocation = GetActorLocation();
 
 	NewLocation += CameraSpeed * DeltaTime;
+
+	if (IsValid(Movement))
+	{
+		Movement->Move(NewLocation, DeltaTime, GetWorld());
+	}
+
 	SetActorLocation(NewLocation);
 }
 
@@ -38,4 +43,9 @@ void AEnemy::SetStaticMesh(UStaticMesh* Mesh)
 {
 	StaticMeshComponent->SetStaticMesh(Mesh);
 	StaticMeshComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+}
+
+void AEnemy::SetMoveBehaviour(UMoveBehaviour* Move)
+{
+	this->Movement = Move;
 }
