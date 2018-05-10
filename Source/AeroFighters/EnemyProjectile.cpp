@@ -12,12 +12,17 @@ AEnemyProjectile::AEnemyProjectile() : Super()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	
+	auto BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
 
-	auto CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CapsuleComponent"));
-	CapsuleComponent->InitCapsuleSize(5.f, 5.f);
-	CapsuleComponent->SetCollisionProfileName(TEXT("Trigger"));
-	CapsuleComponent->SetupAttachment(RootComponent);
-	OnActorHit.AddDynamic(this, &AEnemyProjectile::OnHit);
+	BoxCollision->SetCollisionProfileName(TEXT("OverlapAll"));
+	BoxCollision->SetupAttachment(RootComponent);
+	BoxCollision->bGenerateOverlapEvents = true;
+	BoxCollision->SetWorldScale3D(FVector(0.1f, 0.1f, 0.1f));
+	BoxCollision->SetRelativeScale3D(FVector(0.1f, 0.1f, 0.1f));
+	StaticMesh->SetupAttachment(RootComponent);
+
+	BoxCollision->OnComponentBeginOverlap.AddDynamic(this, &AEnemyProjectile::OnOverlap);
 }
 
 // Called when the game starts or when spawned
@@ -60,7 +65,7 @@ void AEnemyProjectile::Tick(float DeltaTime)
 	//StaticMesh->SetWorldRotation(FRotator(90.f, 0.f, 0.f));
 }
 
-void AEnemyProjectile::OnHit(AActor* self, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit)
+void AEnemyProjectile::OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherActor)
 	{

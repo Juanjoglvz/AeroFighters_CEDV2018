@@ -7,6 +7,10 @@
 #include "MoveBehaviour.h"
 #include "MoveLeft.h"
 #include "MoveRight.h"
+#include "ProjectileBehaviour.h"
+#include "ShootAtPlayerBehaviour.h"
+#include "ShootStraightBehaviour.h"
+#include "MissileBehaviour.h"
 #include "GameFramework/Actor.h"
 #include "EnemyManager.generated.h"
 
@@ -28,7 +32,7 @@ protected:
 public:
 	virtual void Tick(float DeltaTime) override;
 
-	//Variables for controlling wave spawning
+	// Variables for controlling wave spawning
 	UPROPERTY(EditAnywhere, Category = "Wave")
 		int NumberLeft;
 	UPROPERTY(EditAnywhere, Category = "Wave")
@@ -48,14 +52,14 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Wave")
 		float PositionXRight;
 
-	//Variables for controlling wave behaviour
+	// Variables for controlling wave behaviour
 	UPROPERTY(EditAnywhere, Category = "Wave")
 		float MoveRightSpeed;
 	UPROPERTY(EditAnywhere, Category = "Wave")
 		float MoveLeftSpeed;
 
 private:
-	//Variables for controlling the areas around the camera
+	// Variables for controlling the areas around the camera
 	UPROPERTY()
 		TWeakObjectPtr<AActor> TopMovableArea;
 	UPROPERTY()
@@ -65,14 +69,14 @@ private:
 	UPROPERTY()
 		TWeakObjectPtr<AActor> LeftMovableArea;
 
-	//Functions to spawn the different types of enemies
-	void SpawnBug(FVector location, UMoveBehaviour* Movement) const;
+	// Functions to spawn the different types of enemies
+	void SpawnBug(FVector location, UMoveBehaviour* Movement, UProjectileBehaviour* ProjectileBehaviour) const;
 
 
-	//General function for spawning any type of enemy
+	// General function for spawning any type of enemy
 	AEnemy* SpawnEnemy(FVector location, FRotator rotation) const;
 
-	//Mesh references for the enemies
+	// Mesh references for the enemies
 	UPROPERTY()
 		UStaticMesh* BugShipMesh;
 
@@ -82,7 +86,15 @@ private:
 	UPROPERTY()
 		UMoveLeft* MoveLeftObject;
 
-	//Wave
+	// Projectile Behaviours
+	UPROPERTY()
+		UShootAtPlayerBehaviour* ShootAtPlayerObject;
+	UPROPERTY()
+		UShootStraightBehaviour* ShootStraightObject;
+	UPROPERTY()
+		UMissileBehaviour* MissileObject;
+
+	// Wave
 	UFUNCTION(BlueprintCallable)
 		void Wave() const;
 
