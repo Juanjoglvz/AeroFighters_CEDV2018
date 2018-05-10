@@ -18,6 +18,8 @@ AEnemyProjectile::AEnemyProjectile() : Super()
 	BoxCollision->SetCollisionProfileName(TEXT("OverlapAll"));
 	BoxCollision->SetupAttachment(RootComponent);
 	BoxCollision->bGenerateOverlapEvents = true;
+	BoxCollision->SetWorldScale3D(FVector(0.1f, 0.1f, 0.1f));
+	BoxCollision->SetRelativeScale3D(FVector(0.1f, 0.1f, 0.1f));
 	StaticMesh->SetupAttachment(RootComponent);
 
 	BoxCollision->OnComponentBeginOverlap.AddDynamic(this, &AEnemyProjectile::OnOverlap);
