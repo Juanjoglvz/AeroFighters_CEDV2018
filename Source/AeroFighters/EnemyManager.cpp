@@ -64,8 +64,11 @@ void AEnemyManager::BeginPlay()
 
 	// Create the projectile objects
 	ShootAtPlayerObject = NewObject<UShootAtPlayerBehaviour>();
+	ShootAtPlayerObject->SetUp(GetWorld(), 2.f);
 	ShootStraightObject = NewObject<UShootStraightBehaviour>();
+	ShootStraightObject->SetUp(GetWorld(), 1.f);
 	MissileObject = NewObject<UMissileBehaviour>();
+	MissileObject->SetUp(GetWorld(), 4.f);
 }
 
 void AEnemyManager::Tick(float DeltaTime)
@@ -100,6 +103,6 @@ void AEnemyManager::Wave() const
 
 	for (int i = 0; i < this->NumberRight; i++, YpositionRight += SeparationRight) {
 		SpawnBug(FVector( this->LeftMovableArea->GetActorLocation().X + PositionXRight, YpositionRight, 200.f ), 
-			this->MoveLeftObject, this->MissileObject);
+			this->MoveLeftObject, this->ShootStraightObject);
 	}
 }

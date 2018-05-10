@@ -18,7 +18,7 @@ class AEROFIGHTERS_API UMoveBehaviour : public UObject
 public:
 	virtual void Move(FVector& CurrentPosition, float DeltaTime) PURE_VIRTUAL(UMoveBehaviour::Move, );
 
-	virtual void SetUp(float MoveSpeed, UWorld* World);
+	void SetUp(float MoveSpeed, UWorld* World);
 
 protected:
 	float MoveSpeed;

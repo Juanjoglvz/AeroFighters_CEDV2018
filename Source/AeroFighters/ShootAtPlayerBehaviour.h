@@ -17,5 +17,5 @@ class AEROFIGHTERS_API UShootAtPlayerBehaviour : public UProjectileBehaviour
 	
 public:
 	UShootAtPlayerBehaviour();
-	void Shoot(UWorld* World, FVector Location, FRotator Rotation) override;
+	void Shoot(FVector Location, FRotator Rotation, float DeltaTime) override;
 };

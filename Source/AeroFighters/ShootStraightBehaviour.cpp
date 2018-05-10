@@ -5,11 +5,13 @@
 #include "Engine.h"
 
 UShootStraightBehaviour::UShootStraightBehaviour()
-{}
+{
 
-void UShootStraightBehaviour::Shoot(UWorld* World, FVector Location, FRotator Rotation)
+}
+
+void UShootStraightBehaviour::Shoot(FVector Location, FRotator Rotation, float DeltaTime)
 {
 	FActorSpawnParameters SpawnInfo;
-	World->SpawnActor <AEnemyLaser>(Location, Rotation, SpawnInfo); 
+	this->World->SpawnActor <AEnemyLaser>(Location, Rotation, SpawnInfo); 
 }
 

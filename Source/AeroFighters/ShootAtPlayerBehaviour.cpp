@@ -7,7 +7,7 @@
 UShootAtPlayerBehaviour::UShootAtPlayerBehaviour() 
 {}
 
-void UShootAtPlayerBehaviour::Shoot(UWorld* World, FVector Location, FRotator Rotation)
+void UShootAtPlayerBehaviour::Shoot(FVector Location, FRotator Rotation, float DeltaTime)
 {
 	FActorSpawnParameters SpawnInfo;
 	AEnemyLaser* EnemyLaser = World->SpawnActor <AEnemyLaser>(Location, Rotation, SpawnInfo);
