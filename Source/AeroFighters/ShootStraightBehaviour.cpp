@@ -6,12 +6,17 @@
 
 UShootStraightBehaviour::UShootStraightBehaviour()
 {
-
+	this->Timer = 0.f;
 }
 
 void UShootStraightBehaviour::Shoot(FVector Location, FRotator Rotation, float DeltaTime)
 {
-	FActorSpawnParameters SpawnInfo;
-	this->World->SpawnActor <AEnemyLaser>(Location, Rotation, SpawnInfo); 
+	Timer += DeltaTime;
+	if (Timer > ShootTimer)
+	{
+		FActorSpawnParameters SpawnInfo;
+		this->World->SpawnActor <AEnemyLaser>(Location, Rotation, SpawnInfo);
+		Timer = 0.f;
+	}
 }
 

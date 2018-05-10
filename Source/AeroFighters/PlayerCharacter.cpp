@@ -119,7 +119,6 @@ void APlayerCharacter::Tick(float DeltaTime)
 		for (int i = -1; i <= 1; i++)
 		{
 			Location += FVector(0.f, i * 60.f, 0.f);
-			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, TEXT("Shoot"));
 			GetWorld()->SpawnActor <APlayerLaser>(Location, Rotation, SpawnInfo);
 		}
 	}
@@ -153,7 +152,6 @@ void APlayerCharacter::ThrowABomb()
 {
 	if (NumberOfBombsAvailable > 0)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("F event"));
 		myDiscardEnemyShootsDelegate.Broadcast();
 		NumberOfBombsAvailable--;
 	}

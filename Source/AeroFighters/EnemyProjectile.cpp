@@ -69,7 +69,6 @@ void AEnemyProjectile::OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* Ot
 {
 	if (OtherActor)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, FString(TEXT("[EnemyProjectile.cpp] - OnHit")));
 		if (OtherActor->GetClass()->IsChildOf(APlayerLaser::StaticClass()))
 		{
 			this->Destroy();

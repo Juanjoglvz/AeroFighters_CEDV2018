@@ -5,14 +5,22 @@
 #include "Engine.h"
 
 UShootAtPlayerBehaviour::UShootAtPlayerBehaviour() 
-{}
+{
+	this->Timer = 0.f;
+}
 
 void UShootAtPlayerBehaviour::Shoot(FVector Location, FRotator Rotation, float DeltaTime)
 {
-	FActorSpawnParameters SpawnInfo;
-	AEnemyLaser* EnemyLaser = World->SpawnActor <AEnemyLaser>(Location, Rotation, SpawnInfo);
-	FVector Direction = UGameplayStatics::GetPlayerCharacter(World, 0)->GetActorLocation();
-	EnemyLaser->SetDirection(Direction);
+	Timer += DeltaTime;
+	if (Timer > ShootTimer)
+	{
+		FActorSpawnParameters SpawnInfo;
+		AEnemyLaser* EnemyLaser = World->SpawnActor <AEnemyLaser>(Location, Rotation, SpawnInfo);
+		FVector Direction = UGameplayStatics::GetPlayerCharacter(World, 0)->GetActorLocation();
+		EnemyLaser->SetDirection(Direction);
+
+		Timer = 0.f;
+	}
 }
 
 
