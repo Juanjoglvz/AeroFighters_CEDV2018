@@ -34,6 +34,9 @@ public:
 
 	// Variables for controlling wave spawning
 	UPROPERTY(EditAnywhere, Category = "Wave")
+		FString EnemyType;
+
+	UPROPERTY(EditAnywhere, Category = "Wave")
 		int NumberLeft;
 	UPROPERTY(EditAnywhere, Category = "Wave")
 		int NumberRight;
@@ -75,7 +78,7 @@ private:
 
 	// Functions to spawn the different types of enemies
 	void SpawnBug(FVector location, UMoveBehaviour* Movement, UProjectileBehaviour* ProjectileBehaviour) const;
-
+	void SpawnShip(FVector location, UMoveBehaviour* Movement, UProjectileBehaviour* ProjectileBehaviour) const;
 
 	// General function for spawning any type of enemy
 	AEnemy* SpawnEnemy(FVector location, FRotator rotation) const;
@@ -83,20 +86,14 @@ private:
 	// Mesh references for the enemies
 	UPROPERTY()
 		UStaticMesh* BugShipMesh;
+	UPROPERTY()
+		UStaticMesh* ShipMesh;
 
 	//Move behaviours
 	UPROPERTY()
 		UMoveRight* MoveRightObject;
 	UPROPERTY()
 		UMoveLeft* MoveLeftObject;
-
-	// Projectile Behaviours
-	UPROPERTY()
-		UShootAtPlayerBehaviour* ShootAtPlayerObject;
-	UPROPERTY()
-		UShootStraightBehaviour* ShootStraightObject;
-	UPROPERTY()
-		UMissileBehaviour* MissileObject;
 
 	// Wave
 	UFUNCTION(BlueprintCallable)

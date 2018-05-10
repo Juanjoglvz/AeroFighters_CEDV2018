@@ -8,7 +8,7 @@
 
 
 // Sets default values
-APlayerCharacter::APlayerCharacter() : NumberOfBombsAvailable{ 3 }, MoveSpeed{ 1000.f }, CameraSpeed{ 150.f, 0.f, 0.f }, b_IsShooting{ false }
+APlayerCharacter::APlayerCharacter() : NumberOfBombsAvailable{ 3 }, MoveSpeed{ 1000.f }, CameraSpeed{ 150.f, 0.f, 0.f }, b_IsShooting{ false }, Timer{0.25f}, ShootTimer{0.25f}
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -111,16 +111,22 @@ void APlayerCharacter::Tick(float DeltaTime)
 	SetActorLocation(NewLocation);
 
 	// Check if player is shooting. If player is shooting, spawns projectiles.
-	if (b_IsShooting) 
+	Timer += DeltaTime;
+	if (b_IsShooting && Timer > ShootTimer) 
 	{
-		FVector Location = this->GetActorLocation();
 		FRotator Rotation(0.f, 0.f, 0.f);
 		FActorSpawnParameters SpawnInfo;
 		for (int i = -1; i <= 1; i++)
 		{
-			Location += FVector(0.f, i * 60.f, 0.f);
+			FVector Location = this->GetActorLocation();
+			Location += FVector(10.f, i * 20.f, 0.f);
+			if (i == 0)
+			{
+				Location += FVector(20.f, 0.f, 0.f);
+			}
 			GetWorld()->SpawnActor <APlayerLaser>(Location, Rotation, SpawnInfo);
 		}
+		Timer = 0.f;
 	}
 }
 

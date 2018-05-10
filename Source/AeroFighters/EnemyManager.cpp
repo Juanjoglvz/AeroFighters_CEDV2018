@@ -5,7 +5,7 @@
 
 
 // Sets default values
-AEnemyManager::AEnemyManager() : Super(), SeparationLeft(100.f), SeparationRight(100.f), PositionXLeft(200.f), PositionXRight(200.f), MoveLeftSpeed(100.f), MoveRightSpeed(100.f)
+AEnemyManager::AEnemyManager() : Super(), SeparationLeft(100.f), SeparationRight(100.f), PositionXLeft(200.f), PositionXRight(200.f), MoveLeftSpeed(100.f), MoveRightSpeed(100.f), EnemyType(TEXT("Bug"))
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -13,6 +13,9 @@ AEnemyManager::AEnemyManager() : Super(), SeparationLeft(100.f), SeparationRight
 	// Get references to all the assets we need
 	auto BugShipAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Assets/Ships/BugShip'"));
 	this->BugShipMesh = BugShipAsset.Object;
+
+	auto ShipAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Assets/Ships/SimpleShip'"));
+	this->ShipMesh = ShipAsset.Object;
 
 }
 
@@ -61,14 +64,6 @@ void AEnemyManager::BeginPlay()
 	MoveRightObject->SetUp(MoveRightSpeed, GetWorld(), MoveRightMaxWaitingTime);
 	this->MoveLeftObject = NewObject<UMoveLeft>();
 	MoveLeftObject->SetUp(MoveLeftSpeed, GetWorld(), MoveLeftMaxWaitingTime);
-
-	// Create the projectile objects
-	ShootAtPlayerObject = NewObject<UShootAtPlayerBehaviour>();
-	ShootAtPlayerObject->SetUp(GetWorld(), 2.f);
-	ShootStraightObject = NewObject<UShootStraightBehaviour>();
-	ShootStraightObject->SetUp(GetWorld(), 1.f);
-	MissileObject = NewObject<UMissileBehaviour>();
-	MissileObject->SetUp(GetWorld(), 4.f);
 }
 
 void AEnemyManager::Tick(float DeltaTime)
@@ -85,6 +80,15 @@ void AEnemyManager::SpawnBug(FVector location,  UMoveBehaviour* Movement, UProje
 	EnemySpawned->SetProjectileBehaviour(ProjectileBehaviour);
 }
 
+void AEnemyManager::SpawnShip(FVector location, UMoveBehaviour* Movement, UProjectileBehaviour* ProjectileBehaviour) const
+{
+	FRotator rotation = FRotator(0.0f, -90.0f, 0.0f);
+	AEnemy* EnemySpawned = SpawnEnemy(location, rotation);
+	EnemySpawned->SetStaticMesh(this->ShipMesh);
+	EnemySpawned->SetMoveBehaviour(Movement);
+	EnemySpawned->SetProjectileBehaviour(ProjectileBehaviour);
+}
+
 AEnemy* AEnemyManager::SpawnEnemy(FVector location, FRotator rotation) const
 {
 	FActorSpawnParameters spawnInfo;
@@ -95,14 +99,30 @@ void AEnemyManager::Wave() const
 {
 	double YpositionLeft{ -1000.f };
 	double YpositionRight{ 1000.f };
+	if (this->EnemyType.Equals(TEXT("Bug")))
+	{
+		for (int i = 0; i < this->NumberLeft; i++, YpositionLeft -= SeparationLeft) {
+			SpawnBug(FVector(this->LeftMovableArea->GetActorLocation().X + PositionXLeft, YpositionLeft, 200.f),
+				this->MoveRightObject, NewObject<UShootStraightBehaviour>());
+		}
 
-	for (int i = 0; i < this->NumberLeft; i++, YpositionLeft -= SeparationLeft) {
-		SpawnBug(FVector( this->LeftMovableArea->GetActorLocation().X + PositionXLeft, YpositionLeft, 200.f ), 
-			this->MoveRightObject, this->ShootStraightObject);
+		for (int i = 0; i < this->NumberRight; i++, YpositionRight += SeparationRight) {
+			SpawnBug(FVector(this->LeftMovableArea->GetActorLocation().X + PositionXRight, YpositionRight, 200.f),
+				this->MoveLeftObject, NewObject<UShootStraightBehaviour>());
+		}
 	}
+	else if (this->EnemyType.Equals(TEXT("Ship")))
+	{
+		{
+			for (int i = 0; i < this->NumberLeft; i++, YpositionLeft -= SeparationLeft) {
+				SpawnShip(FVector(this->LeftMovableArea->GetActorLocation().X + PositionXLeft, YpositionLeft, 200.f),
+					this->MoveRightObject, NewObject<UShootAtPlayerBehaviour>());
+			}
 
-	for (int i = 0; i < this->NumberRight; i++, YpositionRight += SeparationRight) {
-		SpawnBug(FVector( this->LeftMovableArea->GetActorLocation().X + PositionXRight, YpositionRight, 200.f ), 
-			this->MoveLeftObject, this->ShootStraightObject);
+			for (int i = 0; i < this->NumberRight; i++, YpositionRight += SeparationRight) {
+				SpawnShip(FVector(this->LeftMovableArea->GetActorLocation().X + PositionXRight, YpositionRight, 200.f),
+					this->MoveLeftObject, NewObject<UShootAtPlayerBehaviour>());
+			}
+		}
 	}
 }

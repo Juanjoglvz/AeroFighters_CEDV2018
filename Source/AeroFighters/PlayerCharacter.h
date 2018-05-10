@@ -81,4 +81,6 @@ private:
 	bool IsPosMoveY(FVector NewPos) const;
 
 	bool b_IsShooting;
+	float ShootTimer;
+	float Timer;
 };

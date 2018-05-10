@@ -7,9 +7,10 @@
 UShootAtPlayerBehaviour::UShootAtPlayerBehaviour() 
 {
 	this->Timer = 0.f;
+	this->ShootTimer = 2.f;
 }
 
-void UShootAtPlayerBehaviour::Shoot(FVector Location, FRotator Rotation, float DeltaTime)
+void UShootAtPlayerBehaviour::Shoot(UWorld* World, FVector Location, FRotator Rotation, float DeltaTime)
 {
 	Timer += DeltaTime;
 	if (Timer > ShootTimer)

@@ -7,9 +7,10 @@
 UMissileBehaviour::UMissileBehaviour()
 {
 	this->Timer = 0.f;
+	this->ShootTimer = 4.f;
 }
 
-void UMissileBehaviour::Shoot(FVector Location, FRotator Rotation, float DeltaTime)
+void UMissileBehaviour::Shoot(UWorld* World, FVector Location, FRotator Rotation, float DeltaTime)
 {
 	Timer += DeltaTime;
 	if (Timer > ShootTimer)

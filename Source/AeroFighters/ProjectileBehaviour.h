@@ -15,12 +15,9 @@ class AEROFIGHTERS_API UProjectileBehaviour : public UObject
 	GENERATED_BODY()
 	
 public:
-	virtual void Shoot(FVector Location, FRotator Rotation, float DeltaTime) PURE_VIRTUAL(UProjectileBehaviour::Shoot, );
-
-	void SetUp(UWorld* World, float ShootTimer);
+	virtual void Shoot(UWorld* World, FVector Location, FRotator Rotation, float DeltaTime) PURE_VIRTUAL(UProjectileBehaviour::Shoot, );
 
 protected:
 	float ShootTimer;
 	float Timer;
-	UWorld* World;
 };

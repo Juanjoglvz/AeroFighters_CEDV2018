@@ -17,5 +17,5 @@ class AEROFIGHTERS_API UShootStraightBehaviour : public UProjectileBehaviour
 	
 public:
 	UShootStraightBehaviour();
-	void Shoot(FVector Location, FRotator Rotation, float DeltaTime) override;
+	void Shoot(UWorld* World, FVector Location, FRotator Rotation, float DeltaTime) override;
 };
