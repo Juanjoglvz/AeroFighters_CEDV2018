@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Enemy.h"
+#include "PlayerProjectile.h"
 
 // Sets default values
 AEnemy::AEnemy() : CameraSpeed{ 150.f, 0.f, 0.f }
@@ -12,7 +13,14 @@ AEnemy::AEnemy() : CameraSpeed{ 150.f, 0.f, 0.f }
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
+	auto BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
 
+	BoxCollision->SetCollisionProfileName(TEXT("OverlapAll"));
+	BoxCollision->SetupAttachment(RootComponent);
+	BoxCollision->bGenerateOverlapEvents = true;
+	StaticMeshComponent->SetupAttachment(RootComponent);
+
+	BoxCollision->OnComponentBeginOverlap.AddDynamic(this, &AEnemy::OnOverlap);
 }
 
 // Called when the game starts or when spawned
@@ -36,6 +44,11 @@ void AEnemy::Tick(float DeltaTime)
 		Movement->Move(NewLocation, DeltaTime);
 	}
 
+	if (ProjectileBehaviour != nullptr)
+	{
+		ProjectileBehaviour->Shoot(GetWorld(), this->GetActorLocation(), this->GetActorRotation());
+	}
+
 	SetActorLocation(NewLocation);
 }
 
@@ -48,4 +61,16 @@ void AEnemy::SetStaticMesh(UStaticMesh* Mesh)
 void AEnemy::SetMoveBehaviour(UMoveBehaviour* Move)
 {
 	this->Movement = Move;
+}
+
+void AEnemy::OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor)
+	{
+		if (OtherActor->GetClass()->IsChildOf(APlayerProjectile::StaticClass()))
+		{
+			this->Destroy();
+			OtherActor->Destroy();
+		}
+	}
 }
