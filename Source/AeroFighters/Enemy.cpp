@@ -41,12 +41,12 @@ void AEnemy::Tick(float DeltaTime)
 
 	if (IsValid(Movement))
 	{
-		Movement->Move(NewLocation, DeltaTime, GetWorld());
+		Movement->Move(NewLocation, DeltaTime);
 	}
 
 	if (ProjectileBehaviour != nullptr)
 	{
-		ProjectileBehaviour->Shoot(GetWorld(), this->GetActorLocation(), this->GetActorRotation());
+		ProjectileBehaviour->Shoot(this->GetActorLocation(), this->GetActorRotation(), DeltaTime);
 	}
 
 	SetActorLocation(NewLocation);

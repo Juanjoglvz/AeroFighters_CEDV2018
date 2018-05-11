@@ -8,7 +8,7 @@ UMissileBehaviour::UMissileBehaviour()
 {
 }
 
-void UMissileBehaviour::Shoot(UWorld* World, FVector Location, FRotator Rotation)
+void UMissileBehaviour::Shoot(FVector Location, FRotator Rotation, float DeltaTime)
 {
 	FActorSpawnParameters SpawnInfo;
 	World->SpawnActor <AEnemyMissile>(Location, Rotation, SpawnInfo);

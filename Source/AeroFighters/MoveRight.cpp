@@ -4,12 +4,33 @@
 
 UMoveRight::UMoveRight()
 {
+	KeepMoving = true;
+	TimeWaiting = 0.f;
 }
 
-void UMoveRight::Move(FVector& CurrentPosition, float DeltaTime, UWorld* World) const
+void UMoveRight::SetUp(float MoveSpeed, UWorld* World, float MaxTimeWaiting)
 {
-	FVector NewPos{ CurrentPosition.X, CurrentPosition.Y, CurrentPosition.Z };
-	NewPos.Y += MoveSpeed * DeltaTime;
+	Super::SetUp(MoveSpeed, World);
+	this->MaxTimeWaiting = MaxTimeWaiting;
+}
 
-	CurrentPosition = NewPos;
+void UMoveRight::Move(FVector& CurrentPosition, float DeltaTime)
+{
+	if (KeepMoving || TimeWaiting > MaxTimeWaiting)
+	{
+		FVector NewPos{ CurrentPosition.X, CurrentPosition.Y, CurrentPosition.Z };
+		NewPos.Y += MoveSpeed * DeltaTime;
+
+		if (NewPos.Y > this->RightMovableArea->GetActorLocation().Y)
+		{
+			this->KeepMoving = false;
+		}
+
+		CurrentPosition = NewPos;
+	}
+	else
+	{
+		TimeWaiting += DeltaTime;
+	}
+
 }

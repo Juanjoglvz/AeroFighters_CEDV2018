@@ -17,7 +17,13 @@ class AEROFIGHTERS_API UMoveRight : public UMoveBehaviour
 public:
 	UMoveRight();
 
-	void Move(FVector& CurrentPosition, float DeltaTime, UWorld* World) const override;
+	void Move(FVector& CurrentPosition, float DeltaTime) override;
+
+	void SetUp(float MoveSpeed, UWorld* World, float MaxTimeWaiting);
 	
-	
+private:
+	bool KeepMoving;
+	float TimeWaiting;
+	float MaxTimeWaiting;
+
 };
