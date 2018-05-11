@@ -4,6 +4,7 @@
 #include "PlayerLaser.h"
 #include "EnemyProjectile.h"
 #include "PlayerMissile.h"
+#include "RecordsManager.h"
 #include "Engine.h"
 
 
@@ -43,6 +44,9 @@ void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Get reference to RecordManager
+	FString RecordsManagerString = FString(TEXT("RecordsManager"));
+
 	//Get The references to the borders
 	FString TopMovableAreaString = FString(TEXT("TopMovableArea"));
 	FString BottomMovableAreaString = FString(TEXT("BottomMovableArea"));
@@ -51,6 +55,7 @@ void APlayerCharacter::BeginPlay()
 	uint32 i = 0;
 	for (TActorIterator<AActor> itr(GetWorld()); itr; ++itr)
 	{
+		// References to borders
 		if (TopMovableAreaString.Equals(itr->GetName()))
 		{
 			this->TopMovableArea = *itr;
@@ -72,7 +77,14 @@ void APlayerCharacter::BeginPlay()
 			i++;
 		}
 
-		if (i > 3)
+		// Get RecordsManager reference
+		if (itr->GetName().Contains(RecordsManagerString))
+		{
+			RecordsManagerReference = Cast<ARecordsManager>(*itr);
+			i++;
+		}
+
+		if (i > 4)
 		{
 			break;
 		}
@@ -119,7 +131,6 @@ void APlayerCharacter::Tick(float DeltaTime)
 		for (int i = -1; i <= 1; i++)
 		{
 			Location += FVector(0.f, i * 60.f, 0.f);
-			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, TEXT("Shoot"));
 			GetWorld()->SpawnActor <APlayerLaser>(Location, Rotation, SpawnInfo);
 		}
 	}
@@ -199,7 +210,11 @@ void APlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 		{
 			OtherActor->Destroy();
 			this->Destroy();
-			UGameplayStatics::SetGamePaused(this, true);
+			// Add punctuation to the array
+			ARecordsManager::RecordsScores.Emplace(MakeTuple(FString("Ivan"), FString("30")));
+			// Save the punctuation and go main menu
+			RecordsManagerReference->MyRecordsDelegate.ExecuteIfBound();
+			UGameplayStatics::OpenLevel(GetWorld(), FName("MainMenu"));
 		}
 	}
 }

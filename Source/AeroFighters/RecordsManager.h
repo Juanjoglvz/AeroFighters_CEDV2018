@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "DelegateCombinations.h"
 #include "RecordsManager.generated.h"
 
 UCLASS()
@@ -18,6 +19,9 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+private:
+	FString RecordsText;
 
 public:
 
@@ -37,6 +41,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void WriteJsonFile();
+
+	// Delegate to write 
+	DECLARE_DELEGATE(FRecordsDelegate);
+	FRecordsDelegate MyRecordsDelegate;
 
 	inline static bool ConstPredicate(const TTuple<FString, FString>& ip1, const TTuple<FString, FString>& ip2)
 	{

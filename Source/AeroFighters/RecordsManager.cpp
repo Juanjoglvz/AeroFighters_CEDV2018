@@ -1,7 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #include "RecordsManager.h"
 #include "Blueprint/UserWidget.h"
 #include "TextWidgetTypes.h"
@@ -13,12 +11,16 @@ TArray<TTuple<FString, FString>> ARecordsManager::RecordsScores;
 // Sets default values
 ARecordsManager::ARecordsManager() : Super()
 {
+	RecordsText = FString("");
 }
 
 // Called when the game starts or when spawned
 void ARecordsManager::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// Bind delegate with the corresponding action
+	MyRecordsDelegate.BindLambda([this]() { WriteJsonFile();  });
 
 	// Load JSON data
 	ReadJsonFile();
@@ -28,6 +30,7 @@ void ARecordsManager::BeginPlay()
 	{
 		FString Name = RecordsScores[Index].Key;
 		FString Punctuation = RecordsScores[Index].Value;
+		RecordsText += (Name + " :\t" + Punctuation + "\n");
 	}
 
 
@@ -39,6 +42,9 @@ void ARecordsManager::BeginPlay()
 		{
 			pWRecords->AddToViewport();
 			pWRecordsText = (UTextBlock*)pWRecords->GetWidgetFromName("RecordText");
+			
+			if (pWRecordsText != nullptr)
+				pWRecordsText->SetText(FText::FromString(RecordsText));
 		}
 	}
 }
@@ -114,4 +120,6 @@ void ARecordsManager::WriteJsonFile()
 	TSharedRef< TJsonWriter<>> JsonWriter = TJsonWriterFactory<>::Create(&JsonStr);
 	FJsonSerializer::Serialize(JsonObject.ToSharedRef(), JsonWriter);
 	FFileHelper::SaveStringToFile(*JsonStr, *FullPath);
+
+	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, FString("Writing JSON..."));
 }

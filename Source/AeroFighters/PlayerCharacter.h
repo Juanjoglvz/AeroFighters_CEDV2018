@@ -73,6 +73,10 @@ private:
 	UPROPERTY()
 		TWeakObjectPtr<AActor> LeftMovableArea;
 
+	// Reference to RecordManager
+	UPROPERTY()
+		TWeakObjectPtr<class ARecordsManager> RecordsManagerReference;
+
 	UPROPERTY(EditAnywhere)
 		unsigned int NumberOfBombsAvailable;
 
