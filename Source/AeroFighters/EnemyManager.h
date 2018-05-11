@@ -7,6 +7,7 @@
 #include "MoveBehaviour.h"
 #include "MoveLeft.h"
 #include "MoveRight.h"
+#include "MoveFromTop.h"
 #include "ProjectileBehaviour.h"
 #include "ShootAtPlayerBehaviour.h"
 #include "ShootStraightBehaviour.h"
@@ -43,27 +44,34 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Wave")
 		int NumberTop;
 
-	UPROPERTY(EditAnywhere, Category = "Wave")
+	UPROPERTY(EditAnywhere, Category = "WaveLeft")
 		float SeparationLeft;
-	UPROPERTY(EditAnywhere, Category = "Wave")
-		float SeparationRight;
-	UPROPERTY(EditAnywhere, Category = "Wave")
-		float SeparationTop;
-
-	UPROPERTY(EditAnywhere, Category = "Wave")
+	UPROPERTY(EditAnywhere, Category = "WaveLeft")
 		float PositionXLeft;
-	UPROPERTY(EditAnywhere, Category = "Wave")
-		float PositionXRight;
-
-	//Variables for controlling wave behaviour
-	UPROPERTY(EditAnywhere, Category = "WaveBehaviour")
-		float MoveRightSpeed;
-	UPROPERTY(EditAnywhere, Category = "WaveBehaviour")
+	UPROPERTY(EditAnywhere, Category = "WaveLeft")
 		float MoveLeftSpeed;
-	UPROPERTY(EditAnywhere, Category = "WaveBehaviour")
-		float MoveRightMaxWaitingTime;
-	UPROPERTY(EditAnywhere, Category = "WaveBehaviour")
+	UPROPERTY(EditAnywhere, Category = "WaveLeft")
 		float MoveLeftMaxWaitingTime;
+
+	UPROPERTY(EditAnywhere, Category = "WaveRight")
+		float SeparationRight;
+	UPROPERTY(EditAnywhere, Category = "WaveRight")
+		float PositionXRight;
+	UPROPERTY(EditAnywhere, Category = "WaveRight")
+		float MoveRightSpeed;
+	UPROPERTY(EditAnywhere, Category = "WaveRight")
+		float MoveRightMaxWaitingTime;
+
+	UPROPERTY(EditAnywhere, Category = "WaveTop")
+		float SeparationTop;
+	UPROPERTY(EditAnywhere, Category = "WaveTop")
+		float PositionYTop;
+	UPROPERTY(EditAnywhere, Category = "WaveTop")
+		float MoveTopSpeed;
+	UPROPERTY(EditAnywhere, Category = "WaveTop")
+		float MoveTopMaxWaitingTime;
+	UPROPERTY(EditAnywhere, Category = "WaveTop")
+		float StopPosition;
 
 private:
 	// Variables for controlling the areas around the camera
@@ -94,6 +102,8 @@ private:
 		UMoveRight* MoveRightObject;
 	UPROPERTY()
 		UMoveLeft* MoveLeftObject;
+	UPROPERTY()
+		UMoveFromTop* MoveFromTopObject;
 
 	// Wave
 	UFUNCTION(BlueprintCallable)
