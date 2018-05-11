@@ -7,7 +7,7 @@
 UShootStraightBehaviour::UShootStraightBehaviour()
 {
 	this->Timer = 0.f;
-	this->ShootTimer = 1.f;
+	this->ShootTimer = 2.2f;
 }
 
 void UShootStraightBehaviour::Shoot(UWorld* World, FVector Location, FRotator Rotation, float DeltaTime)
