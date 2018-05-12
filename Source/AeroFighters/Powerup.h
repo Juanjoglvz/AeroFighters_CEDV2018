@@ -35,8 +35,10 @@ protected:
 
 	virtual void SetStaticMeshAsset(UStaticMesh* StaticMeshAsset);
 	UPROPERTY()
-		UStaticMeshComponent* StaticMesh;
+		UStaticMeshComponent* StaticMeshComponent;
 
+	UFUNCTION()
+		void OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -45,4 +47,6 @@ public:
 private:
 	virtual void Move(float DeltaTime);
 	FVector CameraSpeed;
+	FVector Direction;
+	float RandomFloat(float a, float b);
 };

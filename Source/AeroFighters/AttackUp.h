@@ -14,7 +14,8 @@ class AEROFIGHTERS_API AAttackUp : public APowerup
 {
 	GENERATED_BODY()
 	
-	
-	
+public:
+	AAttackUp();
+	virtual void Tick(float DeltaTime) override;
 	
 };
