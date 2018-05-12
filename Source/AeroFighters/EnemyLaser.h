@@ -16,7 +16,7 @@ public:
 	// Sets default values for this actor's properties
 	AEnemyLaser();
 
-	void SetDirection(FVector Direction_) { Direction = Direction_; }
+	void SetDirection(FVector Direction_) { Direction = Direction_; Direction.Y *= 4; }
 
 protected:
 	// Called when the game starts or when spawned

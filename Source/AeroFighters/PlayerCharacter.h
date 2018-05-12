@@ -30,10 +30,10 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	//Input Variable
+	// Input Variable
 	FVector2D MovementInput;
 
-	//Input Functions
+	// Input Functions
 	void MoveForward(float AxisValue);
 	void MoveRight(float AxisValue);
 
@@ -72,7 +72,7 @@ private:
 	UPROPERTY(EditAnywhere)
 		FVector CameraSpeed;
 
-	//Variables for controlling the areas where the player can move to
+	// Variables for controlling the areas where the player can move to
 	UPROPERTY()
 		TWeakObjectPtr<AActor> TopMovableArea;
 	UPROPERTY()
@@ -87,15 +87,21 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Player")
 		unsigned int NumberOfLives;
 
-	//Function to see if posible to move
+	// Function to see if posible to move
 	bool IsPosMoveX(FVector NewPos) const;
 	bool IsPosMoveY(FVector NewPos) const;
 
-	//Shooting functionality
+	// Shooting functionality
 	void Shoot(float DeltaTime);
 	bool b_IsShooting;
 	float ShootTimer;
 	float Timer;
+
+	// Invulnerabilty 
+	bool b_IsVulnerable;
+	float VulnerableTimer;
+	float MaximumVulnerabilityTime;
+	float ShowAndHideTimer;
 
 	PlayerPower CurrentPower;
 };

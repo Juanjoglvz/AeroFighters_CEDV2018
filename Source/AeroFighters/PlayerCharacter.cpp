@@ -8,8 +8,11 @@
 
 
 // Sets default values
-APlayerCharacter::APlayerCharacter() : NumberOfBombsAvailable{ 3 }, NumberOfLives{ 5 }, MoveSpeed { 1000.f }, CameraSpeed{ 150.f, 0.f, 0.f }, 
-b_IsShooting{ false }, Timer{ 0.25f }, ShootTimer{ 0.25f }, CurrentPower{ PlayerPower::WideShot}
+APlayerCharacter::APlayerCharacter() : 
+	NumberOfBombsAvailable{ 3 }, NumberOfLives{ 5 }, MoveSpeed { 1000.f }, CameraSpeed{ 150.f, 0.f, 0.f }, 
+	b_IsShooting{ false }, Timer{ 0.25f }, ShootTimer{ 0.25f }, CurrentPower{ PlayerPower::WideShot}, b_IsVulnerable{ true }, 
+	MaximumVulnerabilityTime{ 3.f }, VulnerableTimer{ 0.f }, ShowAndHideTimer{ 0.f } 
+
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -84,6 +87,9 @@ void APlayerCharacter::BeginPlay()
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
+	VulnerableTimer += DeltaTime;
+	ShowAndHideTimer += DeltaTime;
 
 	//Move at the same rate as the camera
 	FVector NewLocation = GetActorLocation();
@@ -112,6 +118,24 @@ void APlayerCharacter::Tick(float DeltaTime)
 	SetActorLocation(NewLocation);
 
 	Shoot(DeltaTime);
+
+	// Check if player is invulnerable. If it is, show and hide StaticMesh
+	if (!b_IsVulnerable && VulnerableTimer <= MaximumVulnerabilityTime)
+	{
+		if (ShowAndHideTimer > 0.3f)
+		{
+			StaticMeshComponent->SetHiddenInGame(!StaticMeshComponent->bHiddenInGame);
+			ShowAndHideTimer = 0.f;
+		}
+	}
+	else 
+	{
+		b_IsVulnerable = true;
+
+		// If mesh is hidden, show it
+		if (StaticMeshComponent->bHiddenInGame)
+			StaticMeshComponent->SetHiddenInGame(false);
+	}
 }
 
 // Called to bind functionality to input
@@ -181,8 +205,9 @@ bool APlayerCharacter::IsPosMoveY(FVector NewPos) const
 
 void APlayerCharacter::Shoot(float DeltaTime)
 {
-	// Check if player is shooting. If player is shooting, spawns projectiles.
 	Timer += DeltaTime;
+	
+	// Check if player is shooting. If player is shooting, spawns projectiles.
 	if (b_IsShooting && Timer > ShootTimer)
 	{
 		FRotator Rotation(0.f, 0.f, 0.f);
@@ -197,7 +222,7 @@ void APlayerCharacter::Shoot(float DeltaTime)
 				{
 					Location += FVector(20.f, 0.f, 0.f);
 				}
-				GetWorld()->SpawnActor <APlayerLaser>(Location, Rotation, SpawnInfo);
+				GetWorld()->SpawnActor <APlayerMissile>(Location, Rotation, SpawnInfo);
 			}
 		}
 		else if (CurrentPower == PlayerPower::WideShot)
@@ -210,7 +235,7 @@ void APlayerCharacter::Shoot(float DeltaTime)
 				{
 					Location += FVector(20.f, 0.f, 0.f);
 				}
-				GetWorld()->SpawnActor <APlayerLaser>(Location, Rotation, SpawnInfo);
+				GetWorld()->SpawnActor <APlayerMissile>(Location, Rotation, SpawnInfo);
 			}
 		}
 		Timer = 0.f;
@@ -223,13 +248,15 @@ void APlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 	{
 		if (OtherActor->GetClass()->IsChildOf(AEnemyProjectile::StaticClass()))
 		{
-			if (NumberOfLives > 0)
+			if (NumberOfLives > 0 && b_IsVulnerable)
 			{
 				GEngine->AddOnScreenDebugMessage(3, 5.f, FColor::Red, FString(TEXT("Me han dao!")) + FString::FromInt(this->NumberOfLives));
 				NumberOfLives--;
-				//Make player invulnerable
+				// Make player invulnerable
+				b_IsVulnerable = false; 
+				VulnerableTimer = 0.f;
 			}
-			else {
+			else if (NumberOfLives == 0 && b_IsVulnerable){
 				OtherActor->Destroy();
 				this->Destroy();
 				UGameplayStatics::SetGamePaused(this, true);

@@ -58,18 +58,13 @@ void AEnemyProjectile::Tick(float DeltaTime)
 	{
 		this->Destroy();
 	}
-
-	// The basic movement (falling) is the same for all enemy projectile types
-	FVector NewLocation = StaticMesh->GetComponentLocation() + (StaticMesh->GetForwardVector() * GetSpeed() * DeltaTime);
-	StaticMesh->SetWorldLocation(NewLocation);
-	//StaticMesh->SetWorldRotation(FRotator(90.f, 0.f, 0.f));
 }
 
 void AEnemyProjectile::OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherActor)
 	{
-		if (OtherActor->GetClass()->IsChildOf(APlayerLaser::StaticClass()))
+		if (OtherActor->GetClass()->IsChildOf(APlayerMissile::StaticClass()))
 		{
 			this->Destroy();
 		}
