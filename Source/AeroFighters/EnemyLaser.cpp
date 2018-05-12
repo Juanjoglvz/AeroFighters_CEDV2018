@@ -11,7 +11,7 @@ AEnemyLaser::AEnemyLaser() : Super(), Direction { -150.f, 0.f, 0.f }
 	PrimaryActorTick.bCanEverTick = true;
 
 	// Get StaticMesh associated with this projectile 
-	auto StaticMeshAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Assets/Projectile/BasicShot.BasicShot'"));
+	auto StaticMeshAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Assets/Projectile/EnemyShot.EnemyShot'"));
 	
 	if (StaticMeshAsset.Succeeded())
 		SetStaticMeshAsset(StaticMeshAsset.Object);

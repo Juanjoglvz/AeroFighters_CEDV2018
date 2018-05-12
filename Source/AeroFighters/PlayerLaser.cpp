@@ -25,6 +25,7 @@ void APlayerLaser::BeginPlay()
 	Super::BeginPlay();
 	StaticMesh->SetWorldScale3D(FVector(5.f, 5.f, 2.f));
 	StaticMesh->SetRelativeScale3D(FVector(5.f, 5.f, 2.f));
+	StaticMesh->SetRelativeRotation(FRotator(-90.f, 0.f, 0.f), false, nullptr, ETeleportType::TeleportPhysics);
 }
 
 void APlayerLaser::ProjectileBehaviour(float DeltaTime)

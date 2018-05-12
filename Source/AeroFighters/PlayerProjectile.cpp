@@ -30,7 +30,7 @@ void APlayerProjectile::Tick(float DeltaTime)
 	}
 
 	// The basic movement (go up) is the same for all player projectile types
-	FVector NewLocation = StaticMesh->GetComponentLocation() - (StaticMesh->GetForwardVector() * -1 * GetSpeed() * DeltaTime);
+	FVector NewLocation = StaticMesh->GetComponentLocation() + (FVector{ 1.f, 0.f, 0.f } * GetSpeed() * DeltaTime);
 	NewLocation.Z = 200.f;
 	StaticMesh->SetWorldLocation(NewLocation);
 	//StaticMesh->SetWorldRotation(FRotator(90.f, 0.f, 0.f));

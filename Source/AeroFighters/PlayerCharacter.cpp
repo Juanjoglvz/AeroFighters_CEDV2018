@@ -8,7 +8,8 @@
 
 
 // Sets default values
-APlayerCharacter::APlayerCharacter() : NumberOfBombsAvailable{ 3 }, MoveSpeed{ 1000.f }, CameraSpeed{ 150.f, 0.f, 0.f }, b_IsShooting{ false }, Timer{0.25f}, ShootTimer{0.25f}
+APlayerCharacter::APlayerCharacter() : NumberOfBombsAvailable{ 3 }, NumberOfLives{ 5 }, MoveSpeed { 1000.f }, CameraSpeed{ 150.f, 0.f, 0.f }, 
+b_IsShooting{ false }, Timer{ 0.25f }, ShootTimer{ 0.25f }, CurrentPower{ PlayerPower::WideShot}
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -110,24 +111,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 
 	SetActorLocation(NewLocation);
 
-	// Check if player is shooting. If player is shooting, spawns projectiles.
-	Timer += DeltaTime;
-	if (b_IsShooting && Timer > ShootTimer) 
-	{
-		FRotator Rotation(0.f, 0.f, 0.f);
-		FActorSpawnParameters SpawnInfo;
-		for (int i = -1; i <= 1; i++)
-		{
-			FVector Location = this->GetActorLocation();
-			Location += FVector(10.f, i * 20.f, 0.f);
-			if (i == 0)
-			{
-				Location += FVector(20.f, 0.f, 0.f);
-			}
-			GetWorld()->SpawnActor <APlayerLaser>(Location, Rotation, SpawnInfo);
-		}
-		Timer = 0.f;
-	}
+	Shoot(DeltaTime);
 }
 
 // Called to bind functionality to input
@@ -195,15 +179,61 @@ bool APlayerCharacter::IsPosMoveY(FVector NewPos) const
 	return false;
 }
 
+void APlayerCharacter::Shoot(float DeltaTime)
+{
+	// Check if player is shooting. If player is shooting, spawns projectiles.
+	Timer += DeltaTime;
+	if (b_IsShooting && Timer > ShootTimer)
+	{
+		FRotator Rotation(0.f, 0.f, 0.f);
+		FActorSpawnParameters SpawnInfo;
+		if (CurrentPower == PlayerPower::BasicShot)
+		{
+			for (int i = -1; i <= 1; i++)
+			{
+				FVector Location = this->GetActorLocation();
+				Location += FVector(10.f, i * 20.f, 0.f);
+				if (i == 0)
+				{
+					Location += FVector(20.f, 0.f, 0.f);
+				}
+				GetWorld()->SpawnActor <APlayerLaser>(Location, Rotation, SpawnInfo);
+			}
+		}
+		else if (CurrentPower == PlayerPower::WideShot)
+		{
+			for (int i = -2; i <= 2; i++)
+			{
+				FVector Location = this->GetActorLocation();
+				Location += FVector(10.f, i * 30.f, 0.f);
+				if (i == 0)
+				{
+					Location += FVector(20.f, 0.f, 0.f);
+				}
+				GetWorld()->SpawnActor <APlayerLaser>(Location, Rotation, SpawnInfo);
+			}
+		}
+		Timer = 0.f;
+	}
+}
+
 void APlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor)
 {
 	if (OtherActor)
 	{
 		if (OtherActor->GetClass()->IsChildOf(AEnemyProjectile::StaticClass()))
 		{
-			OtherActor->Destroy();
-			this->Destroy();
-			UGameplayStatics::SetGamePaused(this, true);
+			if (NumberOfLives > 0)
+			{
+				GEngine->AddOnScreenDebugMessage(3, 5.f, FColor::Red, FString(TEXT("Me han dao!")) + FString::FromInt(this->NumberOfLives));
+				NumberOfLives--;
+				//Make player invulnerable
+			}
+			else {
+				OtherActor->Destroy();
+				this->Destroy();
+				UGameplayStatics::SetGamePaused(this, true);
+			}
 		}
 	}
 }

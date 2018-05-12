@@ -8,6 +8,15 @@
 #include "GameFramework/Character.h"
 #include "PlayerCharacter.generated.h"
 
+UENUM(BlueprintType)
+enum class PlayerPower : uint8
+{
+	BasicShot,
+	WideShot,
+	WideShotMissile,
+	FullPower,
+};
+
 UCLASS()
 class AEROFIGHTERS_API APlayerCharacter : public ACharacter
 {
@@ -73,14 +82,20 @@ private:
 	UPROPERTY()
 		TWeakObjectPtr<AActor> LeftMovableArea;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Player")
 		unsigned int NumberOfBombsAvailable;
+	UPROPERTY(EditAnywhere, Category = "Player")
+		unsigned int NumberOfLives;
 
 	//Function to see if posible to move
 	bool IsPosMoveX(FVector NewPos) const;
 	bool IsPosMoveY(FVector NewPos) const;
 
+	//Shooting functionality
+	void Shoot(float DeltaTime);
 	bool b_IsShooting;
 	float ShootTimer;
 	float Timer;
+
+	PlayerPower CurrentPower;
 };
