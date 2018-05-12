@@ -49,6 +49,11 @@ void AEnemy::Tick(float DeltaTime)
 		ProjectileBehaviour->Shoot(GetWorld(), this->GetActorLocation(), this->GetActorRotation(), DeltaTime);
 	}
 
+	if (NewLocation.Y > 2000.f || NewLocation.Y < -2000.f)
+	{
+		this->Destroy();
+	}
+
 	SetActorLocation(NewLocation);
 }
 

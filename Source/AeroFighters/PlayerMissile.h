@@ -7,6 +7,7 @@
 #include "PlayerProjectile.h"
 #include "PlayerMissile.generated.h"
 
+class AEnemy;
 UCLASS()
 class AEROFIGHTERS_API APlayerMissile : public APlayerProjectile
 {
@@ -22,4 +23,6 @@ protected:
 
 	virtual void ProjectileBehaviour(float DeltaTime) override;
 
+	UPROPERTY()
+		TWeakObjectPtr<AEnemy> LockedEnemy;
 };

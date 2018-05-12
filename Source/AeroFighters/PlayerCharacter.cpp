@@ -9,7 +9,7 @@
 
 // Sets default values
 APlayerCharacter::APlayerCharacter() : NumberOfBombsAvailable{ 3 }, NumberOfLives{ 5 }, MoveSpeed { 1000.f }, CameraSpeed{ 150.f, 0.f, 0.f }, 
-b_IsShooting{ false }, Timer{ 0.25f }, ShootTimer{ 0.25f }, CurrentPower{ PlayerPower::WideShot}
+b_IsShooting{ false }, Timer{ 0.25f }, ShootTimer{ 0.25f }, MissileTimer{ 0.f }, MissileMaxTime{ 1.f }, CurrentPower{ PlayerPower::WideShot }
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -183,6 +183,7 @@ void APlayerCharacter::Shoot(float DeltaTime)
 {
 	// Check if player is shooting. If player is shooting, spawns projectiles.
 	Timer += DeltaTime;
+	MissileTimer += DeltaTime;
 	if (b_IsShooting && Timer > ShootTimer)
 	{
 		FRotator Rotation(0.f, 0.f, 0.f);
@@ -197,8 +198,9 @@ void APlayerCharacter::Shoot(float DeltaTime)
 				{
 					Location += FVector(20.f, 0.f, 0.f);
 				}
-				GetWorld()->SpawnActor <APlayerLaser>(Location, Rotation, SpawnInfo);
+				GetWorld()->SpawnActor<APlayerLaser>(Location, Rotation, SpawnInfo);
 			}
+			MissileTimer = 0.f;
 		}
 		else if (CurrentPower == PlayerPower::WideShot)
 		{
@@ -210,8 +212,63 @@ void APlayerCharacter::Shoot(float DeltaTime)
 				{
 					Location += FVector(20.f, 0.f, 0.f);
 				}
-				GetWorld()->SpawnActor <APlayerLaser>(Location, Rotation, SpawnInfo);
+				GetWorld()->SpawnActor<APlayerLaser>(Location, Rotation, SpawnInfo);
 			}
+			MissileTimer = 0.f;
+		}
+		else if (CurrentPower == PlayerPower::WideShotMissile)
+		{
+			for (int i = -2; i <= 2; i++)
+			{
+				FVector Location = this->GetActorLocation();
+				Location += FVector(10.f, i * 30.f, 0.f);
+				if (i == 0)
+				{
+					Location += FVector(20.f, 0.f, 0.f);
+				}
+				GetWorld()->SpawnActor<APlayerLaser>(Location, Rotation, SpawnInfo);
+			}
+			if (MissileTimer > MissileMaxTime * 3)
+			{
+				for (int i = -1; i <= 1; i += 2)
+				{
+					GEngine->AddOnScreenDebugMessage(5, 5.f, FColor::Blue, FString(TEXT("Lanzando misil")));
+					FVector Location = this->GetActorLocation();
+					Location += FVector(-20.f, i * 40.f, 0.f);
+					GetWorld()->SpawnActor<APlayerMissile>(Location, Rotation, SpawnInfo);
+				}
+				MissileTimer = 0.f;
+			}
+		}
+		else if (CurrentPower == PlayerPower::FullPower)
+		{
+			for (int i = -2; i <= 2; i++)
+			{
+				FVector Location = this->GetActorLocation();
+				Location += FVector(10.f, i * 30.f, 0.f);
+				if (i == 0)
+				{
+					Location += FVector(20.f, 0.f, 0.f);
+				}
+				GetWorld()->SpawnActor<APlayerLaser>(Location, Rotation, SpawnInfo);
+			}
+
+			if (MissileTimer > MissileMaxTime * 2)
+			{
+				for (int i = -1; i <= 1; i++)
+				{
+					GEngine->AddOnScreenDebugMessage(5, 5.f, FColor::Blue, FString(TEXT("Lanzando misil")));
+					FVector Location = this->GetActorLocation();
+					Location += FVector(-20.f, i * 40.f, 0.f);
+					if (i == 0)
+					{
+						Location += FVector(-80.f, 0.f, 0.f);
+					}
+					GetWorld()->SpawnActor<APlayerMissile>(Location, Rotation, SpawnInfo);
+				}
+				MissileTimer = 0.f;
+			}
+
 		}
 		Timer = 0.f;
 	}
