@@ -49,18 +49,18 @@ public:
 	UPROPERTY(EditAnywhere, Category = "WaveLeft")
 		float PositionXLeft;
 	UPROPERTY(EditAnywhere, Category = "WaveLeft")
-		float MoveLeftSpeed;
+		float MoveRightSpeed;
 	UPROPERTY(EditAnywhere, Category = "WaveLeft")
-		float MoveLeftMaxWaitingTime;
+		float MoveRightMaxWaitingTime;
 
 	UPROPERTY(EditAnywhere, Category = "WaveRight")
 		float SeparationRight;
 	UPROPERTY(EditAnywhere, Category = "WaveRight")
 		float PositionXRight;
 	UPROPERTY(EditAnywhere, Category = "WaveRight")
-		float MoveRightSpeed;
+		float MoveLeftSpeed;
 	UPROPERTY(EditAnywhere, Category = "WaveRight")
-		float MoveRightMaxWaitingTime;
+		float MoveLeftMaxWaitingTime;
 
 	UPROPERTY(EditAnywhere, Category = "WaveTop")
 		float SeparationTop;
