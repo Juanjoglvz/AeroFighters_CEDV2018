@@ -27,24 +27,39 @@ void AProjectile::BeginPlay()
 	Super::BeginPlay();
 
 	// Get the references to movable areas. If projectile goes further these areas, it will be destroyed
-	FString BottomMovableAreaString = FString(TEXT("BottomMovableArea"));
 	FString TopMovableAreaString = FString(TEXT("TopMovableArea"));
-	int Counter = 0;
+	FString BottomMovableAreaString = FString(TEXT("BottomMovableArea"));
+	FString RightMovableAreaString = FString(TEXT("RightMovableArea"));
+	FString LeftMovableAreaString = FString(TEXT("LeftMovableArea"));
+	uint32 i = 0;
 	for (TActorIterator<AActor> itr(GetWorld()); itr; ++itr)
 	{
-		if (BottomMovableAreaString.Equals(itr->GetName()))
-		{
-			this->BottomMovableArea = *itr;
-			Counter++;
-		}
-		else if (TopMovableAreaString.Equals(itr->GetName()))
+		// References to borders
+		if (TopMovableAreaString.Equals(itr->GetName()))
 		{
 			this->TopMovableArea = *itr;
-			Counter++;
+			i++;
+		}
+		else if (BottomMovableAreaString.Equals(itr->GetName()))
+		{
+			this->BottomMovableArea = *itr;
+			i++;
+		}
+		else if (RightMovableAreaString.Equals(itr->GetName()))
+		{
+			this->RightMovableArea = *itr;
+			i++;
+		}
+		else if (LeftMovableAreaString.Equals(itr->GetName()))
+		{
+			this->LeftMovableArea = *itr;
+			i++;
 		}
 
-		if (Counter > 1)
+		if (i > 3)
+		{
 			break;
+		}
 	}
 	
 }

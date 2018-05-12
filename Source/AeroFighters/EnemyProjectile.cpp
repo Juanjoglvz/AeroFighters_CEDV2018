@@ -54,7 +54,9 @@ void AEnemyProjectile::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	// Check if the projectile has to be destroyed
-	if (StaticMesh->GetComponentLocation().X < BottomMovableArea->GetActorLocation().X - 200.f)
+	if (StaticMesh->GetComponentLocation().X < BottomMovableArea->GetActorLocation().X - 200.f 
+		|| StaticMesh->GetComponentLocation().Y > RightMovableArea->GetActorLocation().Y + 300
+		|| StaticMesh->GetComponentLocation().Y < LeftMovableArea->GetActorLocation().Y -300)
 	{
 		this->Destroy();
 	}
