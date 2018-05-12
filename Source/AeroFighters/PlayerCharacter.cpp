@@ -9,7 +9,11 @@
 
 
 // Sets default values
-APlayerCharacter::APlayerCharacter() : NumberOfBombsAvailable{ 3 }, MoveSpeed{ 1000.f }, CameraSpeed{ 150.f, 0.f, 0.f }, b_IsShooting{ false }
+APlayerCharacter::APlayerCharacter() : 
+	NumberOfBombsAvailable{ 3 }, NumberOfLives{ 5 }, MoveSpeed { 1000.f }, CameraSpeed{ 150.f, 0.f, 0.f }, 
+	b_IsShooting{ false }, Timer{ 0.25f }, ShootTimer{ 0.25f }, CurrentPower{ PlayerPower::WideShot}, b_IsVulnerable{ true }, 
+	MaximumVulnerabilityTime{ 3.f }, VulnerableTimer{ 0.f }, ShowAndHideTimer{ 0.f } 
+
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -95,6 +99,9 @@ void APlayerCharacter::BeginPlay()
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
+	VulnerableTimer += DeltaTime;
+	ShowAndHideTimer += DeltaTime;
 
 	//Move at the same rate as the camera
 	FVector NewLocation = GetActorLocation();
@@ -122,17 +129,24 @@ void APlayerCharacter::Tick(float DeltaTime)
 
 	SetActorLocation(NewLocation);
 
-	// Check if player is shooting. If player is shooting, spawns projectiles.
-	if (b_IsShooting) 
+	Shoot(DeltaTime);
+
+	// Check if player is invulnerable. If it is, show and hide StaticMesh
+	if (!b_IsVulnerable && VulnerableTimer <= MaximumVulnerabilityTime)
 	{
-		FVector Location = this->GetActorLocation();
-		FRotator Rotation(0.f, 0.f, 0.f);
-		FActorSpawnParameters SpawnInfo;
-		for (int i = -1; i <= 1; i++)
+		if (ShowAndHideTimer > 0.3f)
 		{
-			Location += FVector(0.f, i * 60.f, 0.f);
-			GetWorld()->SpawnActor <APlayerLaser>(Location, Rotation, SpawnInfo);
+			StaticMeshComponent->SetHiddenInGame(!StaticMeshComponent->bHiddenInGame);
+			ShowAndHideTimer = 0.f;
 		}
+	}
+	else 
+	{
+		b_IsVulnerable = true;
+
+		// If mesh is hidden, show it
+		if (StaticMeshComponent->bHiddenInGame)
+			StaticMeshComponent->SetHiddenInGame(false);
 	}
 }
 
@@ -164,7 +178,6 @@ void APlayerCharacter::ThrowABomb()
 {
 	if (NumberOfBombsAvailable > 0)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("F event"));
 		myDiscardEnemyShootsDelegate.Broadcast();
 		NumberOfBombsAvailable--;
 	}
@@ -202,19 +215,69 @@ bool APlayerCharacter::IsPosMoveY(FVector NewPos) const
 	return false;
 }
 
+void APlayerCharacter::Shoot(float DeltaTime)
+{
+	Timer += DeltaTime;
+	
+	// Check if player is shooting. If player is shooting, spawns projectiles.
+	if (b_IsShooting && Timer > ShootTimer)
+	{
+		FRotator Rotation(0.f, 0.f, 0.f);
+		FActorSpawnParameters SpawnInfo;
+		if (CurrentPower == PlayerPower::BasicShot)
+		{
+			for (int i = -1; i <= 1; i++)
+			{
+				FVector Location = this->GetActorLocation();
+				Location += FVector(10.f, i * 20.f, 0.f);
+				if (i == 0)
+				{
+					Location += FVector(20.f, 0.f, 0.f);
+				}
+				GetWorld()->SpawnActor <APlayerMissile>(Location, Rotation, SpawnInfo);
+			}
+		}
+		else if (CurrentPower == PlayerPower::WideShot)
+		{
+			for (int i = -2; i <= 2; i++)
+			{
+				FVector Location = this->GetActorLocation();
+				Location += FVector(10.f, i * 30.f, 0.f);
+				if (i == 0)
+				{
+					Location += FVector(20.f, 0.f, 0.f);
+				}
+				GetWorld()->SpawnActor <APlayerMissile>(Location, Rotation, SpawnInfo);
+			}
+		}
+		Timer = 0.f;
+	}
+}
+
 void APlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor)
 {
 	if (OtherActor)
 	{
 		if (OtherActor->GetClass()->IsChildOf(AEnemyProjectile::StaticClass()))
 		{
-			OtherActor->Destroy();
-			this->Destroy();
-			// Add punctuation to the array
-			ARecordsManager::RecordsScores.Emplace(MakeTuple(FString("Ivan"), FString("30")));
-			// Save the punctuation and go main menu
-			RecordsManagerReference->MyRecordsDelegate.ExecuteIfBound();
-			UGameplayStatics::OpenLevel(GetWorld(), FName("MainMenu"));
+			if (NumberOfLives > 0 && b_IsVulnerable)
+			{
+				GEngine->AddOnScreenDebugMessage(3, 5.f, FColor::Red, FString(TEXT("Me han dao!")) + FString::FromInt(this->NumberOfLives));
+				NumberOfLives--;
+				// Make player invulnerable
+				b_IsVulnerable = false; 
+				VulnerableTimer = 0.f;
+			}
+			else if (NumberOfLives == 0 && b_IsVulnerable){
+				// Add punctuation to the array
+			        ARecordsManager::RecordsScores.Emplace(MakeTuple(FString("Ivan"), FString("30")));
+			        // Save the punctuation and go main menu
+			        RecordsManagerReference->MyRecordsDelegate.ExecuteIfBound();
+			        UGameplayStatics::OpenLevel(GetWorld(), FName("MainMenu"));
+
+                                OtherActor->Destroy();
+				this->Destroy();
+			}
 		}
 	}
 }

@@ -7,6 +7,7 @@
 #include "MoveBehaviour.h"
 #include "MoveLeft.h"
 #include "MoveRight.h"
+#include "MoveFromTop.h"
 #include "ProjectileBehaviour.h"
 #include "ShootAtPlayerBehaviour.h"
 #include "ShootStraightBehaviour.h"
@@ -34,33 +35,43 @@ public:
 
 	// Variables for controlling wave spawning
 	UPROPERTY(EditAnywhere, Category = "Wave")
+		FString EnemyType;
+
+	UPROPERTY(EditAnywhere, Category = "Wave")
 		int NumberLeft;
 	UPROPERTY(EditAnywhere, Category = "Wave")
 		int NumberRight;
 	UPROPERTY(EditAnywhere, Category = "Wave")
 		int NumberTop;
 
-	UPROPERTY(EditAnywhere, Category = "Wave")
+	UPROPERTY(EditAnywhere, Category = "WaveLeft")
 		float SeparationLeft;
-	UPROPERTY(EditAnywhere, Category = "Wave")
-		float SeparationRight;
-	UPROPERTY(EditAnywhere, Category = "Wave")
-		float SeparationTop;
-
-	UPROPERTY(EditAnywhere, Category = "Wave")
+	UPROPERTY(EditAnywhere, Category = "WaveLeft")
 		float PositionXLeft;
-	UPROPERTY(EditAnywhere, Category = "Wave")
-		float PositionXRight;
-
-	//Variables for controlling wave behaviour
-	UPROPERTY(EditAnywhere, Category = "WaveBehaviour")
-		float MoveRightSpeed;
-	UPROPERTY(EditAnywhere, Category = "WaveBehaviour")
+	UPROPERTY(EditAnywhere, Category = "WaveLeft")
 		float MoveLeftSpeed;
-	UPROPERTY(EditAnywhere, Category = "WaveBehaviour")
-		float MoveRightMaxWaitingTime;
-	UPROPERTY(EditAnywhere, Category = "WaveBehaviour")
+	UPROPERTY(EditAnywhere, Category = "WaveLeft")
 		float MoveLeftMaxWaitingTime;
+
+	UPROPERTY(EditAnywhere, Category = "WaveRight")
+		float SeparationRight;
+	UPROPERTY(EditAnywhere, Category = "WaveRight")
+		float PositionXRight;
+	UPROPERTY(EditAnywhere, Category = "WaveRight")
+		float MoveRightSpeed;
+	UPROPERTY(EditAnywhere, Category = "WaveRight")
+		float MoveRightMaxWaitingTime;
+
+	UPROPERTY(EditAnywhere, Category = "WaveTop")
+		float SeparationTop;
+	UPROPERTY(EditAnywhere, Category = "WaveTop")
+		float PositionYTop;
+	UPROPERTY(EditAnywhere, Category = "WaveTop")
+		float MoveTopSpeed;
+	UPROPERTY(EditAnywhere, Category = "WaveTop")
+		float MoveTopMaxWaitingTime;
+	UPROPERTY(EditAnywhere, Category = "WaveTop")
+		float StopPosition;
 
 private:
 	// Variables for controlling the areas around the camera
@@ -75,7 +86,7 @@ private:
 
 	// Functions to spawn the different types of enemies
 	void SpawnBug(FVector location, UMoveBehaviour* Movement, UProjectileBehaviour* ProjectileBehaviour) const;
-
+	void SpawnShip(FVector location, UMoveBehaviour* Movement, UProjectileBehaviour* ProjectileBehaviour) const;
 
 	// General function for spawning any type of enemy
 	AEnemy* SpawnEnemy(FVector location, FRotator rotation) const;
@@ -83,20 +94,16 @@ private:
 	// Mesh references for the enemies
 	UPROPERTY()
 		UStaticMesh* BugShipMesh;
+	UPROPERTY()
+		UStaticMesh* ShipMesh;
 
 	//Move behaviours
 	UPROPERTY()
 		UMoveRight* MoveRightObject;
 	UPROPERTY()
 		UMoveLeft* MoveLeftObject;
-
-	// Projectile Behaviours
 	UPROPERTY()
-		UShootAtPlayerBehaviour* ShootAtPlayerObject;
-	UPROPERTY()
-		UShootStraightBehaviour* ShootStraightObject;
-	UPROPERTY()
-		UMissileBehaviour* MissileObject;
+		UMoveFromTop* MoveFromTopObject;
 
 	// Wave
 	UFUNCTION(BlueprintCallable)

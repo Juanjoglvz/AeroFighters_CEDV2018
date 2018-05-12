@@ -54,23 +54,17 @@ void AEnemyProjectile::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	// Check if the projectile has to be destroyed
-	if (StaticMesh->GetComponentLocation().X < BottomMovableArea->GetActorLocation().X)
+	if (StaticMesh->GetComponentLocation().X < BottomMovableArea->GetActorLocation().X - 200.f)
 	{
 		this->Destroy();
 	}
-
-	// The basic movement (falling) is the same for all enemy projectile types
-	FVector NewLocation = StaticMesh->GetComponentLocation() + (StaticMesh->GetForwardVector() * GetSpeed() * DeltaTime);
-	StaticMesh->SetWorldLocation(NewLocation);
-	//StaticMesh->SetWorldRotation(FRotator(90.f, 0.f, 0.f));
 }
 
 void AEnemyProjectile::OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherActor)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, FString(TEXT("[EnemyProjectile.cpp] - OnHit")));
-		if (OtherActor->GetClass()->IsChildOf(APlayerLaser::StaticClass()))
+		if (OtherActor->GetClass()->IsChildOf(APlayerMissile::StaticClass()))
 		{
 			this->Destroy();
 		}
