@@ -5,13 +5,15 @@
 #include "Engine.h"
 
 // Sets default values
-APlayerMissile::APlayerMissile() : Super()
+APlayerMissile::APlayerMissile() : Super(), LockedEnemy{ nullptr }
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	// Get StaticMesh associated with this projectile 
-	auto StaticMeshAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Assets/Projectile/BasicMissile.BasicMissile'"));
+
+	auto StaticMeshAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Assets/Projectile/PlayerMissile.PlayerMissile'"));
+
 
 	if (StaticMeshAsset.Succeeded())
 		SetStaticMeshAsset(StaticMeshAsset.Object);
@@ -32,9 +34,8 @@ void APlayerMissile::BeginPlay()
 // The behaviour is to find the nearest enemy and go for it
 void APlayerMissile::ProjectileBehaviour(float DeltaTime)
 {
-	AEnemy* NearestEnemy = nullptr;
 
-	if (NearestEnemy == nullptr)
+	if (LockedEnemy == nullptr)
 	{
 		float MinimumDistance{ 1000000.f };
 		for (TActorIterator<AActor> Iterator(GetWorld()); Iterator; ++Iterator)
@@ -45,16 +46,16 @@ void APlayerMissile::ProjectileBehaviour(float DeltaTime)
 			if (Iterator->GetClass()->IsChildOf(AEnemy::StaticClass()) &&
 				Distance < MinimumDistance)
 			{
-				NearestEnemy = Cast<AEnemy>(*Iterator);
+				LockedEnemy = Cast<AEnemy>(*Iterator);
 				MinimumDistance = Distance;
 			}
 		}
 	}
 
 	// Move Projectile towards the nearest enemy
-	if (NearestEnemy != nullptr)
+	if (LockedEnemy != nullptr)
 	{
-		FVector Direction = NearestEnemy->GetActorLocation() - StaticMesh->GetComponentLocation();
+		FVector Direction = LockedEnemy->GetActorLocation() - StaticMesh->GetComponentLocation();
 		FVector NewLocation = StaticMesh->GetComponentLocation() - (Direction * -1 * GetSpeed() * 100 * DeltaTime);
 		StaticMesh->SetWorldLocation(NewLocation);
 	}

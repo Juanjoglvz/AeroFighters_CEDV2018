@@ -99,6 +99,8 @@ private:
 	void Shoot(float DeltaTime);
 	bool b_IsShooting;
 	float ShootTimer;
+	float MissileTimer;
+	float MissileMaxTime;
 	float Timer;
 
 	// Invulnerabilty 
