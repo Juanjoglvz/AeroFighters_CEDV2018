@@ -4,6 +4,7 @@
 #include "PlayerLaser.h"
 #include "EnemyProjectile.h"
 #include "PlayerMissile.h"
+#include "RecordsManager.h"
 #include "Engine.h"
 
 
@@ -47,6 +48,9 @@ void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Get reference to RecordManager
+	FString RecordsManagerString = FString(TEXT("RecordsManager"));
+
 	//Get The references to the borders
 	FString TopMovableAreaString = FString(TEXT("TopMovableArea"));
 	FString BottomMovableAreaString = FString(TEXT("BottomMovableArea"));
@@ -55,6 +59,7 @@ void APlayerCharacter::BeginPlay()
 	uint32 i = 0;
 	for (TActorIterator<AActor> itr(GetWorld()); itr; ++itr)
 	{
+		// References to borders
 		if (TopMovableAreaString.Equals(itr->GetName()))
 		{
 			this->TopMovableArea = *itr;
@@ -76,7 +81,14 @@ void APlayerCharacter::BeginPlay()
 			i++;
 		}
 
-		if (i > 3)
+		// Get RecordsManager reference
+		if (itr->GetName().Contains(RecordsManagerString))
+		{
+			RecordsManagerReference = Cast<ARecordsManager>(*itr);
+			i++;
+		}
+
+		if (i > 4)
 		{
 			break;
 		}
@@ -257,9 +269,14 @@ void APlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 				VulnerableTimer = 0.f;
 			}
 			else if (NumberOfLives == 0 && b_IsVulnerable){
-				OtherActor->Destroy();
+				// Add punctuation to the array
+			        ARecordsManager::RecordsScores.Emplace(MakeTuple(FString("Ivan"), FString("30")));
+			        // Save the punctuation and go main menu
+			        RecordsManagerReference->MyRecordsDelegate.ExecuteIfBound();
+			        UGameplayStatics::OpenLevel(GetWorld(), FName("MainMenu"));
+
+                                OtherActor->Destroy();
 				this->Destroy();
-				UGameplayStatics::SetGamePaused(this, true);
 			}
 		}
 	}

@@ -82,7 +82,11 @@ private:
 	UPROPERTY()
 		TWeakObjectPtr<AActor> LeftMovableArea;
 
-	UPROPERTY(EditAnywhere, Category = "Player")
+	// Reference to RecordManager
+	UPROPERTY()
+		TWeakObjectPtr<class ARecordsManager> RecordsManagerReference;
+
+	UPROPERTY(EditAnywhere)
 		unsigned int NumberOfBombsAvailable;
 	UPROPERTY(EditAnywhere, Category = "Player")
 		unsigned int NumberOfLives;
