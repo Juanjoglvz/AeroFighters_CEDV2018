@@ -11,7 +11,9 @@ APlayerMissile::APlayerMissile() : Super(), LockedEnemy{ nullptr }
 	PrimaryActorTick.bCanEverTick = true;
 
 	// Get StaticMesh associated with this projectile 
+
 	auto StaticMeshAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Assets/Projectile/PlayerMissile.PlayerMissile'"));
+
 
 	if (StaticMeshAsset.Succeeded())
 		SetStaticMeshAsset(StaticMeshAsset.Object);

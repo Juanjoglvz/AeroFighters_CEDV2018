@@ -38,6 +38,8 @@ public:
 	void SetSpeed (float Speed_) { Speed = Speed_; }
 	float GetSpeed() const { return Speed;  }
 
+	UStaticMeshComponent* GetStaticMesh() const { return StaticMesh; }
+
 private:
 	float Speed;
 };
