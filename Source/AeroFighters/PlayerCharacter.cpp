@@ -238,7 +238,7 @@ void APlayerCharacter::Shoot(float DeltaTime)
 					Location += FVector(20.f, 0.f, 0.f);
 				}
 
-				GetWorld()->SpawnActor <APlayerMissile>(Location, Rotation, SpawnInfo);
+				GetWorld()->SpawnActor<APlayerLaser>(Location, Rotation, SpawnInfo);
 			}
 			MissileTimer = 0.f;
 		}
@@ -252,7 +252,7 @@ void APlayerCharacter::Shoot(float DeltaTime)
 				{
 					Location += FVector(20.f, 0.f, 0.f);
 				}
-				GetWorld()->SpawnActor <APlayerMissile>(Location, Rotation, SpawnInfo);
+				GetWorld()->SpawnActor <APlayerLaser>(Location, Rotation, SpawnInfo);
 			}
 			MissileTimer = 0.f;
 		}
