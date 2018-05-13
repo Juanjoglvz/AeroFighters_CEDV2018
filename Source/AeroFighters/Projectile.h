@@ -31,6 +31,11 @@ protected:
 		TWeakObjectPtr<AActor> BottomMovableArea;
 	UPROPERTY()
 		TWeakObjectPtr<AActor> TopMovableArea;
+	UPROPERTY()
+		TWeakObjectPtr<AActor> RightMovableArea;
+	UPROPERTY()
+		TWeakObjectPtr<AActor> LeftMovableArea;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;	

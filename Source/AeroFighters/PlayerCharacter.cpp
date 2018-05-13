@@ -327,6 +327,8 @@ void APlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 				// Make player invulnerable
 				b_IsVulnerable = false; 
 				VulnerableTimer = 0.f;
+				// Set Power State to 0
+				this->CurrentPower = PlayerPower::BasicShot;
 			}
 			else if (NumberOfLives == 0 && b_IsVulnerable){
 				// Add punctuation to the array
