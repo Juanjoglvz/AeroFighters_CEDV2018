@@ -56,7 +56,7 @@ void APlayerMissile::ProjectileBehaviour(float DeltaTime)
 	if (LockedEnemy != nullptr)
 	{
 		FVector Direction = LockedEnemy->GetActorLocation() - StaticMesh->GetComponentLocation();
-		FVector NewLocation = StaticMesh->GetComponentLocation() - (Direction * -1 * GetSpeed() * 100 * DeltaTime);
+		FVector NewLocation = StaticMesh->GetComponentLocation() - (Direction * -1 * GetSpeed() * 0.002 * DeltaTime);
 		StaticMesh->SetWorldLocation(NewLocation);
 	}
 }
