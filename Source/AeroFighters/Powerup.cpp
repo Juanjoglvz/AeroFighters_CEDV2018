@@ -4,7 +4,7 @@
 #include "PlayerCharacter.h"
 
 // Sets default values
-APowerup::APowerup() : MoveSpeed(0.2f), CameraSpeed{ 150.f, 0.f, 0.f }
+APowerup::APowerup() : MoveSpeed(3.0f), CameraSpeed{ 150.f, 0.f, 0.f }, LastCollidedArea(nullptr)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -31,10 +31,13 @@ void APowerup::SetStaticMeshAsset(UStaticMesh* StaticMeshAsset)
 	StaticMeshComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 }
 
-void APowerup::SetUp(float MoveSpeed, UWorld* World)
+void APowerup::SetSpeed(float MoveSpeed)
 {
 	this->MoveSpeed = MoveSpeed;
+}
 
+void APowerup::SetUp(UWorld * World)
+{
 	//Get The references to the borders
 	FString TopMovableAreaString = FString(TEXT("TopMovableArea"));
 	FString BottomMovableAreaString = FString(TEXT("BottomMovableArea"));
@@ -76,15 +79,17 @@ void APowerup::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	SetUp(GetWorld());
 }
 
 void APowerup::OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherActor)
-	{
+	{		
 		if (OtherActor->GetClass()->IsChildOf(APlayerCharacter::StaticClass()))
 		{
-			GEngine->AddOnScreenDebugMessage(2, 2.f, FColor::Red, TEXT("Pero bueno Folagorrr"));
+			APlayerCharacter* Character = (APlayerCharacter*)OtherActor;
+			GEngine->AddOnScreenDebugMessage(2, 2.f, FColor::Red, TEXT("Subeme la radio"));
 			// Do some stuff with Powerups
 		}
 	}
@@ -95,8 +100,35 @@ void APowerup::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	ChangeDirection(GetActorLocation());
+
 	Move(DeltaTime);
 
+}
+
+void APowerup::ChangeDirection(FVector Position)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Your Bottom: %p"), BottomMovableArea.Get());
+	if (Position.X < BottomMovableArea.Get()->GetActorLocation().X && LastCollidedArea.Get() != BottomMovableArea.Get())
+	{
+		Direction.X *= -1;
+		LastCollidedArea = BottomMovableArea;
+	}
+	else if (Position.X > TopMovableArea.Get()->GetActorLocation().X && LastCollidedArea.Get() != TopMovableArea.Get())
+	{
+		Direction.X *= -1;
+		LastCollidedArea = TopMovableArea;
+	}
+	else if (Position.Y > RightMovableArea.Get()->GetActorLocation().Y && LastCollidedArea.Get() != RightMovableArea.Get())
+	{
+		Direction.Y *= -1;
+		LastCollidedArea = RightMovableArea;
+	}
+	else if (Position.Y < LeftMovableArea.Get()->GetActorLocation().Y && LastCollidedArea.Get() != LeftMovableArea.Get())
+	{
+		Direction.Y *= -1;
+		LastCollidedArea = LeftMovableArea;
+	}
 }
 
 void APowerup::Move(float DeltaTime)
@@ -108,8 +140,6 @@ void APowerup::Move(float DeltaTime)
 	NewLocation += Direction * MoveSpeed * DeltaTime;
 
 	SetActorLocation(NewLocation);
-
-	UE_LOG(LogTemp, Display, TEXT("X:%f  Y:%f  Z:%f"), Direction.X, Direction.Y, Direction.Z);
 }
 
 float APowerup::RandomFloat(float a, float b) {
