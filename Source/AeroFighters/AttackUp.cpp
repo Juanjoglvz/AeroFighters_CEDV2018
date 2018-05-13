@@ -10,7 +10,9 @@ AAttackUp::AAttackUp() : Super()
 	auto StaticMeshAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Engine/BasicShapes/Cube.Cube'"));
 
 	if (StaticMeshAsset.Succeeded())
-		SetStaticMeshAsset(StaticMeshAsset.Object);
+	{
+	SetStaticMeshAsset(StaticMeshAsset.Object);
+	}
 }
 
 void AAttackUp::Tick(float DeltaTime)

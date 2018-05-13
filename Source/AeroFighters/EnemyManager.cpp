@@ -100,8 +100,18 @@ AEnemy* AEnemyManager::SpawnEnemy(FVector location, FRotator rotation) const
 	return GetWorld()->SpawnActor<AEnemy>(location, rotation, spawnInfo);
 }
 
+void AEnemyManager::SpawnPowerUp() const
+{
+	FActorSpawnParameters spawnInfo;
+	GetWorld()->SpawnActor<APowerup>(this->PowerupType, FVector(this->TopMovableArea->GetActorLocation().X, 0.f, 200.f), FRotator(0.f, 0.f, 0.f));
+}
+
 void AEnemyManager::Wave() const
 {
+	if (this->PowerupType)
+	{
+		SpawnPowerUp();
+	}
 	double YpositionLeft{ -1000.f };
 	double YpositionRight{ 1000.f };
 	double YPositionTop{ this->PositionYTop };

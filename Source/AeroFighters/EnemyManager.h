@@ -94,6 +94,9 @@ private:
 	// General function for spawning any type of enemy
 	AEnemy* SpawnEnemy(FVector location, FRotator rotation) const;
 
+	// Spawn PowerUp if declared
+	void SpawnPowerUp() const;
+
 	// Mesh references for the enemies
 	UPROPERTY()
 		UStaticMesh* BugShipMesh;
