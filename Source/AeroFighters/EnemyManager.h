@@ -73,6 +73,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = "WaveTop")
 		float StopPosition;
 
+	UPROPERTY(EditAnywhere, Category = "Powerups")
+		TSubclassOf<class APowerup> PowerupType;
+
 private:
 	// Variables for controlling the areas around the camera
 	UPROPERTY()

@@ -17,3 +17,11 @@ void AAttackUp::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
+
+void AAttackUp::CollisionAction(APlayerCharacter* Character)
+{
+	if (Character)
+	{
+		Character->IncreasePower();
+	}
+}

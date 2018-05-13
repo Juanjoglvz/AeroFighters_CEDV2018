@@ -17,5 +17,7 @@ class AEROFIGHTERS_API AAttackUp : public APowerup
 public:
 	AAttackUp();
 	virtual void Tick(float DeltaTime) override;
+
+	virtual void CollisionAction(APlayerCharacter * Character) override;
 	
 };

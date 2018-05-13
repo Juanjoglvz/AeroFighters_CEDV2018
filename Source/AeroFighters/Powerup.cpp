@@ -80,6 +80,11 @@ void APowerup::BeginPlay()
 	Super::BeginPlay();
 	
 	SetUp(GetWorld());
+
+	float MidX = TopMovableArea.Get()->GetActorLocation().X - BottomMovableArea.Get()->GetActorLocation().X;
+	float MidY = RightMovableArea.Get()->GetActorLocation().Y - LeftMovableArea.Get()->GetActorLocation().Y;
+	UE_LOG(LogTemp, Warning, TEXT("%f   %f"), MidX, MidY);
+	SetActorLocation(FVector(MidX / 2, MidY / 2, GetActorLocation().Z));
 }
 
 void APowerup::OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -91,6 +96,8 @@ void APowerup::OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor
 			APlayerCharacter* Character = (APlayerCharacter*)OtherActor;
 			GEngine->AddOnScreenDebugMessage(2, 2.f, FColor::Red, TEXT("Subeme la radio"));
 			// Do some stuff with Powerups
+			CollisionAction(Character);
+			this->Destroy();
 		}
 	}
 }
@@ -108,7 +115,6 @@ void APowerup::Tick(float DeltaTime)
 
 void APowerup::ChangeDirection(FVector Position)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Your Bottom: %p"), BottomMovableArea.Get());
 	if (Position.X < BottomMovableArea.Get()->GetActorLocation().X && LastCollidedArea.Get() != BottomMovableArea.Get())
 	{
 		Direction.X *= -1;

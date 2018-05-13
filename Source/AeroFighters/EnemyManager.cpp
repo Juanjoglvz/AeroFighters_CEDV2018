@@ -7,7 +7,7 @@
 // Sets default values
 AEnemyManager::AEnemyManager() : Super(), SeparationLeft(100.f), MoveLeftSpeed(100.f), PositionXLeft(200.f), SeparationRight(100.f),
 PositionXRight(200.f), MoveRightSpeed(100.f), SeparationTop(100.f), MoveTopSpeed(100.f), MoveTopMaxWaitingTime(5.f),
-StopPosition(200.f), EnemyType(TEXT("Bug"))
+StopPosition(200.f), EnemyType(TEXT("Bug")), PowerupType(nullptr)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;

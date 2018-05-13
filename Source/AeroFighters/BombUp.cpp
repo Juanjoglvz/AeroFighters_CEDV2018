@@ -3,5 +3,25 @@
 #include "BombUp.h"
 
 
+ABombUp::ABombUp() : Super()
+{
+	PrimaryActorTick.bCanEverTick = true;
 
+	auto StaticMeshAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Assets/Asteroid/Asteroid1.Asteroid1'"));
 
+	if (StaticMeshAsset.Succeeded())
+		SetStaticMeshAsset(StaticMeshAsset.Object);
+}
+
+void ABombUp::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+}
+
+void ABombUp::CollisionAction(APlayerCharacter* Character)
+{
+	if (Character)
+	{
+		Character->IncreaseBombs();
+	}
+}

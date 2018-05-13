@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Engine.h"
+#include "PlayerCharacter.h"
 #include "GameFramework/Actor.h"
 #include "Powerup.generated.h"
 
-UCLASS()
+UCLASS(Abstract)
 class AEROFIGHTERS_API APowerup : public AActor
 {
 	GENERATED_BODY()
@@ -38,6 +39,8 @@ protected:
 	virtual void SetStaticMeshAsset(UStaticMesh* StaticMeshAsset);
 	UPROPERTY()
 		UStaticMeshComponent* StaticMeshComponent;
+
+	virtual void CollisionAction(APlayerCharacter* Character) PURE_VIRTUAL(APowerup::CollisionAction, );
 
 	UFUNCTION()
 		void OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

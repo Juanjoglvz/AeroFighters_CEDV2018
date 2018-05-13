@@ -13,8 +13,10 @@ UCLASS()
 class AEROFIGHTERS_API ABombUp : public APowerup
 {
 	GENERATED_BODY()
-	
-	
-	
-	
+
+public:
+	ABombUp();
+	virtual void Tick(float DeltaTime) override;
+
+	virtual void CollisionAction(APlayerCharacter * Character) override;
 };
