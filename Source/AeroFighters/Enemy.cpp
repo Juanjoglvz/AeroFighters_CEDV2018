@@ -4,7 +4,7 @@
 #include "PlayerProjectile.h"
 
 // Sets default values
-AEnemy::AEnemy() : CameraSpeed{ 150.f, 0.f, 0.f }
+AEnemy::AEnemy() : CameraSpeed{ 150.f, 0.f, 0.f }, PowerupSpawnProbability(0.05)
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -21,6 +21,11 @@ AEnemy::AEnemy() : CameraSpeed{ 150.f, 0.f, 0.f }
 	StaticMeshComponent->SetupAttachment(RootComponent);
 
 	BoxCollision->OnComponentBeginOverlap.AddDynamic(this, &AEnemy::OnOverlap);
+}
+
+void AEnemy::SetPowerupType(TSubclassOf<class APowerup> PowerupType)
+{
+	this->PowerupType = PowerupType;
 }
 
 // Called when the game starts or when spawned
@@ -74,6 +79,10 @@ void AEnemy::OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, 
 	{
 		if (OtherActor->GetClass()->IsChildOf(APlayerProjectile::StaticClass()))
 		{
+			if (PowerupType.Get())
+			{
+				GetWorld()->SpawnActor<APowerup>(PowerupType);
+			}
 			this->Destroy();
 			OtherActor->Destroy();
 		}

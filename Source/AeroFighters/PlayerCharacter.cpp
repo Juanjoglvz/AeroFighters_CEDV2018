@@ -14,7 +14,7 @@ APlayerCharacter::APlayerCharacter() :
 	NumberOfBombsAvailable{ 3 }, NumberOfLives{ 5 }, MoveSpeed { 1000.f }, CameraSpeed{ 150.f, 0.f, 0.f }, 
 	b_IsShooting{ false }, Timer{ 0.25f }, ShootTimer{ 0.25f }, MissileTimer{ 0.f }, MissileMaxTime{ 1.f },
         CurrentPower{ PlayerPower::WideShot}, b_IsVulnerable{ true }, MaximumVulnerabilityTime{ 3.f }, 
-        VulnerableTimer{ 0.f }, ShowAndHideTimer{ 0.f } 
+        VulnerableTimer{ 0.f }, ShowAndHideTimer{ 0.f }, MaxNumberOfBombs(5)
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -42,6 +42,33 @@ APlayerCharacter::APlayerCharacter() :
 	// Add OnHit function to OnActorHit event
 	GetCapsuleComponent()->bGenerateOverlapEvents = true;
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("OverlapAll"));
+}
+
+void APlayerCharacter::IncreaseBombs()
+{
+	if (NumberOfBombsAvailable < MaxNumberOfBombs)
+		NumberOfBombsAvailable++;
+	else
+		return; // Increase Score Here
+}
+
+void APlayerCharacter::IncreasePower()
+{
+	switch (CurrentPower)
+	{
+		case PlayerPower::BasicShot:
+			CurrentPower = PlayerPower::WideShot;
+			break;
+		case PlayerPower::WideShot:
+			CurrentPower = PlayerPower::WideShotMissile;
+			break;
+		case PlayerPower::WideShotMissile:
+			CurrentPower = PlayerPower::FullPower;
+			break;
+		case PlayerPower::FullPower:
+			// Increase score here
+			break;
+	}
 }
 
 // Called when the game starts or when spawned

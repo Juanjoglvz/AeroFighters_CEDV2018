@@ -26,6 +26,9 @@ public:
 	// Sets default values for this character's properties
 	APlayerCharacter();
 
+	void IncreaseBombs();
+	void IncreasePower();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -90,6 +93,8 @@ private:
 		unsigned int NumberOfBombsAvailable;
 	UPROPERTY(EditAnywhere, Category = "Player")
 		unsigned int NumberOfLives;
+	UPROPERTY(EditAnywhere, Category = "Player")
+	unsigned int MaxNumberOfBombs;
 
 	// Function to see if posible to move
 	bool IsPosMoveX(FVector NewPos) const;

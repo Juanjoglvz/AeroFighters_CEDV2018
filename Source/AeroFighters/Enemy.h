@@ -5,6 +5,7 @@
 #include "Core.h"
 #include "Engine.h"
 #include "MoveBehaviour.h"
+#include "Powerup.h"
 #include "ProjectileBehaviour.h"
 #include "GameFramework/Actor.h"
 #include "Enemy.generated.h"
@@ -24,6 +25,8 @@ protected:
 	UFUNCTION()
 		void OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+	float PowerupSpawnProbability;
+
 
 public:
 	// Called every frame
@@ -37,6 +40,8 @@ public:
 
 	void SetProjectileBehaviour(UProjectileBehaviour* ProjectileBehaviour_) { ProjectileBehaviour = ProjectileBehaviour_; }
 
+	void SetPowerupType(TSubclassOf<class APowerup> PowerupType);
+
 private:
 	UPROPERTY()
 		UStaticMeshComponent* StaticMeshComponent;
@@ -48,4 +53,6 @@ private:
 		UProjectileBehaviour* ProjectileBehaviour;
 
 	FVector CameraSpeed;
+
+	TSubclassOf<class APowerup> PowerupType;
 };
