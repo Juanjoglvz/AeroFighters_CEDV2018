@@ -82,6 +82,7 @@ void AEnemyManager::SpawnBug(FVector location,  UMoveBehaviour* Movement, UProje
 	EnemySpawned->SetStaticMesh(this->BugShipMesh);
 	EnemySpawned->SetMoveBehaviour(Movement);
 	EnemySpawned->SetProjectileBehaviour(ProjectileBehaviour);
+	EnemySpawned->SetPowerupType(PowerupType);
 }
 
 void AEnemyManager::SpawnShip(FVector location, UMoveBehaviour* Movement, UProjectileBehaviour* ProjectileBehaviour) const

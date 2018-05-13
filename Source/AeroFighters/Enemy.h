@@ -18,8 +18,6 @@ public:
 	// Sets default values for this actor's properties
 	AEnemy();
 
-	void SetPowerupType(TSubclassOf<class APowerup> PowerupType);
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -41,6 +39,8 @@ public:
 	void SetMoveBehaviour(UMoveBehaviour* Move);
 
 	void SetProjectileBehaviour(UProjectileBehaviour* ProjectileBehaviour_) { ProjectileBehaviour = ProjectileBehaviour_; }
+
+	void SetPowerupType(TSubclassOf<class APowerup> PowerupType);
 
 private:
 	UPROPERTY()

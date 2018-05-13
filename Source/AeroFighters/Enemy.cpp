@@ -23,7 +23,7 @@ AEnemy::AEnemy() : CameraSpeed{ 150.f, 0.f, 0.f }, PowerupSpawnProbability(0.05)
 	BoxCollision->OnComponentBeginOverlap.AddDynamic(this, &AEnemy::OnOverlap);
 }
 
-void AEnemy::SetPowerupType(TSubclassOf<class APowerup>)
+void AEnemy::SetPowerupType(TSubclassOf<class APowerup> PowerupType)
 {
 	this->PowerupType = PowerupType;
 }
