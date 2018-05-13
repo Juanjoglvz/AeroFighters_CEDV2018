@@ -79,7 +79,7 @@ void AEnemy::OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, 
 	{
 		if (OtherActor->GetClass()->IsChildOf(APlayerProjectile::StaticClass()))
 		{
-			if (PowerupType.Get())
+			if (PowerupType.Get() && ((float)rand() / (float)RAND_MAX) < PowerupSpawnProbability )
 			{
 				GetWorld()->SpawnActor<APowerup>(PowerupType);
 			}
