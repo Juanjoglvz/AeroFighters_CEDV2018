@@ -81,7 +81,8 @@ void AEnemy::OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, 
 		{
 			if (PowerupType.Get() && ((float)rand() / (float)RAND_MAX) < PowerupSpawnProbability )
 			{
-				GetWorld()->SpawnActor<APowerup>(PowerupType);
+				
+				GetWorld()->SpawnActor<APowerup>(PowerupType, this->GetActorLocation(), FRotator(0.f,0.f,0.f));
 			}
 			this->Destroy();
 			OtherActor->Destroy();

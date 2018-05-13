@@ -7,7 +7,7 @@
 // Sets default values
 AEnemyManager::AEnemyManager() : Super(), SeparationLeft(100.f), MoveLeftSpeed(100.f), PositionXLeft(200.f), SeparationRight(100.f),
 PositionXRight(200.f), MoveRightSpeed(100.f), SeparationTop(100.f), MoveTopSpeed(100.f), MoveTopMaxWaitingTime(5.f),
-StopPosition(200.f), EnemyType(TEXT("Bug")), PowerupType(nullptr)
+StopPosition(200.f), EnemyType(TEXT("Bug")), PowerupType(nullptr), StaticSpawn(false)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -92,6 +92,7 @@ void AEnemyManager::SpawnShip(FVector location, UMoveBehaviour* Movement, UProje
 	EnemySpawned->SetStaticMesh(this->ShipMesh);
 	EnemySpawned->SetMoveBehaviour(Movement);
 	EnemySpawned->SetProjectileBehaviour(ProjectileBehaviour);
+	EnemySpawned->SetPowerupType(PowerupType);
 }
 
 AEnemy* AEnemyManager::SpawnEnemy(FVector location, FRotator rotation) const
@@ -103,12 +104,12 @@ AEnemy* AEnemyManager::SpawnEnemy(FVector location, FRotator rotation) const
 void AEnemyManager::SpawnPowerUp() const
 {
 	FActorSpawnParameters spawnInfo;
-	GetWorld()->SpawnActor<APowerup>(this->PowerupType, FVector(this->TopMovableArea->GetActorLocation().X, 0.f, 200.f), FRotator(0.f, 0.f, 0.f));
+	GetWorld()->SpawnActor<APowerup>(this->PowerupType, FVector(this->TopMovableArea->GetActorLocation().X - 300, 0.f, 200.f), FRotator(0.f, 0.f, 0.f));
 }
 
 void AEnemyManager::Wave() const
 {
-	if (this->PowerupType)
+	if (this->PowerupType && this->StaticSpawn)
 	{
 		SpawnPowerUp();
 	}
