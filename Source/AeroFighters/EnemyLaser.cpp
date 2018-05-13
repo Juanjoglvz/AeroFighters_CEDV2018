@@ -16,7 +16,7 @@ AEnemyLaser::AEnemyLaser() : Super(), Direction { -150.f, 0.f, 0.f }
 	if (StaticMeshAsset.Succeeded())
 		SetStaticMeshAsset(StaticMeshAsset.Object);
 	
-	SetSpeed(450.f);
+	SetSpeed(900.f);
 }
 
 // Called when the game starts or when spawned
