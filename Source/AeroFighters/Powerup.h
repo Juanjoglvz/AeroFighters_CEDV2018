@@ -15,7 +15,7 @@ class AEROFIGHTERS_API APowerup : public AActor
 public:	
 	// Sets default values for this actor's properties
 	APowerup();
-	void SetUp(float MoveSpeed, UWorld* World);
+	void SetSpeed(float MoveSpeed);
 
 protected:
 	// Called when the game starts or when spawned
@@ -33,6 +33,8 @@ protected:
 	UPROPERTY()
 		TWeakObjectPtr<AActor> LeftMovableArea;
 
+	TWeakObjectPtr<AActor> LastCollidedArea;
+
 	virtual void SetStaticMeshAsset(UStaticMesh* StaticMeshAsset);
 	UPROPERTY()
 		UStaticMeshComponent* StaticMeshComponent;
@@ -46,7 +48,10 @@ public:
 
 private:
 	virtual void Move(float DeltaTime);
+	void SetUp(UWorld* World);
+	float RandomFloat(float a, float b);
+	void ChangeDirection(FVector Position);
+
 	FVector CameraSpeed;
 	FVector Direction;
-	float RandomFloat(float a, float b);
 };
