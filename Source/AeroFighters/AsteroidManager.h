@@ -62,7 +62,24 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Basic")
 		TSubclassOf<class AAsteroid> AsteroidType;
 
+	UPROPERTY(EditAnywhere, Category = "Basic")
+		float RefreshFrequency;
+
+	UPROPERTY(EditAnywhere, Category = "Basic")
+		float LookaheadSpawnDistance;
+
 private:
 	float RandomFloat(float a, float b);
+	void GenerateRandomPositions();
+	bool IsPositionOnScreen(FVector position);
+	AAsteroid* SpawnRandomAsteroid(FVector position);
+	void SpawnVisibleAsteroids();
+	void DespawnInvisibleAsteroids();
+
 	AAsteroid* Prototype;
+	TArray<FVector> AsteroidPositions;
+	TArray<AAsteroid*> SpawnedAsteroids;
+	FVector ClosestAsteroid;
+	FVector2D ViewportSize;
+	float AccumulatedDeltaTime;
 };

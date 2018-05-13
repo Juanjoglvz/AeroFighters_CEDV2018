@@ -42,10 +42,9 @@ void AAsteroid::BeginPlay()
 void AAsteroid::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	FRotator OriginalRotation = GetActorRotation();
-	FRotator NewRotation = OriginalRotation + RotationDrift * RotationDriftSpeed * DeltaTime;
-	
-	SetActorRotation(NewRotation);
+	FRotator RotationIncrease = RotationDrift * RotationDriftSpeed * DeltaTime;
+
+	AddActorWorldRotation(RotationIncrease);
 }
 
 
