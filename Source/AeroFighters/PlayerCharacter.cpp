@@ -349,7 +349,6 @@ void APlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 		{
 			if (NumberOfLives > 0 && b_IsVulnerable)
 			{
-				GEngine->AddOnScreenDebugMessage(3, 5.f, FColor::Red, FString(TEXT("Me han dao!")) + FString::FromInt(this->NumberOfLives));
 				NumberOfLives--;
 				// Make player invulnerable
 				b_IsVulnerable = false; 

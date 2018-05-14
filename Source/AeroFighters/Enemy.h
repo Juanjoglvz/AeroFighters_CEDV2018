@@ -40,7 +40,12 @@ public:
 
 	void SetProjectileBehaviour(UProjectileBehaviour* ProjectileBehaviour_) { ProjectileBehaviour = ProjectileBehaviour_; }
 
+	// Set Drop type and HP
+	void SetHp(int32 HP);
+
 	void SetPowerupType(TSubclassOf<class APowerup> PowerupType);
+
+
 
 private:
 	UPROPERTY()
@@ -55,4 +60,9 @@ private:
 	FVector CameraSpeed;
 
 	TSubclassOf<class APowerup> PowerupType;
+
+	// Variables for controlling HP
+	int32 HP;
+	int32 LaserDmg;
+	int32 MissileDmg;
 };

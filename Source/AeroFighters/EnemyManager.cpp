@@ -86,6 +86,7 @@ void AEnemyManager::SpawnBug(FVector location,  UMoveBehaviour* Movement, UProje
 	EnemySpawned->SetMoveBehaviour(Movement);
 	EnemySpawned->SetProjectileBehaviour(ProjectileBehaviour);
 	EnemySpawned->SetPowerupType(PowerupType);
+	EnemySpawned->SetHp(20);
 }
 
 void AEnemyManager::SpawnShip(FVector location, UMoveBehaviour* Movement, UProjectileBehaviour* ProjectileBehaviour) const
@@ -96,6 +97,7 @@ void AEnemyManager::SpawnShip(FVector location, UMoveBehaviour* Movement, UProje
 	EnemySpawned->SetMoveBehaviour(Movement);
 	EnemySpawned->SetProjectileBehaviour(ProjectileBehaviour);
 	EnemySpawned->SetPowerupType(PowerupType);
+	EnemySpawned->SetHp(40);
 }
 
 void AEnemyManager::SpawnBomber(FVector location, UMoveBehaviour* Movement, UProjectileBehaviour* ProjectileBehaviour) const
@@ -106,6 +108,7 @@ void AEnemyManager::SpawnBomber(FVector location, UMoveBehaviour* Movement, UPro
 	EnemySpawned->SetMoveBehaviour(Movement);
 	EnemySpawned->SetProjectileBehaviour(ProjectileBehaviour);
 	EnemySpawned->SetPowerupType(PowerupType);
+	EnemySpawned->SetHp(80);
 }
 
 AEnemy* AEnemyManager::SpawnEnemy(FVector location, FRotator rotation) const

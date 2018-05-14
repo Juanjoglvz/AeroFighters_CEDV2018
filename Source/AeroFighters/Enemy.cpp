@@ -2,9 +2,11 @@
 
 #include "Enemy.h"
 #include "PlayerProjectile.h"
+#include "PlayerLaser.h"
+#include "PlayerMissile.h"
 
 // Sets default values
-AEnemy::AEnemy() : CameraSpeed{ 150.f, 0.f, 0.f }, PowerupSpawnProbability(0.05)
+AEnemy::AEnemy() : CameraSpeed{ 150.f, 0.f, 0.f }, PowerupSpawnProbability(0.05), LaserDmg(10), MissileDmg(50)
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -73,18 +75,39 @@ void AEnemy::SetMoveBehaviour(UMoveBehaviour* Move)
 	this->Movement = Move;
 }
 
+void AEnemy::SetHp(int32 HP)
+{
+	this->HP = HP;
+}
+
 void AEnemy::OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherActor)
 	{
 		if (OtherActor->GetClass()->IsChildOf(APlayerProjectile::StaticClass()))
 		{
-			if (PowerupType.Get() && ((float)rand() / (float)RAND_MAX) < PowerupSpawnProbability )
+			// Reduce health and destroy if less than 0
+			if (OtherActor->GetClass()->IsChildOf(APlayerLaser::StaticClass()))
 			{
-				
-				GetWorld()->SpawnActor<APowerup>(PowerupType, this->GetActorLocation(), FRotator(0.f,0.f,0.f));
+				this->HP -= this->LaserDmg;
 			}
-			this->Destroy();
+			else if (OtherActor->GetClass()->IsChildOf(APlayerMissile::StaticClass()))
+			{
+				this->HP -= this->MissileDmg;
+			}
+			if (this->HP < 0)
+			{
+				//Roll the dice for possible drop
+				if (PowerupType.Get() && ((float)rand() / (float)RAND_MAX) < PowerupSpawnProbability)
+				{
+
+					GetWorld()->SpawnActor<APowerup>(PowerupType, this->GetActorLocation(), FRotator(0.f, 0.f, 0.f));
+				}
+
+				this->Destroy();
+			}
+
+
 			OtherActor->Destroy();
 		}
 	}
