@@ -21,6 +21,10 @@ protected:
 	virtual void BeginPlay() override;
 	
 	virtual void ProjectileBehaviour(float DeltaTime) override;
+	
+	// Override EnemyProjectile OnOverlap function, because missiles have to be destroyed if they impact with Player lasers too
+	UFUNCTION(Category = "Hit")
+		virtual void OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;
 
 private:
 	TWeakObjectPtr<ACharacter> CharacterReference;

@@ -37,10 +37,6 @@ void AEnemyProjectile::BeginPlay()
 	{
 		PlayerCharacter->myDiscardEnemyShootsDelegate.AddDynamic(this, &AEnemyProjectile::OnBomb);
 	}
-	else
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, FString(TEXT("[EnemyProjectile.cpp] - PlayerCharacter is nullptr")));
-	}
 }
 
 void AEnemyProjectile::OnBomb()
@@ -56,7 +52,7 @@ void AEnemyProjectile::Tick(float DeltaTime)
 	// Check if the projectile has to be destroyed
 	if (StaticMesh->GetComponentLocation().X < BottomMovableArea->GetActorLocation().X - 200.f 
 		|| StaticMesh->GetComponentLocation().Y > RightMovableArea->GetActorLocation().Y + 300
-		|| StaticMesh->GetComponentLocation().Y < LeftMovableArea->GetActorLocation().Y -300)
+		|| StaticMesh->GetComponentLocation().Y < LeftMovableArea->GetActorLocation().Y - 300)
 	{
 		this->Destroy();
 	}
