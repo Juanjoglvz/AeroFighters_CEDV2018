@@ -56,7 +56,14 @@ void APlayerMissile::ProjectileBehaviour(float DeltaTime)
 	if (LockedEnemy != nullptr)
 	{
 		FVector Direction = LockedEnemy->GetActorLocation() - StaticMesh->GetComponentLocation();
-		FVector NewLocation = StaticMesh->GetComponentLocation() - (Direction * -1 * GetSpeed() * 0.002 * DeltaTime);
+		FVector NewLocation{ 0.f, 0.f, 0.f };
+		
+		// If the projectile is over the spaceship, it must go down. Otherwise, it must go up
+		if (Direction.X < 0)
+			NewLocation = StaticMesh->GetComponentLocation() + (Direction * GetSpeed() * 0.02 * DeltaTime);
+		else 	
+			NewLocation = StaticMesh->GetComponentLocation() - (Direction * -1 * GetSpeed() * 0.002 * DeltaTime);
+		
 		StaticMesh->SetWorldLocation(NewLocation);
 	}
 }
