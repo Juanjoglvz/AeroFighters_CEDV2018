@@ -17,6 +17,14 @@
 
 class AEnemy;
 
+UENUM(BlueprintType)
+enum class EnemyType : uint8
+{
+	Bug,
+	Ship,
+	Bomber,
+};
+
 UCLASS()
 class AEROFIGHTERS_API AEnemyManager : public AActor
 {
@@ -35,7 +43,7 @@ public:
 
 	// Variables for controlling wave spawning
 	UPROPERTY(EditAnywhere, Category = "Wave")
-		FString EnemyType;
+		EnemyType EnemyType;
 
 	UPROPERTY(EditAnywhere, Category = "Wave")
 		int NumberLeft;
@@ -92,6 +100,7 @@ private:
 	// Functions to spawn the different types of enemies
 	void SpawnBug(FVector location, UMoveBehaviour* Movement, UProjectileBehaviour* ProjectileBehaviour) const;
 	void SpawnShip(FVector location, UMoveBehaviour* Movement, UProjectileBehaviour* ProjectileBehaviour) const;
+	void SpawnBomber(FVector location, UMoveBehaviour* Movement, UProjectileBehaviour* ProjectileBehaviour) const;
 
 	// General function for spawning any type of enemy
 	AEnemy* SpawnEnemy(FVector location, FRotator rotation) const;
@@ -104,6 +113,8 @@ private:
 		UStaticMesh* BugShipMesh;
 	UPROPERTY()
 		UStaticMesh* ShipMesh;
+	UPROPERTY()
+		UStaticMesh* BomberMesh;
 
 	//Move behaviours
 	UPROPERTY()

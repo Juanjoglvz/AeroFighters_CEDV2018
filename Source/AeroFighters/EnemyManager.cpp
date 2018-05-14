@@ -7,7 +7,7 @@
 // Sets default values
 AEnemyManager::AEnemyManager() : Super(), SeparationLeft(100.f), MoveLeftSpeed(100.f), PositionXLeft(200.f), SeparationRight(100.f),
 PositionXRight(200.f), MoveRightSpeed(100.f), SeparationTop(100.f), MoveTopSpeed(100.f), MoveTopMaxWaitingTime(5.f),
-StopPosition(200.f), EnemyType(TEXT("Bug")), PowerupType(nullptr), StaticSpawn(false)
+StopPosition(200.f), EnemyType(EnemyType::Bug), PowerupType(nullptr), StaticSpawn(false)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -18,6 +18,9 @@ StopPosition(200.f), EnemyType(TEXT("Bug")), PowerupType(nullptr), StaticSpawn(f
 
 	auto ShipAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Assets/Ships/SimpleShip'"));
 	this->ShipMesh = ShipAsset.Object;
+
+	auto BomberAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Assets/Ships/spaceshipBasic'"));
+	this->BomberMesh = BomberAsset.Object;
 	
 }
 
@@ -95,6 +98,16 @@ void AEnemyManager::SpawnShip(FVector location, UMoveBehaviour* Movement, UProje
 	EnemySpawned->SetPowerupType(PowerupType);
 }
 
+void AEnemyManager::SpawnBomber(FVector location, UMoveBehaviour* Movement, UProjectileBehaviour* ProjectileBehaviour) const
+{
+	FRotator rotation = FRotator(0.0f, 90.0f, 0.0f);
+	AEnemy* EnemySpawned = SpawnEnemy(location, rotation);
+	EnemySpawned->SetStaticMesh(this->BugShipMesh);
+	EnemySpawned->SetMoveBehaviour(Movement);
+	EnemySpawned->SetProjectileBehaviour(ProjectileBehaviour);
+	EnemySpawned->SetPowerupType(PowerupType);
+}
+
 AEnemy* AEnemyManager::SpawnEnemy(FVector location, FRotator rotation) const
 {
 	FActorSpawnParameters spawnInfo;
@@ -116,7 +129,7 @@ void AEnemyManager::Wave() const
 	double YpositionLeft{ -1000.f };
 	double YpositionRight{ 1000.f };
 	double YPositionTop{ this->PositionYTop };
-	if (this->EnemyType.Equals(TEXT("Bug")))
+	if (this->EnemyType == EnemyType::Bug)
 	{
 		for (int i = 0; i < this->NumberLeft; i++, YpositionLeft -= SeparationLeft) {
 			SpawnBug(FVector(this->LeftMovableArea->GetActorLocation().X + PositionXLeft, YpositionLeft, 200.f),
@@ -132,22 +145,37 @@ void AEnemyManager::Wave() const
 				this->MoveFromTopObject, NewObject<UShootStraightBehaviour>());
 		}
 	}
-	else if (this->EnemyType.Equals(TEXT("Ship")))
+	else if (this->EnemyType == EnemyType::Ship)
 	{
-		{
-			for (int i = 0; i < this->NumberLeft; i++, YpositionLeft -= SeparationLeft) {
-				SpawnShip(FVector(this->LeftMovableArea->GetActorLocation().X + PositionXLeft, YpositionLeft, 200.f),
-					this->MoveRightObject, NewObject<UShootAtPlayerBehaviour>());
-			}
+		for (int i = 0; i < this->NumberLeft; i++, YpositionLeft -= SeparationLeft) {
+			SpawnShip(FVector(this->LeftMovableArea->GetActorLocation().X + PositionXLeft, YpositionLeft, 200.f),
+				this->MoveRightObject, NewObject<UShootAtPlayerBehaviour>());
+		}
 
-			for (int i = 0; i < this->NumberRight; i++, YpositionRight += SeparationRight) {
-				SpawnShip(FVector(this->LeftMovableArea->GetActorLocation().X + PositionXRight, YpositionRight, 200.f),
-					this->MoveLeftObject, NewObject<UShootAtPlayerBehaviour>());
-			}
-			for (int i = 0; i < this->NumberTop; i++, YPositionTop += SeparationTop) {
-				SpawnShip(FVector(this->TopMovableArea->GetActorLocation().X + 300.f, YPositionTop, 200.f),
-					this->MoveFromTopObject, NewObject<UShootAtPlayerBehaviour>());
-			}
+		for (int i = 0; i < this->NumberRight; i++, YpositionRight += SeparationRight) {
+			SpawnShip(FVector(this->LeftMovableArea->GetActorLocation().X + PositionXRight, YpositionRight, 200.f),
+				this->MoveLeftObject, NewObject<UShootAtPlayerBehaviour>());
+		}
+		for (int i = 0; i < this->NumberTop; i++, YPositionTop += SeparationTop) {
+			SpawnShip(FVector(this->TopMovableArea->GetActorLocation().X + 300.f, YPositionTop, 200.f),
+				this->MoveFromTopObject, NewObject<UShootAtPlayerBehaviour>());
+		}
+	
+	}
+	else if (this->EnemyType == EnemyType::Bomber)
+	{
+		for (int i = 0; i < this->NumberLeft; i++, YpositionLeft -= SeparationLeft) {
+			SpawnBomber(FVector(this->LeftMovableArea->GetActorLocation().X + PositionXLeft, YpositionLeft, 200.f),
+				this->MoveRightObject, NewObject<UMissileBehaviour>());
+		}
+
+		for (int i = 0; i < this->NumberRight; i++, YpositionRight += SeparationRight) {
+			SpawnBomber(FVector(this->LeftMovableArea->GetActorLocation().X + PositionXRight, YpositionRight, 200.f),
+				this->MoveLeftObject, NewObject<UMissileBehaviour>());
+		}
+		for (int i = 0; i < this->NumberTop; i++, YPositionTop += SeparationTop) {
+			SpawnBomber(FVector(this->TopMovableArea->GetActorLocation().X + 300.f, YPositionTop, 200.f),
+				this->MoveFromTopObject, NewObject<UMissileBehaviour>());
 		}
 	}
 }
