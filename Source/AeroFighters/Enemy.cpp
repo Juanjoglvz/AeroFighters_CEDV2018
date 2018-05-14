@@ -34,6 +34,14 @@ void AEnemy::SetPowerupType(TSubclassOf<class APowerup> PowerupType)
 void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// Bind an action to destroy the enemy if the character spawns a bomb
+	// The action is a lambda function that destroys the projectile
+	APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetCharacter());
+	if (PlayerCharacter != nullptr)
+	{
+		PlayerCharacter->myDiscardEnemyShootsDelegate.AddDynamic(this, &AEnemy::OnBomb);
+	}
 }
 
 // Called every frame
@@ -78,6 +86,11 @@ void AEnemy::SetMoveBehaviour(UMoveBehaviour* Move)
 void AEnemy::SetHp(int32 HP)
 {
 	this->HP = HP;
+}
+
+void AEnemy::OnBomb()
+{
+	this->Destroy();
 }
 
 void AEnemy::OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

@@ -80,6 +80,16 @@ void APowerup::BeginPlay()
 	Super::BeginPlay();
 	
 	SetUp(GetWorld());
+
+	// If the PowerUp spanws outside the borders (left and right ones), destroy it
+	if (StaticMeshComponent->GetComponentLocation().Y < LeftMovableArea.Get()->GetActorLocation().Y)
+	{
+		this->Destroy();
+	}
+	else if (StaticMeshComponent->GetComponentLocation().Y > RightMovableArea.Get()->GetActorLocation().Y)
+	{
+		this->Destroy();
+	}
 }
 
 void APowerup::OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
