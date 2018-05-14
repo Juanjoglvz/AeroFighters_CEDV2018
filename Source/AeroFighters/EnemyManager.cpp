@@ -104,7 +104,7 @@ void AEnemyManager::SpawnBomber(FVector location, UMoveBehaviour* Movement, UPro
 {
 	FRotator rotation = FRotator(0.0f, 90.0f, 0.0f);
 	AEnemy* EnemySpawned = SpawnEnemy(location, rotation);
-	EnemySpawned->SetStaticMesh(this->BugShipMesh);
+	EnemySpawned->SetStaticMesh(this->BomberMesh);
 	EnemySpawned->SetMoveBehaviour(Movement);
 	EnemySpawned->SetProjectileBehaviour(ProjectileBehaviour);
 	EnemySpawned->SetPowerupType(PowerupType);

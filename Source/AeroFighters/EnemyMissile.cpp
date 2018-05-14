@@ -16,7 +16,7 @@ AEnemyMissile::AEnemyMissile()
 	if (StaticMeshAsset.Succeeded())
 		SetStaticMeshAsset(StaticMeshAsset.Object);
 	
-	SetSpeed(150.f);
+	SetSpeed(50.f);
 }
 
 // Called when the game starts or when spawned
@@ -46,6 +46,11 @@ void AEnemyMissile::ProjectileBehaviour(float DeltaTime)
 		// The projectile moves towards player
 		FVector NewLocation = StaticMesh->GetComponentLocation() + (Direction * GetSpeed() * DeltaTime * 0.003f);
 		NewLocation.Z = 200.f;
+
+		//Camera Stuff 
+		NewLocation.X += 150.f * DeltaTime;
+
+
 		StaticMesh->SetWorldLocation(NewLocation);
 	}
 }
