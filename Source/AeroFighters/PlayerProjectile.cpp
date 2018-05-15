@@ -24,7 +24,7 @@ void APlayerProjectile::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	// Check if the projectile has to be destroyed
-	if (StaticMesh->GetComponentLocation().X > TopMovableArea->GetActorLocation().X + 400.f)
+	if (StaticMesh->GetComponentLocation().X > TopMovableArea->GetActorLocation().X + 100.f)
 	{
 		this->Destroy();
 	}

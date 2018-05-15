@@ -78,10 +78,10 @@ void AAsteroidManager::SpawnVisibleAsteroids()
 			Spawned = true;
 			UE_LOG(LogTemp, Display, TEXT("Spawned at X:%f  Y:%f"), Location.X, Location.Y);
 		}
-		else if (Spawned) // If we spawned an asteroid and we found an asteroid that is not on screen then stop trying spawning new ones
+		/*else if (Spawned) // If we spawned an asteroid and we found an asteroid that is not on screen then stop trying spawning new ones
 		{
 			break;
-		}
+		}*/
 		else {
 			Index++;
 		}
@@ -113,10 +113,10 @@ void AAsteroidManager::DespawnInvisibleAsteroids()
 			Despawned = true;
 			UE_LOG(LogTemp, Display, TEXT("Despawned %p at X:%f  Y:%f"), ast, Location.X, Location.Y);
 		}
-		else if (Despawned) // If we despawned an asteroid and we found an asteroid that is on screen then stop trying despawning new ones
+		/*else if (Despawned) // If we despawned an asteroid and we found an asteroid that is on screen then stop trying despawning new ones
 		{
 			break;
-		}
+		}*/
 		else
 		{
 			Index++;

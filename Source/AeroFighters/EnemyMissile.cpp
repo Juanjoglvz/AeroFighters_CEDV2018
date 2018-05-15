@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "EnemyMissile.h"
+#include "PlayerLaser.h"
 #include "Engine.h"
 
 // Sets default values
@@ -15,7 +16,7 @@ AEnemyMissile::AEnemyMissile()
 	if (StaticMeshAsset.Succeeded())
 		SetStaticMeshAsset(StaticMeshAsset.Object);
 	
-	SetSpeed(150.f);
+	SetSpeed(50.f);
 }
 
 // Called when the game starts or when spawned
@@ -43,9 +44,27 @@ void AEnemyMissile::ProjectileBehaviour(float DeltaTime)
 		StaticMesh->SetRelativeRotation(EnemyRotation, false, nullptr, ETeleportType::TeleportPhysics);
 
 		// The projectile moves towards player
-		FVector NewLocation = StaticMesh->GetComponentLocation() + (Direction * GetSpeed() * DeltaTime * 0.0001f);
+		FVector NewLocation = StaticMesh->GetComponentLocation() + (Direction * GetSpeed() * DeltaTime * 0.003f);
 		NewLocation.Z = 200.f;
+
+		//Camera Stuff 
+		NewLocation.X += 150.f * DeltaTime;
+
+
 		StaticMesh->SetWorldLocation(NewLocation);
 	}
 }
 
+
+void AEnemyMissile::OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	Super::OnOverlap(OverlappedComp, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
+	
+	if (OtherActor)
+	{
+		if (OtherActor->GetClass()->IsChildOf(APlayerLaser::StaticClass()))
+		{
+			this->Destroy();
+		}
+	}
+}

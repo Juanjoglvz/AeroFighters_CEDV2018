@@ -28,7 +28,7 @@ void APowerup::SetStaticMeshAsset(UStaticMesh* StaticMeshAsset)
 	StaticMeshComponent->SetMobility(EComponentMobility::Movable);
 	StaticMeshComponent->SetEnableGravity(false);
 	StaticMeshComponent->SetSimulatePhysics(false);
-	StaticMeshComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	StaticMeshComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepWorldTransform);
 }
 
 void APowerup::SetSpeed(float MoveSpeed)
@@ -81,10 +81,15 @@ void APowerup::BeginPlay()
 	
 	SetUp(GetWorld());
 
-	float MidX = TopMovableArea.Get()->GetActorLocation().X - BottomMovableArea.Get()->GetActorLocation().X;
-	float MidY = RightMovableArea.Get()->GetActorLocation().Y - LeftMovableArea.Get()->GetActorLocation().Y;
-	UE_LOG(LogTemp, Warning, TEXT("%f   %f"), MidX, MidY);
-	SetActorLocation(FVector(MidX / 2, MidY / 2, GetActorLocation().Z));
+	// If the PowerUp spanws outside the borders (left and right ones), destroy it
+	if (StaticMeshComponent->GetComponentLocation().Y < LeftMovableArea.Get()->GetActorLocation().Y)
+	{
+		this->Destroy();
+	}
+	else if (StaticMeshComponent->GetComponentLocation().Y > RightMovableArea.Get()->GetActorLocation().Y)
+	{
+		this->Destroy();
+	}
 }
 
 void APowerup::OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -94,7 +99,7 @@ void APowerup::OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor
 		if (OtherActor->GetClass()->IsChildOf(APlayerCharacter::StaticClass()))
 		{
 			APlayerCharacter* Character = (APlayerCharacter*)OtherActor;
-			GEngine->AddOnScreenDebugMessage(2, 2.f, FColor::Red, TEXT("Subeme la radio"));
+			GEngine->AddOnScreenDebugMessage(2, 2.f, FColor::Red, TEXT("Collided with player"));
 			// Do some stuff with Powerups
 			CollisionAction(Character);
 			this->Destroy();
