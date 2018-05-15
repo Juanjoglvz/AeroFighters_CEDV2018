@@ -5,6 +5,9 @@
 #include "EnemyProjectile.h"
 #include "PlayerMissile.h"
 #include "RecordsManager.h"
+#include "Blueprint/UserWidget.h"
+#include "TextWidgetTypes.h"
+#include "TextBlock.h"
 #include "Engine.h"
 
 
@@ -121,6 +124,25 @@ void APlayerCharacter::BeginPlay()
 			break;
 		}
 	}
+
+	// Set HUD text for the number of available bombs
+	// Create the Records Widget
+	if (WBombs)
+	{
+		pWBomb = CreateWidget<UUserWidget>(GetGameInstance(), WBombs);
+		if (pWBomb)
+		{
+			pWBomb->AddToViewport();
+			pWBombText = (UTextBlock*)pWBomb->GetWidgetFromName("NumberOfBombs");
+			pWHealthText = (UTextBlock*)pWBomb->GetWidgetFromName("Health");
+
+			if (pWBombText != nullptr)
+				pWBombText->SetText(FText::AsNumber(NumberOfBombsAvailable));
+
+			if (pWHealthText != nullptr)
+				pWHealthText->SetText(FText::AsNumber(NumberOfLives));
+		}
+	}
 }
 
 // Called every frame
@@ -209,6 +231,10 @@ void APlayerCharacter::ThrowABomb()
 		myDiscardEnemyShootsDelegate.Broadcast();
 		NumberOfBombsAvailable--;
 	}
+
+	// Update number of bombs in the HUD
+	if (pWBombText != nullptr)
+		pWBombText->SetText(FText::AsNumber(NumberOfBombsAvailable));
 }
 
 void APlayerCharacter::Shoot()
@@ -366,6 +392,8 @@ void APlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActo
                                 OtherActor->Destroy();
 				this->Destroy();
 			}
+			if (pWHealthText != nullptr)
+				pWHealthText->SetText(FText::AsNumber(NumberOfLives));
 		}
 	}
 }

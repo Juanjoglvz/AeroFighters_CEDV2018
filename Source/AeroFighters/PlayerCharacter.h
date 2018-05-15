@@ -69,6 +69,19 @@ public:
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDiscardEnemyShootsDelegate);
 	FDiscardEnemyShootsDelegate myDiscardEnemyShootsDelegate;
 
+	// Widget to show the available bombs and lives
+	UPROPERTY(EditAnywhere, Category = "Widgets")
+		TSubclassOf<class UUserWidget> WBombs;
+
+	UPROPERTY()
+		class UUserWidget* pWBomb;
+
+	UPROPERTY()
+		class UTextBlock* pWBombText;
+
+	UPROPERTY()
+		class UTextBlock* pWHealthText;
+
 private:
 	UPROPERTY(EditAnywhere)
 		float MoveSpeed;

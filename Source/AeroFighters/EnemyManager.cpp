@@ -19,7 +19,7 @@ StopPosition(200.f), EnemyType(EnemyType::Bug), PowerupType(nullptr), StaticSpaw
 	auto ShipAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Assets/Ships/SimpleShip'"));
 	this->ShipMesh = ShipAsset.Object;
 
-	auto BomberAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Assets/Ships/spaceshipBasic'"));
+	auto BomberAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Assets/Ships/SpaceShuttle.SpaceShuttle'"));
 	this->BomberMesh = BomberAsset.Object;
 	
 }
