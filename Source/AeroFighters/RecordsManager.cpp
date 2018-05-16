@@ -9,7 +9,7 @@
 TArray<TTuple<FString, FString>> ARecordsManager::RecordsScores;
 
 // Sets default values
-ARecordsManager::ARecordsManager() : Super()
+ARecordsManager::ARecordsManager() : Super(), CurrentScore(0)
 {
 	RecordsText = FString("");
 }
@@ -18,6 +18,8 @@ ARecordsManager::ARecordsManager() : Super()
 void ARecordsManager::BeginPlay()
 {
 	Super::BeginPlay();
+
+	MyIncreaseScore.BindLambda([this](int score) {OnScore(score); });
 
 	// Bind delegate with the corresponding action
 	MyRecordsDelegate.BindLambda([this]() { WriteJsonFile();  });
@@ -49,6 +51,12 @@ void ARecordsManager::BeginPlay()
 	}
 }
 
+void ARecordsManager::OnScore(int score)
+{
+	CurrentScore += score;
+	UE_LOG(LogTemp, Warning, TEXT("Nueva score: %d"), CurrentScore);
+}
+
 void ARecordsManager::ReadJsonFile()
 {
 	if (RecordsScores.Num() != 0)
@@ -73,10 +81,10 @@ void ARecordsManager::ReadJsonFile()
 			TSharedPtr<FJsonObject> Json = Value->AsObject();
 
 			FString Name = Json->GetStringField(TEXT("Name"));
-			FString Round = Json->GetStringField(TEXT("Round"));
+			FString Score = Json->GetStringField(TEXT("Score"));
 
 			// Add the values read, into corresponding arrays
-			RecordsScores.Add(TTuple<FString, FString>(Name, Round));
+			RecordsScores.Add(TTuple<FString, FString>(Name, Score));
 		}
 	}
 }
@@ -95,7 +103,7 @@ void ARecordsManager::WriteJsonFile()
 	// Record object. It has the following form:
 	/*  {
 	"Name":"the_name",
-	"Round":"the_round"
+	"Score":"the_score"
 	}
 	*/
 
@@ -103,7 +111,7 @@ void ARecordsManager::WriteJsonFile()
 	{
 		TSharedPtr<FJsonObject> JsonRecordObject = MakeShareable(new FJsonObject());
 		JsonRecordObject->SetStringField("Name", RecordsScores[Index].Key);
-		JsonRecordObject->SetStringField("Round", RecordsScores[Index].Value);
+		JsonRecordObject->SetStringField("Score", RecordsScores[Index].Value);
 		TSharedRef<FJsonValueObject> JsonValue = MakeShareable(new FJsonValueObject(JsonRecordObject));
 
 		// Add the Record Object to JSON Array

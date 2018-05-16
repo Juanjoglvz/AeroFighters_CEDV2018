@@ -23,6 +23,9 @@ protected:
 private:
 	FString RecordsText;
 
+	int CurrentScore;
+	void OnScore(int score);
+
 public:
 
 	// Widget to show the records
@@ -52,6 +55,9 @@ public:
 		int32 val2 = FCString::Atoi(*ip2.Value);
 		return (val1 > val2);
 	}
+
+	DECLARE_DELEGATE_OneParam(FScoreIncreased, int);
+	FScoreIncreased MyIncreaseScore;
 	
 	
 };

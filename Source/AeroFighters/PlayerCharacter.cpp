@@ -51,8 +51,8 @@ void APlayerCharacter::IncreaseBombs()
 {
 	if (NumberOfBombsAvailable < MaxNumberOfBombs)
 		NumberOfBombsAvailable++;
-	else
-		return; // Increase Score Here
+	else if (RecordsManagerReference.IsValid()) // Increase Score
+		RecordsManagerReference.Get()->MyIncreaseScore.ExecuteIfBound(1000);
 }
 
 void APlayerCharacter::IncreasePower()
@@ -69,7 +69,8 @@ void APlayerCharacter::IncreasePower()
 			CurrentPower = PlayerPower::FullPower;
 			break;
 		case PlayerPower::FullPower:
-			// Increase score here
+			if (RecordsManagerReference.IsValid())
+				RecordsManagerReference.Get()->MyIncreaseScore.ExecuteIfBound(1000);
 			break;
 	}
 }
@@ -80,7 +81,7 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	// Get reference to RecordManager
-	FString RecordsManagerString = FString(TEXT("RecordsManager"));
+	FString RecordsManagerString = FString(TEXT("RecordsManager1"));
 
 	//Get The references to the borders
 	FString TopMovableAreaString = FString(TEXT("TopMovableArea"));
