@@ -6,6 +6,7 @@
 #include "Engine.h"
 #include "MoveBehaviour.h"
 #include "Powerup.h"
+#include "RecordsManager.h"
 #include "ProjectileBehaviour.h"
 #include "GameFramework/Actor.h"
 #include "Enemy.generated.h"
@@ -48,9 +49,13 @@ public:
 
 	void SetPowerupType(TSubclassOf<class APowerup> PowerupType);
 
+	TWeakObjectPtr<class ARecordsManager> RecordsManagerReference;
+
 
 
 private:
+	void GetRecordsManager();
+
 	UPROPERTY()
 		UStaticMeshComponent* StaticMeshComponent;
 	
