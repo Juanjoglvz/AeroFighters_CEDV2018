@@ -7,11 +7,12 @@ AAttackUp::AAttackUp() : Super()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	auto StaticMeshAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Engine/BasicShapes/Cube.Cube'"));
+	auto StaticMeshAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Assets/Powerup/attackup.attackup'"));
 
 	if (StaticMeshAsset.Succeeded())
 	{
-	SetStaticMeshAsset(StaticMeshAsset.Object);
+		SetStaticMeshAsset(StaticMeshAsset.Object);
+		SetActorScale3D(FVector(0.1, 0.1, 0.1));
 	}
 }
 
