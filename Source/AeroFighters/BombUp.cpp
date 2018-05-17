@@ -10,7 +10,9 @@ ABombUp::ABombUp() : Super()
 	auto StaticMeshAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Assets/Powerup/bomb.bomb'"));
 
 	if (StaticMeshAsset.Succeeded())
+	{
 		SetStaticMeshAsset(StaticMeshAsset.Object);
+	}
 }
 
 void ABombUp::Tick(float DeltaTime)
