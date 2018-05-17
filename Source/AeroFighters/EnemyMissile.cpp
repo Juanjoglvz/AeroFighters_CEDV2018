@@ -2,6 +2,7 @@
 
 #include "EnemyMissile.h"
 #include "PlayerLaser.h"
+#include "PlayerCharacter.h"
 #include "Engine.h"
 
 // Sets default values
@@ -63,6 +64,10 @@ void AEnemyMissile::OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* Other
 	if (OtherActor)
 	{
 		if (OtherActor->GetClass()->IsChildOf(APlayerLaser::StaticClass()))
+		{
+			this->Destroy();
+		}
+		else if (OtherActor->GetClass()->IsChildOf(APlayerCharacter::StaticClass()))
 		{
 			this->Destroy();
 		}
