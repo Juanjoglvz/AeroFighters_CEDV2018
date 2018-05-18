@@ -102,7 +102,7 @@ void AEnemyManager::SpawnShip(FVector location, UMoveBehaviour* Movement, UProje
 
 void AEnemyManager::SpawnBomber(FVector location, UMoveBehaviour* Movement, UProjectileBehaviour* ProjectileBehaviour) const
 {
-	FRotator rotation = FRotator(0.0f, 90.0f, 0.0f);
+	FRotator rotation = FRotator(360.0f, -90.0f, -90.0f);
 	AEnemy* EnemySpawned = SpawnEnemy(location, rotation);
 	EnemySpawned->SetStaticMesh(this->BomberMesh);
 	EnemySpawned->SetMoveBehaviour(Movement);

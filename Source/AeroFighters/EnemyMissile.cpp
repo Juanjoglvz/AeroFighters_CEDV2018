@@ -2,6 +2,7 @@
 
 #include "EnemyMissile.h"
 #include "PlayerLaser.h"
+#include "PlayerCharacter.h"
 #include "Engine.h"
 
 // Sets default values
@@ -44,7 +45,8 @@ void AEnemyMissile::ProjectileBehaviour(float DeltaTime)
 		StaticMesh->SetRelativeRotation(EnemyRotation, false, nullptr, ETeleportType::TeleportPhysics);
 
 		// The projectile moves towards player
-		FVector NewLocation = StaticMesh->GetComponentLocation() + (Direction * GetSpeed() * DeltaTime * 0.003f);
+		Direction.Normalize(); // Normalize the vector so it doesnt slow down when near the player
+		FVector NewLocation = StaticMesh->GetComponentLocation() + (Direction * GetSpeed() * DeltaTime * 1.5f);
 		NewLocation.Z = 200.f;
 
 		//Camera Stuff 
@@ -63,6 +65,10 @@ void AEnemyMissile::OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* Other
 	if (OtherActor)
 	{
 		if (OtherActor->GetClass()->IsChildOf(APlayerLaser::StaticClass()))
+		{
+			this->Destroy();
+		}
+		else if (OtherActor->GetClass()->IsChildOf(APlayerCharacter::StaticClass()))
 		{
 			this->Destroy();
 		}
