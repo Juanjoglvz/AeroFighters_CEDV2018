@@ -19,7 +19,7 @@ void ARecordsManager::BeginPlay()
 {
 	Super::BeginPlay();
 
-	MyIncreaseScore.BindLambda([this](int score) {OnScore(score); });
+	MyIncreaseScore.BindLambda([this](int score) { OnScore(score); });
 
 	// Bind delegate with the corresponding action
 	MyRecordsDelegate.BindLambda([this]() { WriteJsonFile();  });
@@ -44,9 +44,13 @@ void ARecordsManager::BeginPlay()
 		{
 			pWRecords->AddToViewport();
 			pWRecordsText = (UTextBlock*)pWRecords->GetWidgetFromName("RecordText");
+			pWScoreText = (UTextBlock*)pWRecords->GetWidgetFromName("PunctuationText");
 			
 			if (pWRecordsText != nullptr)
 				pWRecordsText->SetText(FText::FromString(RecordsText));
+
+			if (pWScoreText != nullptr)
+				pWScoreText->SetText(FText::AsNumber(CurrentScore));
 		}
 	}
 }
@@ -54,7 +58,10 @@ void ARecordsManager::BeginPlay()
 void ARecordsManager::OnScore(int score)
 {
 	CurrentScore += score;
-	UE_LOG(LogTemp, Warning, TEXT("Nueva score: %d"), CurrentScore);
+
+	// Show punctuation in HUD
+	if (pWScoreText != nullptr)
+		pWScoreText->SetText(FText::AsNumber(CurrentScore));
 }
 
 void ARecordsManager::ReadJsonFile()
@@ -91,6 +98,9 @@ void ARecordsManager::ReadJsonFile()
 
 void ARecordsManager::WriteJsonFile()
 {
+	// First of all, add the current punctuation to the array
+	ARecordsManager::RecordsScores.Emplace(MakeTuple(FString("Ivan"), FString::FromInt(CurrentScore)));
+
 	// Sort the array
 	RecordsScores.Sort(ARecordsManager::ConstPredicate);
 

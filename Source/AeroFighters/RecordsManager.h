@@ -38,6 +38,9 @@ public:
 	UPROPERTY()
 		class UTextBlock* pWRecordsText;
 
+	UPROPERTY()
+		class UTextBlock* pWScoreText;
+
 	static TArray<TTuple<FString, FString>> RecordsScores;
 
 	void ReadJsonFile();
@@ -49,6 +52,10 @@ public:
 	DECLARE_DELEGATE(FRecordsDelegate);
 	FRecordsDelegate MyRecordsDelegate;
 
+	// Delegate to receive the punctuation
+	DECLARE_DELEGATE_OneParam(FScoreIncreased, int);
+	FScoreIncreased MyIncreaseScore;
+
 	inline static bool ConstPredicate(const TTuple<FString, FString>& ip1, const TTuple<FString, FString>& ip2)
 	{
 		int32 val1 = FCString::Atoi(*ip1.Value);
@@ -56,8 +63,4 @@ public:
 		return (val1 > val2);
 	}
 
-	DECLARE_DELEGATE_OneParam(FScoreIncreased, int);
-	FScoreIncreased MyIncreaseScore;
-	
-	
 };

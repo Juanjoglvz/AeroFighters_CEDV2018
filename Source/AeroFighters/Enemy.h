@@ -49,7 +49,7 @@ public:
 
 	void SetPowerupType(TSubclassOf<class APowerup> PowerupType);
 
-	TWeakObjectPtr<class ARecordsManager> RecordsManagerReference;
+	TWeakObjectPtr<ARecordsManager> RecordsManagerReference;
 
 
 

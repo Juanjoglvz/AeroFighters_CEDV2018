@@ -48,10 +48,10 @@ void AEnemy::BeginPlay()
 
 void AEnemy::GetRecordsManager()
 {
-	FString RecordsManagerString = FString(TEXT("RecordsManager1"));
+	FString RecordsManagerString = FString(TEXT("RecordsManager"));
 	for (TActorIterator<AActor> itr(GetWorld()); itr; ++itr)
 	{
-		if (RecordsManagerString.Equals(itr->GetName()))
+		if (itr->GetName().Contains(RecordsManagerString))
 		{
 			this->RecordsManagerReference = Cast<ARecordsManager>(*itr);
 			return;
@@ -105,6 +105,7 @@ void AEnemy::SetHp(int32 HP)
 
 void AEnemy::OnBomb()
 {
+	RecordsManagerReference.Get()->MyIncreaseScore.ExecuteIfBound(1000);
 	this->Destroy();
 }
 
@@ -132,7 +133,7 @@ void AEnemy::OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, 
 					GetWorld()->SpawnActor<APowerup>(PowerupType, this->GetActorLocation(), FRotator(0.f, 0.f, 0.f));
 				}
 
-				RecordsManagerReference.Get()->MyIncreaseScore.ExecuteIfBound(1000);
+   				RecordsManagerReference.Get()->MyIncreaseScore.ExecuteIfBound(1000);
 				this->Destroy();
 			}
 

@@ -351,7 +351,6 @@ void APlayerCharacter::Shoot(float DeltaTime)
 			{
 				for (int i = -1; i <= 1; i++)
 				{
-					GEngine->AddOnScreenDebugMessage(5, 5.f, FColor::Blue, FString(TEXT("Lanzando misil")));
 					FVector Location = this->GetActorLocation();
 					Location += FVector(-20.f, i * 40.f, 0.f);
 					if (i == 0)
@@ -384,14 +383,11 @@ void APlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 				this->CurrentPower = PlayerPower::BasicShot;
 			}
 			else if (NumberOfLives == 0 && b_IsVulnerable){
-				// Add punctuation to the array
-			        ARecordsManager::RecordsScores.Emplace(MakeTuple(FString("Ivan"), FString("30")));
-			        // Save the punctuation and go main menu
-			        RecordsManagerReference->MyRecordsDelegate.ExecuteIfBound();
-			        UGameplayStatics::OpenLevel(GetWorld(), FName("MainMenu"));
-
-                                OtherActor->Destroy();
+			    // Save the punctuation and go main menu
+			    RecordsManagerReference->MyRecordsDelegate.ExecuteIfBound(); 
+				OtherActor->Destroy();
 				this->Destroy();
+			    UGameplayStatics::OpenLevel(GetWorld(), FName("MainMenu"));
 			}
 			if (pWHealthText != nullptr)
 				pWHealthText->SetText(FText::AsNumber(NumberOfLives));
