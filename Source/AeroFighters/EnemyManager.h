@@ -85,7 +85,7 @@ public:
 		TSubclassOf<class APowerup> PowerupType;
 	UPROPERTY(EditAnywhere, Category = "Powerups")
 		bool StaticSpawn;
-
+	
 private:
 	// Variables for controlling the areas around the camera
 	UPROPERTY()
