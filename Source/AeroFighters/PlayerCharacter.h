@@ -133,5 +133,11 @@ private:
 	UPROPERTY()
 		UAudioComponent* shootingAudioComponent;
 
+	// PostProcessing Functionality
+	UPostProcessComponent* PostProcessComponent;
+	bool b_IsFlashing;
+	float PostProcessingTimer;
+	float FlashTime;
+
 	PlayerPower CurrentPower;
 };

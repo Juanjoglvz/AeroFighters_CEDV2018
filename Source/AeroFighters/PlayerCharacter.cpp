@@ -16,8 +16,8 @@
 APlayerCharacter::APlayerCharacter() : 
 	NumberOfBombsAvailable{ 3 }, NumberOfLives{ 5 }, MoveSpeed { 1000.f }, CameraSpeed{ 150.f, 0.f, 0.f }, 
 	b_IsShooting{ false }, Timer{ 0.25f }, ShootTimer{ 0.25f }, MissileTimer{ 0.f }, MissileMaxTime{ 1.f },
-        CurrentPower{ PlayerPower::BasicShot}, b_IsVulnerable{ true }, MaximumVulnerabilityTime{ 3.f }, 
-        VulnerableTimer{ 0.f }, ShowAndHideTimer{ 0.f }, MaxNumberOfBombs(5)
+    CurrentPower{ PlayerPower::BasicShot}, b_IsVulnerable{ true }, MaximumVulnerabilityTime{ 3.f }, b_IsFlashing { false },
+    VulnerableTimer{ 0.f }, ShowAndHideTimer{ 0.f }, MaxNumberOfBombs(5), PostProcessingTimer { 0.f }, FlashTime { 0.75f }
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -26,6 +26,7 @@ APlayerCharacter::APlayerCharacter() :
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
+	
 	//Set Static Mesh
 	auto StaticMeshAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Assets/Ships/Plane'"));
 
@@ -90,6 +91,15 @@ void APlayerCharacter::BeginPlay()
 
 	// Get reference to RecordManager
 	FString RecordsManagerString = FString(TEXT("RecordsManager"));
+
+	// Get PostProcess component
+	TArray<UPostProcessComponent*> Comps;
+	GetComponents(Comps);
+	if (Comps.Num() > 0)
+	{
+		PostProcessComponent = Comps[0];
+	}
+	PostProcessComponent->BlendWeight = 0.f;
 
 	//Get The references to the borders
 	FString TopMovableAreaString = FString(TEXT("TopMovableArea"));
@@ -160,7 +170,19 @@ void APlayerCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	
 	VulnerableTimer += DeltaTime;
-	ShowAndHideTimer += DeltaTime;
+	ShowAndHideTimer += DeltaTime; 
+
+	
+	if (b_IsFlashing && PostProcessingTimer <= FlashTime)
+	{
+		PostProcessingTimer += DeltaTime;
+	}
+	else
+	{
+		b_IsFlashing = false;
+		PostProcessingTimer = 0.f;
+		PostProcessComponent->BlendWeight = 0.f;
+	}
 
 	//Move at the same rate as the camera
 	FVector NewLocation = GetActorLocation();
@@ -235,10 +257,15 @@ void APlayerCharacter::MoveRight(float AxisValue)
 // If character throw a bomb, all enemy projectiles will be destroyed
 void APlayerCharacter::ThrowABomb()
 {
+	b_IsFlashing = true;
+
 	if (NumberOfBombsAvailable > 0)
 	{
 		myDiscardEnemyShootsDelegate.Broadcast();
 		NumberOfBombsAvailable--;
+
+		// Flash effect
+		PostProcessComponent->BlendWeight = 1.f;
 	}
 
 	// Update number of bombs in the HUD
