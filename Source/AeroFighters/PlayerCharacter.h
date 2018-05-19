@@ -127,5 +127,11 @@ private:
 	float MaximumVulnerabilityTime;
 	float ShowAndHideTimer;
 
+	// Shooting sound
+	UPROPERTY()
+		USoundCue* shootingAudioCue;
+	UPROPERTY()
+		UAudioComponent* shootingAudioComponent;
+
 	PlayerPower CurrentPower;
 };

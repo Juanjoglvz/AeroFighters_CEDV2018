@@ -57,4 +57,10 @@ private:
 
 	FVector CameraSpeed;
 	FVector Direction;
+
+	// Powerup sound
+	UPROPERTY()
+		USoundCue* PowerupAudioCue;
+	UPROPERTY()
+		UAudioComponent* PowerupAudioComponent;
 };

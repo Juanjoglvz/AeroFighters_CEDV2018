@@ -112,9 +112,9 @@ void ARecordsManager::WriteJsonFile()
 
 	// Record object. It has the following form:
 	/*  {
-	"Name":"the_name",
-	"Score":"the_score"
-	}
+			"Name":"the_name",
+			"Score":"the_score"
+		}
 	*/
 
 	for (int32 Index = 0; Index < RecordsScores.Num(); Index++)

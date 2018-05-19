@@ -34,9 +34,17 @@ APlayerCharacter::APlayerCharacter() :
 		StaticMeshComponent->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
 		StaticMeshComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	}
-	else
-	{
-		GEngine->AddOnScreenDebugMessage(2, 15.f, FColor::Red, TEXT("Ship Mesh didn't load correctly"));
+	
+	// Set shooting audio
+	static ConstructorHelpers::FObjectFinder<USoundCue> soundCue(TEXT("SoundCue'/Game/Sounds/Shoot_Cue.Shoot_Cue'"));
+	shootingAudioCue = soundCue.Object;
+
+	shootingAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
+	shootingAudioComponent->bAutoActivate = false;
+	shootingAudioComponent->AttachTo(RootComponent);
+	
+	if (shootingAudioCue->IsValidLowLevelFast()) {
+		shootingAudioComponent->SetSound(shootingAudioCue);
 	}
 
 	//Take control of player
@@ -81,7 +89,7 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	// Get reference to RecordManager
-	FString RecordsManagerString = FString(TEXT("RecordsManager1"));
+	FString RecordsManagerString = FString(TEXT("RecordsManager"));
 
 	//Get The references to the borders
 	FString TopMovableAreaString = FString(TEXT("TopMovableArea"));
@@ -293,6 +301,7 @@ void APlayerCharacter::Shoot(float DeltaTime)
 				}
 
 				GetWorld()->SpawnActor<APlayerLaser>(Location, Rotation, SpawnInfo);
+				shootingAudioComponent->Play();
 			}
 			MissileTimer = 0.f;
 		}
@@ -307,6 +316,7 @@ void APlayerCharacter::Shoot(float DeltaTime)
 					Location += FVector(20.f, 0.f, 0.f);
 				}
 				GetWorld()->SpawnActor <APlayerLaser>(Location, Rotation, SpawnInfo);
+				shootingAudioComponent->Play();
 			}
 			MissileTimer = 0.f;
 		}
@@ -321,6 +331,7 @@ void APlayerCharacter::Shoot(float DeltaTime)
 					Location += FVector(20.f, 0.f, 0.f);
 				}
 				GetWorld()->SpawnActor<APlayerLaser>(Location, Rotation, SpawnInfo);
+				shootingAudioComponent->Play();
 			}
 			if (MissileTimer > MissileMaxTime * 3)
 			{
@@ -330,6 +341,7 @@ void APlayerCharacter::Shoot(float DeltaTime)
 					FVector Location = this->GetActorLocation();
 					Location += FVector(-20.f, i * 40.f, 0.f);
 					GetWorld()->SpawnActor<APlayerMissile>(Location, Rotation, SpawnInfo);
+					shootingAudioComponent->Play();
 				}
 				MissileTimer = 0.f;
 			}
@@ -345,6 +357,7 @@ void APlayerCharacter::Shoot(float DeltaTime)
 					Location += FVector(20.f, 0.f, 0.f);
 				}
 				GetWorld()->SpawnActor<APlayerLaser>(Location, Rotation, SpawnInfo);
+				shootingAudioComponent->Play();
 			}
 
 			if (MissileTimer > MissileMaxTime * 2)
@@ -358,6 +371,7 @@ void APlayerCharacter::Shoot(float DeltaTime)
 						Location += FVector(-80.f, 0.f, 0.f);
 					}
 					GetWorld()->SpawnActor<APlayerMissile>(Location, Rotation, SpawnInfo);
+					shootingAudioComponent->Play();
 				}
 				MissileTimer = 0.f;
 			}
