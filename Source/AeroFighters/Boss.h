@@ -7,6 +7,8 @@
 #include "GameFramework/Pawn.h"
 #include "Boss.generated.h"
 
+class UMoveBehaviour;
+
 UCLASS()
 class AEROFIGHTERS_API ABoss : public APawn
 {
@@ -35,6 +37,18 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void SetPosition(AActor* Position);
+	UFUNCTION(BlueprintCallable)
+		void Enrage();
+
+	UFUNCTION(BlueprintCallable)
+		void LaserCircle();
+	UFUNCTION(BlueprintCallable)
+		void MissileWave();
+	UFUNCTION(BlueprintCallable)
+		void BugSpawn();
+
+	void SpawnBug(FVector Location, UMoveBehaviour* Movement) const;
+
 	
 private:
 
@@ -45,4 +59,24 @@ private:
 	float Hp;
 	float LaserDmg;
 	float MissileDmg;
+	bool b_Enraged;
+
+	bool b_LaserCircle;
+	float LaserTimer;
+	float LTimer;
+	uint32 CurrentLaser;
+
+	bool b_MissileWave;
+	float MissileTimer;
+	float MTimer;
+	uint32 CurrentMissile;
+
+	bool b_BugSpawn;
+	float BugSpawnTimer;
+	float BTimer;
+	uint32 BugsSpawned;
+
+	// Mesh references for the enemies
+	UPROPERTY()
+		UStaticMesh* BugShipMesh;
 };
