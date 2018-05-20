@@ -20,6 +20,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UFUNCTION()
+		void OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -30,10 +33,16 @@ public:
 	UPROPERTY()
 		UStaticMeshComponent* StaticMeshComponent;
 
+	UFUNCTION(BlueprintCallable)
+		void SetPosition(AActor* Position);
 	
 private:
-	void SetStaticMeshAsset(UStaticMesh* StaticMeshAsset);
 
 	FVector CameraSpeed;
-	
+	UPROPERTY()
+		AActor* Position;
+
+	float Hp;
+	float LaserDmg;
+	float MissileDmg;
 };
