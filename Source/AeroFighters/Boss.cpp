@@ -16,14 +16,8 @@ ABoss::ABoss() : CameraSpeed {150.0f, 0.0f, 0.0f}, Hp{100}, LaserDmg{10}, Missil
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-	auto BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
 
-	BoxCollision->SetCollisionProfileName(TEXT("OverlapAll"));
-	BoxCollision->SetupAttachment(RootComponent);
-	BoxCollision->bGenerateOverlapEvents = true;
 	StaticMeshComponent->SetupAttachment(RootComponent);
-
-	BoxCollision->OnComponentBeginOverlap.AddDynamic(this, &ABoss::OnOverlap);
 
 	auto StaticMeshAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Assets/Ships/Frigate'"));
 
@@ -33,6 +27,14 @@ ABoss::ABoss() : CameraSpeed {150.0f, 0.0f, 0.0f}, Hp{100}, LaserDmg{10}, Missil
 		StaticMeshComponent->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
 		StaticMeshComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	}
+	auto BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
+	// Changed variables because box collision Component does not seem to be set up correctly
+	BoxCollision->RelativeScale3D = FVector(0.5, 2.65, 1.0);
+	BoxCollision->SetCollisionProfileName(TEXT("OverlapAll"));
+	BoxCollision->SetupAttachment(StaticMeshComponent);
+	BoxCollision->bGenerateOverlapEvents = true;
+
+	BoxCollision->OnComponentBeginOverlap.AddDynamic(this, &ABoss::OnOverlap);
 
 }
 
