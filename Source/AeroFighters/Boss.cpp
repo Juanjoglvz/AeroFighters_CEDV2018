@@ -9,6 +9,7 @@
 #include "Enemy.h"
 #include "MoveRight.h"
 #include "MoveLeft.h"
+#include "BossAIController.h"
 #include "ShootStraightBehaviour.h"
 
 
@@ -50,6 +51,12 @@ CurrentLaser{ 0 }, CurrentMissile{ 0 }, BugsSpawned{ 0 }
 	// Get references to all the assets we need
 	auto BugShipAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Assets/Ships/BugShip'"));
 	this->BugShipMesh = BugShipAsset.Object;
+
+
+	auto BehaviorTreeAsset = ConstructorHelpers::FObjectFinder<UBehaviorTree>(TEXT("BehaviorTree'/Game/Blueprints/BossBT.BossBT'"));
+
+	if (BehaviorTreeAsset.Succeeded())
+		BehaviorTree = BehaviorTreeAsset.Object;
 	
 }
 
@@ -57,6 +64,9 @@ CurrentLaser{ 0 }, CurrentMissile{ 0 }, BugsSpawned{ 0 }
 void ABoss::BeginPlay()
 {
 	Super::BeginPlay();
+
+	ABossAIController* AIController = GetWorld()->SpawnActor<ABossAIController>(ABossAIController::StaticClass());
+	AIController->Possess(this);
 	
 }
 

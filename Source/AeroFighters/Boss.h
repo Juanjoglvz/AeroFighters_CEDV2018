@@ -4,6 +4,8 @@
  
 #include "CoreMinimal.h"
 #include "Engine.h"
+#include "BehaviorTree/BehaviorTree.h"
+
 #include "GameFramework/Pawn.h"
 #include "Boss.generated.h"
 
@@ -49,6 +51,8 @@ public:
 
 	
 
+	UBehaviorTree* BehaviorTree;
+
 	
 private:
 
@@ -77,7 +81,9 @@ private:
 	float BugSpawnTimer;
 	float BTimer;
 	uint32 BugsSpawned;
+
 	void SpawnBugWave();
+
 	void SpawnBug(FVector Location, UMoveBehaviour* Movement) const;
 
 	// Mesh references for the enemies
