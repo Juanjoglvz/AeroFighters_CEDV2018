@@ -17,7 +17,7 @@ AEnemyMissile::AEnemyMissile()
 	if (StaticMeshAsset.Succeeded())
 		SetStaticMeshAsset(StaticMeshAsset.Object);
 	
-	SetSpeed(50.f);
+	SetSpeed(200.f);
 }
 
 // Called when the game starts or when spawned

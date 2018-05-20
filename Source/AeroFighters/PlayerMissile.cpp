@@ -18,7 +18,7 @@ APlayerMissile::APlayerMissile() : Super(), LockedEnemy{ nullptr }
 	if (StaticMeshAsset.Succeeded())
 		SetStaticMeshAsset(StaticMeshAsset.Object);
 
-	SetSpeed(300.f);
+	SetSpeed(150.f);
 }
 
 // Called when the game starts or when spawned
@@ -34,7 +34,7 @@ void APlayerMissile::BeginPlay()
 // The behaviour is to find the nearest enemy and go for it
 void APlayerMissile::ProjectileBehaviour(float DeltaTime)
 {
-
+	FVector NewLocation = StaticMesh->GetComponentLocation();
 	if (LockedEnemy == nullptr)
 	{
 		float MinimumDistance{ 1000000.f };
@@ -49,22 +49,26 @@ void APlayerMissile::ProjectileBehaviour(float DeltaTime)
 				LockedEnemy = Cast<AEnemy>(*Iterator);
 				MinimumDistance = Distance;
 			}
+
+			//When not locked on enemy and searching for one, move straight
+			NewLocation.X += 1.5f * DeltaTime;
 		}
 	}
 
 	// Move Projectile towards the nearest enemy
-	if (LockedEnemy != nullptr)
+	else if (LockedEnemy != nullptr)
 	{
 		FVector Direction = LockedEnemy->GetActorLocation() - StaticMesh->GetComponentLocation();
-		FVector NewLocation{ 0.f, 0.f, 0.f };
+		// Rotate towards the enemy
+		FRotator EnemyRotation = FRotationMatrix::MakeFromX(Direction).Rotator();
+		StaticMesh->SetRelativeRotation(EnemyRotation, false, nullptr, ETeleportType::TeleportPhysics);
+
+		// The projectile moves towards the enemy
+		Direction.Normalize(); // Normalize the vector so it doesnt slow down when near the player
+		NewLocation += (Direction * GetSpeed() * DeltaTime * 1.5f);
 		
-		// If the projectile is over the spaceship, it must go down. Otherwise, it must go up
-		if (Direction.X < 0)
-			NewLocation = StaticMesh->GetComponentLocation() + (Direction * GetSpeed() * 0.02 * DeltaTime);
-		else 	
-			NewLocation = StaticMesh->GetComponentLocation() - (Direction * -1 * GetSpeed() * 0.002 * DeltaTime);
-		
-		StaticMesh->SetWorldLocation(NewLocation);
 	}
+	NewLocation.Z = 200.f;
+	StaticMesh->SetWorldLocation(NewLocation);
 }
 	

@@ -6,6 +6,7 @@
 #include "PlayerMissile.h"
 
 // Sets default values
+
 AEnemy::AEnemy() : CameraSpeed{ 150.f, 0.f, 0.f }, PowerupSpawnProbability(0.05), LaserDmg(10), MissileDmg(50), RecordsManagerReference(nullptr)
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
