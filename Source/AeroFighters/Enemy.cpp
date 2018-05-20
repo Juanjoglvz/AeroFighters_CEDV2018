@@ -106,7 +106,7 @@ void AEnemy::SetHp(int32 HP)
 
 void AEnemy::OnBomb()
 {
-	RecordsManagerReference.Get()->MyIncreaseScore.ExecuteIfBound(1000);
+	RecordsManagerReference.Get()->MyIncreaseScore.ExecuteIfBound(100);
 	this->Destroy();
 }
 
@@ -134,7 +134,7 @@ void AEnemy::OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, 
 					GetWorld()->SpawnActor<APowerup>(PowerupType, this->GetActorLocation(), FRotator(0.f, 0.f, 0.f));
 				}
 
-   				RecordsManagerReference.Get()->MyIncreaseScore.ExecuteIfBound(1000);
+   				RecordsManagerReference.Get()->MyIncreaseScore.ExecuteIfBound(100);
 				this->Destroy();
 			}
 

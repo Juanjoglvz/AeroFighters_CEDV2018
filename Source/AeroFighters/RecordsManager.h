@@ -24,6 +24,8 @@ private:
 	FString RecordsText;
 
 	int CurrentScore;
+	FString Name;
+
 	void OnScore(int score);
 
 public:
@@ -46,11 +48,10 @@ public:
 	void ReadJsonFile();
 
 	UFUNCTION(BlueprintCallable)
-	void WriteJsonFile();
+		void SetName(FString Name_) { Name = Name_; }
 
-	// Delegate to write 
-	DECLARE_DELEGATE(FRecordsDelegate);
-	FRecordsDelegate MyRecordsDelegate;
+	UFUNCTION(BlueprintCallable)
+	void WriteJsonFile();
 
 	// Delegate to receive the punctuation
 	DECLARE_DELEGATE_OneParam(FScoreIncreased, int);

@@ -70,9 +70,13 @@ APlayerCharacter::APlayerCharacter() :
 void APlayerCharacter::IncreaseBombs()
 {
 	if (NumberOfBombsAvailable < MaxNumberOfBombs)
+	{
 		NumberOfBombsAvailable++;
-	else if (RecordsManagerReference.IsValid()) // Increase Score
+		pWBombText->SetText(FText::AsNumber(NumberOfBombsAvailable));
+	} // Increase Score
+	else if (RecordsManagerReference.IsValid()) {
 		RecordsManagerReference.Get()->MyIncreaseScore.ExecuteIfBound(1000);
+	}
 }
 
 void APlayerCharacter::IncreasePower()
@@ -446,12 +450,10 @@ void APlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 				crashAudioComponent->Play();
 				OtherActor->Destroy();
 			}
-			else if (NumberOfLives == 0 && b_IsVulnerable){
-			    // Save the punctuation and go main menu
-			    RecordsManagerReference->MyRecordsDelegate.ExecuteIfBound(); 
-				//OtherActor->Destroy();
-				//this->Destroy();
-			    	crashAudioComponent->Play();
+			else if (NumberOfLives == 0 && b_IsVulnerable) {
+				OtherActor->Destroy();
+
+				crashAudioComponent->Play();
 				if (pWGameEnd)
 				{
 					pWGameEnd->AddToViewport();
@@ -461,7 +463,6 @@ void APlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 					if (pWGameScore)
 						pWGameScore->AddToViewport();
 				}
-				//UGameplayStatics::OpenLevel(GetWorld(), FName("MainMenu"));
 			}
 			if (pWHealthText != nullptr)
 				pWHealthText->SetText(FText::AsNumber(NumberOfLives));
