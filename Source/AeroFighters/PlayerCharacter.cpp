@@ -36,16 +36,27 @@ APlayerCharacter::APlayerCharacter() :
 		StaticMeshComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	}
 	
-	// Set shooting audio
+	// Set shooting and crash audio
 	static ConstructorHelpers::FObjectFinder<USoundCue> soundCue(TEXT("SoundCue'/Game/Sounds/Shoot_Cue.Shoot_Cue'"));
-	shootingAudioCue = soundCue.Object;
+	static ConstructorHelpers::FObjectFinder<USoundCue> crashCue(TEXT("SoundCue'/Game/Sounds/Crash_Cue.Crash_Cue'"));
+
+	USoundCue* shootingAudioCue = soundCue.Object;
+	USoundCue* crashAudioCue = crashCue.Object;
 
 	shootingAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
 	shootingAudioComponent->bAutoActivate = false;
 	shootingAudioComponent->AttachTo(RootComponent);
+
+	crashAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("CrashComponent"));
+	crashAudioComponent->bAutoActivate = false;
+	crashAudioComponent->AttachTo(RootComponent);
 	
 	if (shootingAudioCue->IsValidLowLevelFast()) {
 		shootingAudioComponent->SetSound(shootingAudioCue);
+	}
+
+	if (crashAudioCue->IsValidLowLevelFast()) {
+		crashAudioComponent->SetSound(crashAudioCue);
 	}
 
 	//Take control of player
@@ -421,12 +432,16 @@ void APlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 				VulnerableTimer = 0.f;
 				// Set Power State to 0
 				this->CurrentPower = PlayerPower::BasicShot;
+				// Execute crash sound
+				crashAudioComponent->Play();
 			}
 			else if (NumberOfLives == 0 && b_IsVulnerable){
 			    // Save the punctuation and go main menu
 			    RecordsManagerReference->MyRecordsDelegate.ExecuteIfBound(); 
 				OtherActor->Destroy();
 				this->Destroy();
+				// Execute crash sound
+				crashAudioComponent->Play();
 			    UGameplayStatics::OpenLevel(GetWorld(), FName("MainMenu"));
 			}
 			if (pWHealthText != nullptr)

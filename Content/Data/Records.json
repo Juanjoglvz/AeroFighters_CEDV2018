@@ -2,6 +2,10 @@
 	"Records": [
 		{
 			"Name": "Ivan",
+			"Score": "2000"
+		},
+		{
+			"Name": "Ivan",
 			"Score": "1000"
 		},
 		{

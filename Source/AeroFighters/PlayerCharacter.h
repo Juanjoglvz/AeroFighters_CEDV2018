@@ -129,9 +129,9 @@ private:
 
 	// Shooting sound
 	UPROPERTY()
-		USoundCue* shootingAudioCue;
-	UPROPERTY()
 		UAudioComponent* shootingAudioComponent;
+	UPROPERTY()
+		UAudioComponent* crashAudioComponent;
 
 	// PostProcessing Functionality
 	UPostProcessComponent* PostProcessComponent;
