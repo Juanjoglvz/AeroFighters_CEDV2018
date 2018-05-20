@@ -364,7 +364,6 @@ void APlayerCharacter::Shoot(float DeltaTime)
 			{
 				for (int i = -1; i <= 1; i += 2)
 				{
-					GEngine->AddOnScreenDebugMessage(5, 5.f, FColor::Blue, FString(TEXT("Lanzando misil")));
 					FVector Location = this->GetActorLocation();
 					Location += FVector(-20.f, i * 40.f, 0.f);
 					GetWorld()->SpawnActor<APlayerMissile>(Location, Rotation, SpawnInfo);

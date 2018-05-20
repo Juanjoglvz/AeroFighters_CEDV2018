@@ -2,19 +2,15 @@
 	"Records": [
 		{
 			"Name": "Ivan",
-			"Round": "30"
+			"Score": "1000"
 		},
 		{
 			"Name": "Ivan",
-			"Round": "30"
-		},
-		{
-			"Name": "Juanjo",
-			"Round": "21"
+			"Score": "11"
 		},
 		{
 			"Name": "Ivan",
-			"Round": "11"
+			"Score": "0"
 		}
 	]
 }
