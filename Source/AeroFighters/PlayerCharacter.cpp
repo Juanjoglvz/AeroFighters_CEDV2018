@@ -173,6 +173,15 @@ void APlayerCharacter::BeginPlay()
 				pWHealthText->SetText(FText::AsNumber(NumberOfLives));
 		}
 	}
+
+	if (WGameEnd)
+	{
+		pWGameEnd = CreateWidget<UUserWidget>(GetGameInstance(), WGameEnd);
+	}
+	if (WGameScore)
+	{
+		pWGameScore = CreateWidget<UUserWidget>(GetGameInstance(), WGameScore);
+	}
 }
 
 // Called every frame
@@ -432,17 +441,27 @@ void APlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 				VulnerableTimer = 0.f;
 				// Set Power State to 0
 				this->CurrentPower = PlayerPower::BasicShot;
+
 				// Execute crash sound
 				crashAudioComponent->Play();
+				OtherActor->Destroy();
 			}
 			else if (NumberOfLives == 0 && b_IsVulnerable){
 			    // Save the punctuation and go main menu
 			    RecordsManagerReference->MyRecordsDelegate.ExecuteIfBound(); 
-				OtherActor->Destroy();
-				this->Destroy();
-				// Execute crash sound
-				crashAudioComponent->Play();
-			    UGameplayStatics::OpenLevel(GetWorld(), FName("MainMenu"));
+				//OtherActor->Destroy();
+				//this->Destroy();
+			    	crashAudioComponent->Play();
+				if (pWGameEnd)
+				{
+					pWGameEnd->AddToViewport();
+					UGameplayStatics::SetGamePaused(this, true);
+
+					// Show the widget
+					if (pWGameScore)
+						pWGameScore->AddToViewport();
+				}
+				//UGameplayStatics::OpenLevel(GetWorld(), FName("MainMenu"));
 			}
 			if (pWHealthText != nullptr)
 				pWHealthText->SetText(FText::AsNumber(NumberOfLives));

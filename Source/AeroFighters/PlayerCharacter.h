@@ -82,6 +82,17 @@ public:
 	UPROPERTY()
 		class UTextBlock* pWHealthText;
 
+
+	UPROPERTY(EditAnywhere, Category = "Widgets")
+		TSubclassOf<class UUserWidget> WGameEnd;
+	UPROPERTY()
+		class UUserWidget* pWGameEnd;
+
+	UPROPERTY(EditAnywhere, Category = "Widgets")
+		TSubclassOf<class UUserWidget> WGameScore;
+	UPROPERTY()
+		class UUserWidget* pWGameScore;
+
 private:
 	UPROPERTY(EditAnywhere)
 		float MoveSpeed;

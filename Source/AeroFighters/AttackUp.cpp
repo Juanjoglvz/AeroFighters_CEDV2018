@@ -7,11 +7,11 @@ AAttackUp::AAttackUp() : Super()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	auto StaticMeshAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Engine/BasicShapes/Cube.Cube'"));
+	auto StaticMeshAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Assets/Powerup/electricity.electricity'"));
 
 	if (StaticMeshAsset.Succeeded())
 	{
-	SetStaticMeshAsset(StaticMeshAsset.Object);
+		SetStaticMeshAsset(StaticMeshAsset.Object);
 	}
 }
 
