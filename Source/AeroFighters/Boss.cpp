@@ -118,10 +118,7 @@ void ABoss::Tick(float DeltaTime)
 		SpawnBugWave();
 	}
 	
-
-
 	SetActorLocation(NewLocation);
-
 }
 
 void ABoss::LaserAttack()
@@ -272,6 +269,11 @@ void ABoss::MissileWave()
 void ABoss::BugSpawn()
 {
 	this->b_BugSpawn = true;
+}
+
+float ABoss::GetHp()
+{
+	return this->Hp;
 }
 
 void ABoss::SpawnBug(FVector Location, UMoveBehaviour* Movement) const

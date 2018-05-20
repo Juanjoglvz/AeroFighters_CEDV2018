@@ -35,8 +35,13 @@ protected:
 public:
 	ABossAIController();
 
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
 	virtual void Possess(APawn* InPawn) override;
 
+private:
+	ABoss* BossReference;
 
 
 

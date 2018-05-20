@@ -49,7 +49,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void BugSpawn();
 
-	
+	float GetHp();
 
 	UBehaviorTree* BehaviorTree;
 
