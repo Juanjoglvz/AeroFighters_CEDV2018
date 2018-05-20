@@ -65,11 +65,13 @@ private:
 	float LaserTimer;
 	float LTimer;
 	uint32 CurrentLaser;
+	void LaserAttack();
 
 	bool b_MissileWave;
 	float MissileTimer;
 	float MTimer;
 	uint32 CurrentMissile;
+	void MissileAttack();
 
 	bool b_BugSpawn;
 	float BugSpawnTimer;

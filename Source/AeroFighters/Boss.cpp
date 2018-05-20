@@ -92,7 +92,15 @@ void ABoss::Tick(float DeltaTime)
 		}
 	}
 
+	if (b_LaserCircle)
+	{
+		LaserAttack();
+	}
 
+	if (b_MissileWave)
+	{
+		MissileAttack();
+	}
 
 	//Spawn Bugs
 	if (b_BugSpawn)
@@ -104,6 +112,88 @@ void ABoss::Tick(float DeltaTime)
 
 	SetActorLocation(NewLocation);
 
+}
+
+void ABoss::LaserAttack()
+{
+	if (LTimer > LaserTimer && CurrentLaser < 1)
+	{
+		AEnemyLaser* EnemyLaser1 = GetWorld()->SpawnActor<AEnemyLaser>(FVector{ GetActorLocation().X - 160.f, 0.f, 200.f}, FRotator{ 0.f, -90.f, 0.f });
+		FVector Direction1{ 1.f, 0.f, 0.f };
+		EnemyLaser1->SetDirection(Direction1);
+
+		LTimer = 0.f;
+		CurrentLaser++;
+	}
+	if (LTimer > LaserTimer && CurrentLaser > 1 && CurrentLaser < 4)
+	{
+		AEnemyLaser* EnemyLaser1 = GetWorld()->SpawnActor<AEnemyLaser>(FVector{GetActorLocation().X - 160.f + CurrentLaser * 20.f, 100.f * CurrentLaser, 200.f}, FRotator{ 0.f, -90.f, 0.f });
+		FVector Direction1{ 1.f, 0.f + CurrentLaser * 0.3f, 0.f };
+		Direction1.Normalize();
+		EnemyLaser1->SetDirection(Direction1);
+
+		AEnemyLaser* EnemyLaser2 = GetWorld()->SpawnActor<AEnemyLaser>(FVector{ GetActorLocation().X - 160.f + CurrentLaser * 20.f, -100.f * CurrentLaser, 200.f }, FRotator{ 0.f, -90.f, 0.f });
+		FVector Direction2{ 1.f, 0.f - CurrentLaser * 0.3f, 0.f };
+		Direction2.Normalize();
+		EnemyLaser1->SetDirection(Direction2);
+
+		LTimer = 0.f;
+		CurrentLaser++;
+	}
+	if (b_Enraged)
+	{
+		if (LTimer > LaserTimer && CurrentLaser < 6)
+		{
+			AEnemyLaser* EnemyLaser1 = GetWorld()->SpawnActor<AEnemyLaser>(FVector{ GetActorLocation().X - 160.f + CurrentLaser * 20.f, 100.f * CurrentLaser, 200.f }, FRotator{ 0.f, -90.f, 0.f });
+			FVector Direction1{ 1.f, 0.f + CurrentLaser * 0.3f, 0.f };
+			Direction1.Normalize();
+			EnemyLaser1->SetDirection(Direction1);
+
+			AEnemyLaser* EnemyLaser2 = GetWorld()->SpawnActor<AEnemyLaser>(FVector{ GetActorLocation().X - 160.f + CurrentLaser * 20.f, -100.f * CurrentLaser, 200.f }, FRotator{ 0.f, -90.f, 0.f });
+			FVector Direction2{ 1.f, 0.f - CurrentLaser * 0.3f, 0.f };
+			Direction2.Normalize();
+			EnemyLaser1->SetDirection(Direction2);
+
+			LTimer = 0.f;
+			CurrentLaser++;
+		}
+		else if (LTimer > LaserTimer && CurrentLaser == 7)
+		{
+			AEnemyLaser* EnemyLaser1 = GetWorld()->SpawnActor<AEnemyLaser>(FVector{ GetActorLocation().X - 160.f, 0.f, 200.f }, FRotator{ 0.f, -90.f, 0.f });
+			FVector Direction1{ 1.f, 0.f, 0.f };
+			EnemyLaser1->SetDirection(Direction1);
+
+			LTimer = 0.f;
+			CurrentLaser++;
+		}
+	}
+	else
+	{
+		LTimer = 0.f;
+		CurrentLaser = 0;
+		b_LaserCircle = false;
+	}
+}
+
+void ABoss::MissileAttack()
+{
+	if (MTimer > MissileTimer && CurrentMissile < 6)
+	{
+		GetWorld()->SpawnActor<AEnemyMissile>(FVector{ GetActorLocation().X - 100.f, -250.f + CurrentMissile * 100.f, 200.f }, GetActorRotation());
+		if (b_Enraged)
+		{
+			GetWorld()->SpawnActor<AEnemyMissile>(FVector{ GetActorLocation().X + 100.f, -750.f + CurrentMissile * 300.f, 200.f }, GetActorRotation());
+		}
+
+		MTimer = 0.f;
+		CurrentMissile++;
+	}
+	if (MTimer > MissileTimer && CurrentMissile >= 6)
+	{
+		CurrentMissile = 0;
+		MTimer = 0.f;
+		b_MissileWave = false;
+	}
 }
 
 void ABoss::SpawnBugWave()
