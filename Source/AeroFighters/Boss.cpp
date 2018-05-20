@@ -205,7 +205,7 @@ void ABoss::SpawnBugWave()
 		SpawnBug(FVector{ Position->GetActorLocation().X + 350 + BugsSpawned * 50, -1000.f, 200.f }, MovementRight);
 
 		UMoveLeft* MovementLeft = NewObject<UMoveLeft>();
-		MovementRight->SetUp(100.f, GetWorld(), 0.f);
+		MovementLeft->SetUp(100.f, GetWorld(), 0.f);
 		SpawnBug(FVector{ Position->GetActorLocation().X + 350 + BugsSpawned * 50, 1000.f, 200.f }, MovementLeft);
 
 
@@ -222,7 +222,7 @@ void ABoss::SpawnBugWave()
 			SpawnBug(FVector{ Position->GetActorLocation().X + 350, -1200.f, 200.f }, MovementRight);
 
 			UMoveLeft* MovementLeft = NewObject<UMoveLeft>();
-			MovementRight->SetUp(100.f, GetWorld(), 0.f);
+			MovementLeft->SetUp(100.f, GetWorld(), 0.f);
 			SpawnBug(FVector{ Position->GetActorLocation().X + 350, 1000.f, 200.f }, MovementLeft);
 			SpawnBug(FVector{ Position->GetActorLocation().X + 350, 1200.f, 200.f }, MovementLeft);
 		}
