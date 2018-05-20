@@ -47,7 +47,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void BugSpawn();
 
-	void SpawnBug(FVector Location, UMoveBehaviour* Movement) const;
+	
 
 	
 private:
@@ -75,6 +75,8 @@ private:
 	float BugSpawnTimer;
 	float BTimer;
 	uint32 BugsSpawned;
+	void SpawnBugWave();
+	void SpawnBug(FVector Location, UMoveBehaviour* Movement) const;
 
 	// Mesh references for the enemies
 	UPROPERTY()

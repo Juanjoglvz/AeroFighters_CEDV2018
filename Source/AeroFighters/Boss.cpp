@@ -66,6 +66,21 @@ void ABoss::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	//Only increase the counter that we need
+	if (b_BugSpawn)
+	{
+		BTimer += DeltaTime;
+	}
+	else if (b_LaserCircle)
+	{
+		LTimer += DeltaTime;
+	}
+	else if (b_MissileWave)
+	{
+		MTimer += DeltaTime;
+	}
+
+	//Move with the camera
 	FVector NewLocation = GetActorLocation();
 	NewLocation += CameraSpeed * DeltaTime;
 
@@ -79,11 +94,25 @@ void ABoss::Tick(float DeltaTime)
 
 
 
-	if (b_BugSpawn && BugsSpawned < 3)
+	//Spawn Bugs
+	if (b_BugSpawn)
+	{
+		SpawnBugWave();
+	}
+	
+
+
+	SetActorLocation(NewLocation);
+
+}
+
+void ABoss::SpawnBugWave()
+{
+	if (BTimer > BugSpawnTimer && BugsSpawned < 3)
 	{
 		UMoveRight* MovementRight = NewObject<UMoveRight>();
 		MovementRight->SetUp(100.f, GetWorld(), 0.f);
-		SpawnBug(FVector{Position->GetActorLocation().X + 350 + BugsSpawned * 50, -1000.f, 200.f}, MovementRight);
+		SpawnBug(FVector{ Position->GetActorLocation().X + 350 + BugsSpawned * 50, -1000.f, 200.f }, MovementRight);
 
 		UMoveLeft* MovementLeft = NewObject<UMoveLeft>();
 		MovementRight->SetUp(100.f, GetWorld(), 0.f);
@@ -91,16 +120,26 @@ void ABoss::Tick(float DeltaTime)
 
 
 		BugsSpawned++;
+		BTimer = 0.f;
 	}
-	if (b_BugSpawn && BugsSpawned >= 3)
+	if (BTimer > BugSpawnTimer && BugsSpawned >= 3)
 	{
+		if (b_Enraged)
+		{
+			UMoveRight* MovementRight = NewObject<UMoveRight>();
+			MovementRight->SetUp(100.f, GetWorld(), 0.f);
+			SpawnBug(FVector{ Position->GetActorLocation().X + 350, -1000.f, 200.f }, MovementRight);
+			SpawnBug(FVector{ Position->GetActorLocation().X + 350, -1200.f, 200.f }, MovementRight);
+
+			UMoveLeft* MovementLeft = NewObject<UMoveLeft>();
+			MovementRight->SetUp(100.f, GetWorld(), 0.f);
+			SpawnBug(FVector{ Position->GetActorLocation().X + 350, 1000.f, 200.f }, MovementLeft);
+			SpawnBug(FVector{ Position->GetActorLocation().X + 350, 1200.f, 200.f }, MovementLeft);
+		}
 		BugsSpawned = 0;
+		BTimer = 0.f;
 		b_BugSpawn = false;
 	}
-
-
-	SetActorLocation(NewLocation);
-
 }
 
 // Called to bind functionality to input
