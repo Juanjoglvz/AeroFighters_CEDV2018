@@ -381,16 +381,16 @@ void APlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 				VulnerableTimer = 0.f;
 				// Set Power State to 0
 				this->CurrentPower = PlayerPower::BasicShot;
+				OtherActor->Destroy();
 			}
 			else if (NumberOfLives == 0 && b_IsVulnerable){
 				// Add punctuation to the array
-			        ARecordsManager::RecordsScores.Emplace(MakeTuple(FString("Ivan"), FString("30")));
-			        // Save the punctuation and go main menu
-			        RecordsManagerReference->MyRecordsDelegate.ExecuteIfBound();
-			        UGameplayStatics::OpenLevel(GetWorld(), FName("MainMenu"));
+			    ARecordsManager::RecordsScores.Emplace(MakeTuple(FString("Ivan"), FString("30")));
+			    // Save the punctuation and go main menu
+			    RecordsManagerReference->MyRecordsDelegate.ExecuteIfBound();
+			    UGameplayStatics::OpenLevel(GetWorld(), FName("MainMenu"));
 
-                                OtherActor->Destroy();
-				this->Destroy();
+				OtherActor->Destroy();
 			}
 			if (pWHealthText != nullptr)
 				pWHealthText->SetText(FText::AsNumber(NumberOfLives));
