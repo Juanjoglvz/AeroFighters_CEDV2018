@@ -19,6 +19,8 @@ void ARecordsManager::BeginPlay()
 {
 	Super::BeginPlay();
 
+	ARecordsManager::RecordsScores.Empty();
+
 	MyIncreaseScore.BindLambda([this](int score) { OnScore(score); });
 
 	// Bind delegate with the corresponding action
@@ -112,9 +114,9 @@ void ARecordsManager::WriteJsonFile()
 
 	// Record object. It has the following form:
 	/*  {
-	"Name":"the_name",
-	"Score":"the_score"
-	}
+			"Name":"the_name",
+			"Score":"the_score"
+		}
 	*/
 
 	for (int32 Index = 0; Index < RecordsScores.Num(); Index++)
@@ -138,6 +140,4 @@ void ARecordsManager::WriteJsonFile()
 	TSharedRef< TJsonWriter<>> JsonWriter = TJsonWriterFactory<>::Create(&JsonStr);
 	FJsonSerializer::Serialize(JsonObject.ToSharedRef(), JsonWriter);
 	FFileHelper::SaveStringToFile(*JsonStr, *FullPath);
-
-	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, FString("Writing JSON..."));
 }

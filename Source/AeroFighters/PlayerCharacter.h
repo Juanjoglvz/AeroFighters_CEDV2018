@@ -138,5 +138,17 @@ private:
 	float MaximumVulnerabilityTime;
 	float ShowAndHideTimer;
 
+	// Shooting sound
+	UPROPERTY()
+		UAudioComponent* shootingAudioComponent;
+	UPROPERTY()
+		UAudioComponent* crashAudioComponent;
+
+	// PostProcessing Functionality
+	UPostProcessComponent* PostProcessComponent;
+	bool b_IsFlashing;
+	float PostProcessingTimer;
+	float FlashTime;
+
 	PlayerPower CurrentPower;
 };

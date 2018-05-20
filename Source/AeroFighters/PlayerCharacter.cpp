@@ -16,8 +16,8 @@
 APlayerCharacter::APlayerCharacter() : 
 	NumberOfBombsAvailable{ 3 }, NumberOfLives{ 5 }, MoveSpeed { 1000.f }, CameraSpeed{ 150.f, 0.f, 0.f }, 
 	b_IsShooting{ false }, Timer{ 0.25f }, ShootTimer{ 0.25f }, MissileTimer{ 0.f }, MissileMaxTime{ 1.f },
-        CurrentPower{ PlayerPower::BasicShot}, b_IsVulnerable{ true }, MaximumVulnerabilityTime{ 3.f }, 
-        VulnerableTimer{ 0.f }, ShowAndHideTimer{ 0.f }, MaxNumberOfBombs(5)
+    CurrentPower{ PlayerPower::BasicShot}, b_IsVulnerable{ true }, MaximumVulnerabilityTime{ 3.f }, b_IsFlashing { false },
+    VulnerableTimer{ 0.f }, ShowAndHideTimer{ 0.f }, MaxNumberOfBombs(5), PostProcessingTimer { 0.f }, FlashTime { 0.75f }
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -26,6 +26,7 @@ APlayerCharacter::APlayerCharacter() :
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
+	
 	//Set Static Mesh
 	auto StaticMeshAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Assets/Ships/Plane'"));
 
@@ -34,9 +35,28 @@ APlayerCharacter::APlayerCharacter() :
 		StaticMeshComponent->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
 		StaticMeshComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	}
-	else
-	{
-		GEngine->AddOnScreenDebugMessage(2, 15.f, FColor::Red, TEXT("Ship Mesh didn't load correctly"));
+	
+	// Set shooting and crash audio
+	static ConstructorHelpers::FObjectFinder<USoundCue> soundCue(TEXT("SoundCue'/Game/Sounds/Shoot_Cue.Shoot_Cue'"));
+	static ConstructorHelpers::FObjectFinder<USoundCue> crashCue(TEXT("SoundCue'/Game/Sounds/Crash_Cue.Crash_Cue'"));
+
+	USoundCue* shootingAudioCue = soundCue.Object;
+	USoundCue* crashAudioCue = crashCue.Object;
+
+	shootingAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
+	shootingAudioComponent->bAutoActivate = false;
+	shootingAudioComponent->AttachTo(RootComponent);
+
+	crashAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("CrashComponent"));
+	crashAudioComponent->bAutoActivate = false;
+	crashAudioComponent->AttachTo(RootComponent);
+	
+	if (shootingAudioCue->IsValidLowLevelFast()) {
+		shootingAudioComponent->SetSound(shootingAudioCue);
+	}
+
+	if (crashAudioCue->IsValidLowLevelFast()) {
+		crashAudioComponent->SetSound(crashAudioCue);
 	}
 
 	//Take control of player
@@ -81,7 +101,16 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	// Get reference to RecordManager
-	FString RecordsManagerString = FString(TEXT("RecordsManager1"));
+	FString RecordsManagerString = FString(TEXT("RecordsManager"));
+
+	// Get PostProcess component
+	TArray<UPostProcessComponent*> Comps;
+	GetComponents(Comps);
+	if (Comps.Num() > 0)
+	{
+		PostProcessComponent = Comps[0];
+	}
+	PostProcessComponent->BlendWeight = 0.f;
 
 	//Get The references to the borders
 	FString TopMovableAreaString = FString(TEXT("TopMovableArea"));
@@ -161,7 +190,19 @@ void APlayerCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	
 	VulnerableTimer += DeltaTime;
-	ShowAndHideTimer += DeltaTime;
+	ShowAndHideTimer += DeltaTime; 
+
+	
+	if (b_IsFlashing && PostProcessingTimer <= FlashTime)
+	{
+		PostProcessingTimer += DeltaTime;
+	}
+	else
+	{
+		b_IsFlashing = false;
+		PostProcessingTimer = 0.f;
+		PostProcessComponent->BlendWeight = 0.f;
+	}
 
 	//Move at the same rate as the camera
 	FVector NewLocation = GetActorLocation();
@@ -236,10 +277,15 @@ void APlayerCharacter::MoveRight(float AxisValue)
 // If character throw a bomb, all enemy projectiles will be destroyed
 void APlayerCharacter::ThrowABomb()
 {
+	b_IsFlashing = true;
+
 	if (NumberOfBombsAvailable > 0)
 	{
 		myDiscardEnemyShootsDelegate.Broadcast();
 		NumberOfBombsAvailable--;
+
+		// Flash effect
+		PostProcessComponent->BlendWeight = 1.f;
 	}
 
 	// Update number of bombs in the HUD
@@ -302,6 +348,7 @@ void APlayerCharacter::Shoot(float DeltaTime)
 				}
 
 				GetWorld()->SpawnActor<APlayerLaser>(Location, Rotation, SpawnInfo);
+				shootingAudioComponent->Play();
 			}
 			MissileTimer = 0.f;
 		}
@@ -316,6 +363,7 @@ void APlayerCharacter::Shoot(float DeltaTime)
 					Location += FVector(20.f, 0.f, 0.f);
 				}
 				GetWorld()->SpawnActor <APlayerLaser>(Location, Rotation, SpawnInfo);
+				shootingAudioComponent->Play();
 			}
 			MissileTimer = 0.f;
 		}
@@ -330,15 +378,16 @@ void APlayerCharacter::Shoot(float DeltaTime)
 					Location += FVector(20.f, 0.f, 0.f);
 				}
 				GetWorld()->SpawnActor<APlayerLaser>(Location, Rotation, SpawnInfo);
+				shootingAudioComponent->Play();
 			}
 			if (MissileTimer > MissileMaxTime * 3)
 			{
 				for (int i = -1; i <= 1; i += 2)
 				{
-					GEngine->AddOnScreenDebugMessage(5, 5.f, FColor::Blue, FString(TEXT("Lanzando misil")));
 					FVector Location = this->GetActorLocation();
 					Location += FVector(-20.f, i * 40.f, 0.f);
 					GetWorld()->SpawnActor<APlayerMissile>(Location, Rotation, SpawnInfo);
+					shootingAudioComponent->Play();
 				}
 				MissileTimer = 0.f;
 			}
@@ -354,6 +403,7 @@ void APlayerCharacter::Shoot(float DeltaTime)
 					Location += FVector(20.f, 0.f, 0.f);
 				}
 				GetWorld()->SpawnActor<APlayerLaser>(Location, Rotation, SpawnInfo);
+				shootingAudioComponent->Play();
 			}
 
 			if (MissileTimer > MissileMaxTime * 2)
@@ -367,6 +417,7 @@ void APlayerCharacter::Shoot(float DeltaTime)
 						Location += FVector(-80.f, 0.f, 0.f);
 					}
 					GetWorld()->SpawnActor<APlayerMissile>(Location, Rotation, SpawnInfo);
+					shootingAudioComponent->Play();
 				}
 				MissileTimer = 0.f;
 			}
@@ -390,14 +441,17 @@ void APlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 				VulnerableTimer = 0.f;
 				// Set Power State to 0
 				this->CurrentPower = PlayerPower::BasicShot;
+
+				// Execute crash sound
+				crashAudioComponent->Play();
 				OtherActor->Destroy();
 			}
 			else if (NumberOfLives == 0 && b_IsVulnerable){
 			    // Save the punctuation and go main menu
-			    //RecordsManagerReference->MyRecordsDelegate.ExecuteIfBound(); 
+			    RecordsManagerReference->MyRecordsDelegate.ExecuteIfBound(); 
 				//OtherActor->Destroy();
 				//this->Destroy();
-			    
+			    	crashAudioComponent->Play();
 				if (pWGameEnd)
 				{
 					pWGameEnd->AddToViewport();
