@@ -82,6 +82,17 @@ public:
 	UPROPERTY()
 		class UTextBlock* pWHealthText;
 
+
+	UPROPERTY(EditAnywhere, Category = "Widgets")
+		TSubclassOf<class UUserWidget> WGameEnd;
+	UPROPERTY()
+		class UUserWidget* pWGameEnd;
+
+	UPROPERTY(EditAnywhere, Category = "Widgets")
+		TSubclassOf<class UUserWidget> WGameScore;
+	UPROPERTY()
+		class UUserWidget* pWGameScore;
+
 private:
 	UPROPERTY(EditAnywhere)
 		float MoveSpeed;
@@ -126,6 +137,18 @@ private:
 	float VulnerableTimer;
 	float MaximumVulnerabilityTime;
 	float ShowAndHideTimer;
+
+	// Shooting sound
+	UPROPERTY()
+		UAudioComponent* shootingAudioComponent;
+	UPROPERTY()
+		UAudioComponent* crashAudioComponent;
+
+	// PostProcessing Functionality
+	UPostProcessComponent* PostProcessComponent;
+	bool b_IsFlashing;
+	float PostProcessingTimer;
+	float FlashTime;
 
 	PlayerPower CurrentPower;
 };

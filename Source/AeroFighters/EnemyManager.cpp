@@ -71,6 +71,7 @@ void AEnemyManager::BeginPlay()
 	MoveLeftObject->SetUp(MoveLeftSpeed, GetWorld(), MoveLeftMaxWaitingTime);
 	this->MoveFromTopObject = NewObject<UMoveFromTop>();
 	MoveFromTopObject->SetUp(MoveTopSpeed, GetWorld(), MoveTopMaxWaitingTime, StopPosition);
+
 }
 
 void AEnemyManager::Tick(float DeltaTime)

@@ -6,7 +6,8 @@
 #include "PlayerMissile.h"
 
 // Sets default values
-AEnemy::AEnemy() : CameraSpeed{ 150.f, 0.f, 0.f }, PowerupSpawnProbability(0.01), LaserDmg(10), MissileDmg(50)
+
+AEnemy::AEnemy() : CameraSpeed{ 150.f, 0.f, 0.f }, PowerupSpawnProbability(0.05), LaserDmg(10), MissileDmg(50), RecordsManagerReference(nullptr)
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -35,12 +36,27 @@ void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 
+	GetRecordsManager();
+
 	// Bind an action to destroy the enemy if the character spawns a bomb
 	// The action is a lambda function that destroys the projectile
 	APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetCharacter());
 	if (PlayerCharacter != nullptr)
 	{
 		PlayerCharacter->myDiscardEnemyShootsDelegate.AddDynamic(this, &AEnemy::OnBomb);
+	}
+}
+
+void AEnemy::GetRecordsManager()
+{
+	FString RecordsManagerString = FString(TEXT("RecordsManager"));
+	for (TActorIterator<AActor> itr(GetWorld()); itr; ++itr)
+	{
+		if (itr->GetName().Contains(RecordsManagerString))
+		{
+			this->RecordsManagerReference = Cast<ARecordsManager>(*itr);
+			return;
+		}
 	}
 }
 
@@ -90,6 +106,7 @@ void AEnemy::SetHp(int32 HP)
 
 void AEnemy::OnBomb()
 {
+	RecordsManagerReference.Get()->MyIncreaseScore.ExecuteIfBound(1000);
 	this->Destroy();
 }
 
@@ -117,6 +134,7 @@ void AEnemy::OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, 
 					GetWorld()->SpawnActor<APowerup>(PowerupType, this->GetActorLocation(), FRotator(0.f, 0.f, 0.f));
 				}
 
+   				RecordsManagerReference.Get()->MyIncreaseScore.ExecuteIfBound(1000);
 				this->Destroy();
 			}
 

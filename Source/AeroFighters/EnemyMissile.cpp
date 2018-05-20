@@ -44,8 +44,8 @@ void AEnemyMissile::ProjectileBehaviour(float DeltaTime)
 		FRotator EnemyRotation = FRotationMatrix::MakeFromX(Direction).Rotator();
 		StaticMesh->SetRelativeRotation(EnemyRotation, false, nullptr, ETeleportType::TeleportPhysics);
 
-		// The projectile moves towards player
 		Direction.Normalize(); // Normalize the vector so it doesnt slow down when near the player
+		// The projectile moves towards player
 		FVector NewLocation = StaticMesh->GetComponentLocation() + (Direction * GetSpeed() * DeltaTime * 1.5f);
 		NewLocation.Z = 200.f;
 
@@ -70,7 +70,10 @@ void AEnemyMissile::OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* Other
 		}
 		else if (OtherActor->GetClass()->IsChildOf(APlayerCharacter::StaticClass()))
 		{
+			/* The missile is destroyed because if we destroy the missile here 
+			the player does not get the collision notification and cannot decrease its life
 			this->Destroy();
+			*/
 		}
 	}
 }

@@ -23,6 +23,9 @@ protected:
 private:
 	FString RecordsText;
 
+	int CurrentScore;
+	void OnScore(int score);
+
 public:
 
 	// Widget to show the records
@@ -35,6 +38,9 @@ public:
 	UPROPERTY()
 		class UTextBlock* pWRecordsText;
 
+	UPROPERTY()
+		class UTextBlock* pWScoreText;
+
 	static TArray<TTuple<FString, FString>> RecordsScores;
 
 	void ReadJsonFile();
@@ -46,12 +52,15 @@ public:
 	DECLARE_DELEGATE(FRecordsDelegate);
 	FRecordsDelegate MyRecordsDelegate;
 
+	// Delegate to receive the punctuation
+	DECLARE_DELEGATE_OneParam(FScoreIncreased, int);
+	FScoreIncreased MyIncreaseScore;
+
 	inline static bool ConstPredicate(const TTuple<FString, FString>& ip1, const TTuple<FString, FString>& ip2)
 	{
 		int32 val1 = FCString::Atoi(*ip1.Value);
 		int32 val2 = FCString::Atoi(*ip2.Value);
 		return (val1 > val2);
 	}
-	
-	
+
 };

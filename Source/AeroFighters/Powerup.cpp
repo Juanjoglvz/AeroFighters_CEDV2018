@@ -19,6 +19,18 @@ APowerup::APowerup() : MoveSpeed(3.0f), CameraSpeed{ 150.f, 0.f, 0.f }, LastColl
 	BoxCollision->bGenerateOverlapEvents = true;
 	BoxCollision->OnComponentBeginOverlap.AddDynamic(this, &APowerup::OnOverlap);
 
+	// Set Powerup audio
+	static ConstructorHelpers::FObjectFinder<USoundCue> powerupCue(TEXT("SoundCue'/Game/Sounds/PowerUP_Cue.PowerUP_Cue'"));
+	PowerupAudioCue = powerupCue.Object;
+
+	PowerupAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("PowerUpComponent"));
+	PowerupAudioComponent->bAutoActivate = false;
+	PowerupAudioComponent->AttachTo(RootComponent);
+
+	if (PowerupAudioCue->IsValidLowLevelFast()) {
+		PowerupAudioComponent->SetSound(PowerupAudioCue);
+	}
+
 	Direction = FVector(RandomFloat(-100, 100), RandomFloat(-100, 100), 0.0f);
 }
 
@@ -99,10 +111,9 @@ void APowerup::OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor
 		if (OtherActor->GetClass()->IsChildOf(APlayerCharacter::StaticClass()))
 		{
 			APlayerCharacter* Character = (APlayerCharacter*)OtherActor;
-			GEngine->AddOnScreenDebugMessage(2, 2.f, FColor::Red, TEXT("Collided with player"));
-			// Do some stuff with Powerups
 			CollisionAction(Character);
 			this->Destroy();
+			PowerupAudioComponent->Play();
 		}
 	}
 }

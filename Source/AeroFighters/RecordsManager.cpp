@@ -9,7 +9,7 @@
 TArray<TTuple<FString, FString>> ARecordsManager::RecordsScores;
 
 // Sets default values
-ARecordsManager::ARecordsManager() : Super()
+ARecordsManager::ARecordsManager() : Super(), CurrentScore(0)
 {
 	RecordsText = FString("");
 }
@@ -18,6 +18,10 @@ ARecordsManager::ARecordsManager() : Super()
 void ARecordsManager::BeginPlay()
 {
 	Super::BeginPlay();
+
+	ARecordsManager::RecordsScores.Empty();
+
+	MyIncreaseScore.BindLambda([this](int score) { OnScore(score); });
 
 	// Bind delegate with the corresponding action
 	MyRecordsDelegate.BindLambda([this]() { WriteJsonFile();  });
@@ -42,11 +46,24 @@ void ARecordsManager::BeginPlay()
 		{
 			pWRecords->AddToViewport();
 			pWRecordsText = (UTextBlock*)pWRecords->GetWidgetFromName("RecordText");
+			pWScoreText = (UTextBlock*)pWRecords->GetWidgetFromName("PunctuationText");
 			
 			if (pWRecordsText != nullptr)
 				pWRecordsText->SetText(FText::FromString(RecordsText));
+
+			if (pWScoreText != nullptr)
+				pWScoreText->SetText(FText::AsNumber(CurrentScore));
 		}
 	}
+}
+
+void ARecordsManager::OnScore(int score)
+{
+	CurrentScore += score;
+
+	// Show punctuation in HUD
+	if (pWScoreText != nullptr)
+		pWScoreText->SetText(FText::AsNumber(CurrentScore));
 }
 
 void ARecordsManager::ReadJsonFile()
@@ -73,16 +90,19 @@ void ARecordsManager::ReadJsonFile()
 			TSharedPtr<FJsonObject> Json = Value->AsObject();
 
 			FString Name = Json->GetStringField(TEXT("Name"));
-			FString Round = Json->GetStringField(TEXT("Round"));
+			FString Score = Json->GetStringField(TEXT("Score"));
 
 			// Add the values read, into corresponding arrays
-			RecordsScores.Add(TTuple<FString, FString>(Name, Round));
+			RecordsScores.Add(TTuple<FString, FString>(Name, Score));
 		}
 	}
 }
 
 void ARecordsManager::WriteJsonFile()
 {
+	// First of all, add the current punctuation to the array
+	ARecordsManager::RecordsScores.Emplace(MakeTuple(FString("Ivan"), FString::FromInt(CurrentScore)));
+
 	// Sort the array
 	RecordsScores.Sort(ARecordsManager::ConstPredicate);
 
@@ -94,16 +114,16 @@ void ARecordsManager::WriteJsonFile()
 
 	// Record object. It has the following form:
 	/*  {
-	"Name":"the_name",
-	"Round":"the_round"
-	}
+			"Name":"the_name",
+			"Score":"the_score"
+		}
 	*/
 
 	for (int32 Index = 0; Index < RecordsScores.Num(); Index++)
 	{
 		TSharedPtr<FJsonObject> JsonRecordObject = MakeShareable(new FJsonObject());
 		JsonRecordObject->SetStringField("Name", RecordsScores[Index].Key);
-		JsonRecordObject->SetStringField("Round", RecordsScores[Index].Value);
+		JsonRecordObject->SetStringField("Score", RecordsScores[Index].Value);
 		TSharedRef<FJsonValueObject> JsonValue = MakeShareable(new FJsonValueObject(JsonRecordObject));
 
 		// Add the Record Object to JSON Array
@@ -120,6 +140,4 @@ void ARecordsManager::WriteJsonFile()
 	TSharedRef< TJsonWriter<>> JsonWriter = TJsonWriterFactory<>::Create(&JsonStr);
 	FJsonSerializer::Serialize(JsonObject.ToSharedRef(), JsonWriter);
 	FFileHelper::SaveStringToFile(*JsonStr, *FullPath);
-
-	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, FString("Writing JSON..."));
 }

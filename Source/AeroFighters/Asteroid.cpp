@@ -20,10 +20,6 @@ AAsteroid::AAsteroid() : RotationDrift(FRotator(0.0f, 0.0f, 0.0f)), RotationDrif
 		StaticMeshComponent->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
 		StaticMeshComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	}
-	else
-	{
-		GEngine->AddOnScreenDebugMessage(2, 15.f, FColor::Red, TEXT("Ship Mesh didn't load correctly"));
-	}
 }
 
 AAsteroid* AAsteroid::clone()
