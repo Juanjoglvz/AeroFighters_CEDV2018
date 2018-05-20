@@ -51,8 +51,8 @@ void APlayerCharacter::IncreaseBombs()
 {
 	if (NumberOfBombsAvailable < MaxNumberOfBombs)
 		NumberOfBombsAvailable++;
-	else
-		return; // Increase Score Here
+	else if (RecordsManagerReference.IsValid()) // Increase Score
+		RecordsManagerReference.Get()->MyIncreaseScore.ExecuteIfBound(1000);
 }
 
 void APlayerCharacter::IncreasePower()
@@ -69,7 +69,8 @@ void APlayerCharacter::IncreasePower()
 			CurrentPower = PlayerPower::FullPower;
 			break;
 		case PlayerPower::FullPower:
-			// Increase score here
+			if (RecordsManagerReference.IsValid())
+				RecordsManagerReference.Get()->MyIncreaseScore.ExecuteIfBound(1000);
 			break;
 	}
 }
@@ -80,7 +81,7 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	// Get reference to RecordManager
-	FString RecordsManagerString = FString(TEXT("RecordsManager"));
+	FString RecordsManagerString = FString(TEXT("RecordsManager1"));
 
 	//Get The references to the borders
 	FString TopMovableAreaString = FString(TEXT("TopMovableArea"));
@@ -142,6 +143,15 @@ void APlayerCharacter::BeginPlay()
 			if (pWHealthText != nullptr)
 				pWHealthText->SetText(FText::AsNumber(NumberOfLives));
 		}
+	}
+
+	if (WGameEnd)
+	{
+		pWGameEnd = CreateWidget<UUserWidget>(GetGameInstance(), WGameEnd);
+	}
+	if (WGameScore)
+	{
+		pWGameScore = CreateWidget<UUserWidget>(GetGameInstance(), WGameScore);
 	}
 }
 
@@ -350,7 +360,6 @@ void APlayerCharacter::Shoot(float DeltaTime)
 			{
 				for (int i = -1; i <= 1; i++)
 				{
-					GEngine->AddOnScreenDebugMessage(5, 5.f, FColor::Blue, FString(TEXT("Lanzando misil")));
 					FVector Location = this->GetActorLocation();
 					Location += FVector(-20.f, i * 40.f, 0.f);
 					if (i == 0)
@@ -384,13 +393,21 @@ void APlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 				OtherActor->Destroy();
 			}
 			else if (NumberOfLives == 0 && b_IsVulnerable){
-				// Add punctuation to the array
-			    ARecordsManager::RecordsScores.Emplace(MakeTuple(FString("Ivan"), FString("30")));
 			    // Save the punctuation and go main menu
-			    RecordsManagerReference->MyRecordsDelegate.ExecuteIfBound();
-			    UGameplayStatics::OpenLevel(GetWorld(), FName("MainMenu"));
+			    //RecordsManagerReference->MyRecordsDelegate.ExecuteIfBound(); 
+				//OtherActor->Destroy();
+				//this->Destroy();
+			    
+				if (pWGameEnd)
+				{
+					pWGameEnd->AddToViewport();
+					UGameplayStatics::SetGamePaused(this, true);
 
-				OtherActor->Destroy();
+					// Show the widget
+					if (pWGameScore)
+						pWGameScore->AddToViewport();
+				}
+				//UGameplayStatics::OpenLevel(GetWorld(), FName("MainMenu"));
 			}
 			if (pWHealthText != nullptr)
 				pWHealthText->SetText(FText::AsNumber(NumberOfLives));
