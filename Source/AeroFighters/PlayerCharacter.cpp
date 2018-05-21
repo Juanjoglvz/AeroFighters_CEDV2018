@@ -476,7 +476,7 @@ void APlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* Ot
 				OtherActor->Destroy();
 			}
 
-			if (NumberOfLives > 0 && b_IsVulnerable)
+			if (NumberOfLives > 1 && b_IsVulnerable)
 			{
 				NumberOfLives--;
 				// Make player invulnerable
@@ -489,7 +489,7 @@ void APlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* Ot
 				crashAudioComponent->Play();
 				OtherActor->Destroy();
 			}
-			else if (NumberOfLives == 0 && b_IsVulnerable) {
+			else if (NumberOfLives == 1 && b_IsVulnerable) {
 				OtherActor->Destroy();
 
 				crashAudioComponent->Play();

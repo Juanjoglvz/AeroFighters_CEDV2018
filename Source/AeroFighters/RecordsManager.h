@@ -57,6 +57,9 @@ public:
 		void SetName(FString Name_) { Name = Name_; }
 
 	UFUNCTION(BlueprintCallable)
+		int GetScore() { return CurrentScore; }
+
+	UFUNCTION(BlueprintCallable)
 		void WriteJsonFile();
 
 	UFUNCTION(BlueprintCallable)
