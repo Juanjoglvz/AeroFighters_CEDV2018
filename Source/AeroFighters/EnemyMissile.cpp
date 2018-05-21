@@ -68,12 +68,5 @@ void AEnemyMissile::OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* Other
 		{
 			this->Destroy();
 		}
-		else if (OtherActor->GetClass()->IsChildOf(APlayerCharacter::StaticClass()))
-		{
-			/* The missile is destroyed because if we destroy the missile here 
-			the player does not get the collision notification and cannot decrease its life
-			this->Destroy();
-			*/
-		}
 	}
 }

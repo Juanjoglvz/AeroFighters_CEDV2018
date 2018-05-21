@@ -138,7 +138,6 @@ void AEnemy::OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, 
 				this->Destroy();
 			}
 
-
 			OtherActor->Destroy();
 		}
 	}
