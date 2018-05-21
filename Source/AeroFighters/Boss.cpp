@@ -1,4 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+/* Copyright (C) 2018 Iván García, Juan José Corroto and Javier Córdoba - All Rights Reserved
+* You may use, distribute and modify this code under the
+* terms of the GNU GPLv3 license.
+*
+* You should have received a copy of the GNU GPLv3 license with
+* this file. If not, please write to: ivan.garcia16@alu.uclm.es
+*/
 
 #include "Boss.h"
 #include "PlayerProjectile.h"
@@ -45,8 +51,6 @@ CurrentLaser{ 0 }, CurrentMissile{ 0 }, BugsSpawned{ 0 }
 	BoxCollision->bGenerateOverlapEvents = true;
 
 	BoxCollision->OnComponentBeginOverlap.AddDynamic(this, &ABoss::OnOverlap);
-
-
 
 	// Get references to all the assets we need
 	auto BugShipAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Assets/Ships/BugShip'"));
@@ -312,6 +316,12 @@ void ABoss::OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, U
 			}
 			if (this->Hp < 0)
 			{
+				// Show widget when the boss is destroyed
+				APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetCharacter());
+				if (PlayerCharacter != nullptr)
+				{
+					PlayerCharacter->MyBossDestroyed.ExecuteIfBound();
+				}
 				this->Destroy();
 			}
 

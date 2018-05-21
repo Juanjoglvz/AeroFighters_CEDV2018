@@ -1,4 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+/* Copyright (C) 2018 Iván García, Juan José Corroto and Javier Córdoba - All Rights Reserved
+* You may use, distribute and modify this code under the
+* terms of the GNU GPLv3 license.
+*
+* You should have received a copy of the GNU GPLv3 license with
+* this file. If not, please write to: ivan.garcia16@alu.uclm.es
+*/
 
 #include "PlayerCharacter.h"
 #include "PlayerLaser.h"
@@ -110,6 +116,9 @@ void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Bind delegate with the function
+	MyBossDestroyed.BindUFunction(this, "OnBossDestroyed");
+
 	// Get reference to RecordManager
 	FString RecordsManagerString = FString(TEXT("RecordsManager"));
 
@@ -187,6 +196,10 @@ void APlayerCharacter::BeginPlay()
 	if (WGameEnd)
 	{
 		pWGameEnd = CreateWidget<UUserWidget>(GetGameInstance(), WGameEnd);
+	}
+	if (WGameEndWinner)
+	{
+		pWGameEndWinner = CreateWidget<UUserWidget>(GetGameInstance(), WGameEndWinner);
 	}
 	if (WGameScore)
 	{
@@ -434,6 +447,19 @@ void APlayerCharacter::Shoot(float DeltaTime)
 
 		}
 		Timer = 0.f;
+	}
+}
+
+void APlayerCharacter::OnBossDestroyed()
+{
+	if (pWGameEndWinner)
+	{
+		pWGameEndWinner->AddToViewport();
+		UGameplayStatics::SetGamePaused(this, true);
+
+		// Show the widget
+		if (pWGameScore)
+			pWGameScore->AddToViewport();
 	}
 }
 

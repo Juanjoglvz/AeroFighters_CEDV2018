@@ -1,20 +1,3 @@
 {
-	"Records": [
-		{
-			"Name": "Default",
-			"Score": "11900"
-		},
-		{
-			"Name": "Ivan",
-			"Score": "2000"
-		},
-		{
-			"Name": "Perita",
-			"Score": "1000"
-		},
-		{
-			"Name": "IvanxD",
-			"Score": "0"
-		}
-	]
+	"Records": []
 }

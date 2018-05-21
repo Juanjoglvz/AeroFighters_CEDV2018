@@ -1,4 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+/* Copyright (C) 2018 Iván García, Juan José Corroto and Javier Córdoba - All Rights Reserved
+* You may use, distribute and modify this code under the
+* terms of the GNU GPLv3 license.
+*
+* You should have received a copy of the GNU GPLv3 license with
+* this file. If not, please write to: ivan.garcia16@alu.uclm.es
+*/
 
 #pragma once
 
@@ -69,6 +75,10 @@ public:
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDiscardEnemyShootsDelegate);
 	FDiscardEnemyShootsDelegate myDiscardEnemyShootsDelegate;
 
+	// Event thrown when the boss is destroyed
+	DECLARE_DELEGATE(FBossDestroyed);
+	FBossDestroyed MyBossDestroyed;
+
 	// Widget to show the available bombs and lives
 	UPROPERTY(EditAnywhere, Category = "Widgets")
 		TSubclassOf<class UUserWidget> WBombs;
@@ -87,6 +97,11 @@ public:
 		TSubclassOf<class UUserWidget> WGameEnd;
 	UPROPERTY()
 		class UUserWidget* pWGameEnd;
+
+	UPROPERTY(EditAnywhere, Category = "Widgets")
+		TSubclassOf<class UUserWidget> WGameEndWinner;
+	UPROPERTY()
+		class UUserWidget* pWGameEndWinner;
 
 	UPROPERTY(EditAnywhere, Category = "Widgets")
 		TSubclassOf<class UUserWidget> WGameScore;
@@ -149,6 +164,10 @@ private:
 	bool b_IsFlashing;
 	float PostProcessingTimer;
 	float FlashTime;
+
+	// Function called when the boss is destroyed
+	UFUNCTION()
+		virtual void OnBossDestroyed();
 
 	PlayerPower CurrentPower;
 };
