@@ -5,7 +5,7 @@
 
 
 // Sets default values
-AEnemyLaser::AEnemyLaser() : Super(), Direction { -150.f, 0.f, 0.f }
+AEnemyLaser::AEnemyLaser() : Super(), Direction { -1.f, 0.f, 0.f }
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -16,7 +16,7 @@ AEnemyLaser::AEnemyLaser() : Super(), Direction { -150.f, 0.f, 0.f }
 	if (StaticMeshAsset.Succeeded())
 		SetStaticMeshAsset(StaticMeshAsset.Object);
 	
-	SetSpeed(900.f);
+	SetSpeed(90.f);
 }
 
 // Called when the game starts or when spawned
@@ -35,7 +35,12 @@ void AEnemyLaser::ProjectileBehaviour(float DeltaTime)
 	StaticMesh->SetRelativeRotation(FRotator(-90.f, 0.f, 0.f), false, nullptr, ETeleportType::TeleportPhysics);
 
 	// The projectile moves towards player
-	FVector NewLocation = StaticMesh->GetComponentLocation() + (Direction * GetSpeed() * DeltaTime * 0.0001f);
+	FVector NewLocation = StaticMesh->GetComponentLocation() + (Direction * GetSpeed() * DeltaTime);
 	NewLocation.Z = 200.f;
 	StaticMesh->SetWorldLocation(NewLocation);
+}
+
+void AEnemyLaser::SetDirection(FVector Direction_)
+{
+	Direction = Direction_; 
 }

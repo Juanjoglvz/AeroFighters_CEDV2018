@@ -68,7 +68,7 @@ private:
 	bool b_LaserCircle;
 	float LaserTimer;
 	float LTimer;
-	uint32 CurrentLaser;
+	int32 CurrentLaser;
 	void LaserAttack();
 
 	bool b_MissileWave;

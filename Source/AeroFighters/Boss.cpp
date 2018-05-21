@@ -126,7 +126,7 @@ void ABoss::LaserAttack()
 	if (LTimer > LaserTimer && CurrentLaser < 1)
 	{
 		AEnemyLaser* EnemyLaser1 = GetWorld()->SpawnActor<AEnemyLaser>(FVector{ GetActorLocation().X - 160.f, 0.f, 200.f}, FRotator{ 0.f, -90.f, 0.f });
-		EnemyLaser1->SetDirection(FVector{ 1.f, 0.f, 0.f });
+		EnemyLaser1->SetDirection(FVector{ -1.f, 0.f, 0.f });
 
 		LTimer = 0.f;
 		CurrentLaser++;
@@ -134,10 +134,11 @@ void ABoss::LaserAttack()
 	if (LTimer > LaserTimer && CurrentLaser > 0 && CurrentLaser < 4)
 	{
 		AEnemyLaser* EnemyLaser1 = GetWorld()->SpawnActor<AEnemyLaser>(FVector{GetActorLocation().X - 160.f + CurrentLaser * 20.f, 100.f * CurrentLaser, 200.f}, FRotator{ 0.f, -90.f, 0.f });
-		EnemyLaser1->SetDirection(FVector{ 1.f, 0.f + CurrentLaser * 0.3f, 0.f }.GetSafeNormal());
+		EnemyLaser1->SetDirection(FVector{ -1.f, CurrentLaser * 0.8f, 0.f }.GetSafeNormal());
+
 
 		AEnemyLaser* EnemyLaser2 = GetWorld()->SpawnActor<AEnemyLaser>(FVector{ GetActorLocation().X - 160.f + CurrentLaser * 20.f, -100.f * CurrentLaser, 200.f }, FRotator{ 0.f, -90.f, 0.f });
-		EnemyLaser1->SetDirection(FVector{ 1.f, 0.f - CurrentLaser * 0.3f, 0.f }.GetSafeNormal());
+		EnemyLaser2->SetDirection(FVector{ -1.f, -(CurrentLaser * 0.8f), 0.f }.GetSafeNormal());
 
 		LTimer = 0.f;
 		CurrentLaser++;
@@ -147,10 +148,10 @@ void ABoss::LaserAttack()
 		if (LTimer > LaserTimer && CurrentLaser < 6)
 		{
 			AEnemyLaser* EnemyLaser1 = GetWorld()->SpawnActor<AEnemyLaser>(FVector{ GetActorLocation().X - 160.f + CurrentLaser * 20.f, 100.f * (6 - CurrentLaser), 200.f }, FRotator{ 0.f, -90.f, 0.f });
-			EnemyLaser1->SetDirection(FVector{ 1.f, 0.f + (6 - CurrentLaser) * 0.3f, 0.f }.GetSafeNormal());
+			EnemyLaser1->SetDirection(FVector{ -1.f, (6 - CurrentLaser) * 0.8f, 0.f }.GetSafeNormal());
 
 			AEnemyLaser* EnemyLaser2 = GetWorld()->SpawnActor<AEnemyLaser>(FVector{ GetActorLocation().X - 160.f + CurrentLaser * 20.f, -100.f * (6 - CurrentLaser), 200.f }, FRotator{ 0.f, -90.f, 0.f });
-			EnemyLaser1->SetDirection(FVector{ 1.f, 0.f - (6 - CurrentLaser) * 0.3f, 0.f }.GetSafeNormal());
+			EnemyLaser2->SetDirection(FVector{ -1.f, -(6 - CurrentLaser) * 0.8f, 0.f }.GetSafeNormal());
 
 			LTimer = 0.f;
 			CurrentLaser++;
@@ -158,7 +159,7 @@ void ABoss::LaserAttack()
 		else if (LTimer > LaserTimer && CurrentLaser == 6)
 		{
 			AEnemyLaser* EnemyLaser1 = GetWorld()->SpawnActor<AEnemyLaser>(FVector{ GetActorLocation().X - 160.f, 0.f, 200.f }, FRotator{ 0.f, -90.f, 0.f });
-			EnemyLaser1->SetDirection(FVector{ 1.f, 0.f, 0.f });
+			EnemyLaser1->SetDirection(FVector{ -1.f, 0.f, 0.f });
 
 			LTimer = 0.f;
 			CurrentLaser++;
@@ -185,7 +186,7 @@ void ABoss::MissileAttack()
 		GetWorld()->SpawnActor<AEnemyMissile>(FVector{ GetActorLocation().X - 100.f, -250.f + CurrentMissile * 100.f, 200.f }, GetActorRotation());
 		if (b_Enraged)
 		{
-			GetWorld()->SpawnActor<AEnemyMissile>(FVector{ GetActorLocation().X + 100.f, -750.f + CurrentMissile * 300.f, 200.f }, GetActorRotation());
+			GetWorld()->SpawnActor<AEnemyMissile>(FVector{ GetActorLocation().X + 100.f, -500.f + CurrentMissile * 200.f, 200.f }, GetActorRotation());
 		}
 
 		MTimer = 0.f;
