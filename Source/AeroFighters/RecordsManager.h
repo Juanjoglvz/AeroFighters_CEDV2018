@@ -51,7 +51,10 @@ public:
 		void SetName(FString Name_) { Name = Name_; }
 
 	UFUNCTION(BlueprintCallable)
-	void WriteJsonFile();
+		void WriteJsonFile();
+
+	UFUNCTION(BlueprintCallable)
+		void DeleteRecords();
 
 	// Delegate to receive the punctuation
 	DECLARE_DELEGATE_OneParam(FScoreIncreased, int);

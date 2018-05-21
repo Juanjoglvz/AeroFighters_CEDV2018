@@ -12,7 +12,7 @@ TArray<TTuple<FString, FString>> ARecordsManager::RecordsScores;
 ARecordsManager::ARecordsManager() : Super(), CurrentScore(0)
 {
 	RecordsText = FString("");
-	Name = FString("Default");
+	Name = FString("");
 }
 
 // Called when the game starts or when spawned
@@ -99,7 +99,8 @@ void ARecordsManager::ReadJsonFile()
 void ARecordsManager::WriteJsonFile()
 {
 	// First of all, add the current punctuation to the array
-	ARecordsManager::RecordsScores.Emplace(MakeTuple(Name, FString::FromInt(CurrentScore)));
+	if (Name.Len() > 0)
+		ARecordsManager::RecordsScores.Emplace(MakeTuple(Name, FString::FromInt(CurrentScore)));
 
 	// Sort the array
 	RecordsScores.Sort(ARecordsManager::ConstPredicate);
@@ -138,4 +139,10 @@ void ARecordsManager::WriteJsonFile()
 	TSharedRef< TJsonWriter<>> JsonWriter = TJsonWriterFactory<>::Create(&JsonStr);
 	FJsonSerializer::Serialize(JsonObject.ToSharedRef(), JsonWriter);
 	FFileHelper::SaveStringToFile(*JsonStr, *FullPath);
+}
+
+void ARecordsManager::DeleteRecords()
+{
+	ARecordsManager::RecordsScores.Empty();
+	WriteJsonFile();
 }
