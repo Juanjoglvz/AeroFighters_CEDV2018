@@ -14,7 +14,7 @@
 
 
 // Sets default values
-ABoss::ABoss() : CameraSpeed {150.0f, 0.0f, 0.0f}, Hp{5000}, LaserDmg{10}, MissileDmg{50},
+ABoss::ABoss() : CameraSpeed {150.0f, 0.0f, 0.0f}, Hp{5000}, LaserDmg{10}, MissileDmg{50}, BombDmg{300},
 b_Enraged{ false }, b_BugSpawn{ false }, b_LaserCircle{ false }, b_MissileWave{ false },
 LTimer{ 0.0f }, LaserTimer{ 0.5 }, MTimer{ 0.0f }, MissileTimer{ 1.f }, BTimer{ 0.f }, BugSpawnTimer{ 1.f },
 CurrentLaser{ 0 }, CurrentMissile{ 0 }, BugsSpawned{ 0 }
@@ -67,6 +67,12 @@ void ABoss::BeginPlay()
 
 	ABossAIController* AIController = GetWorld()->SpawnActor<ABossAIController>(ABossAIController::StaticClass());
 	AIController->Possess(this);
+
+	APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetCharacter());
+	if (PlayerCharacter != nullptr)
+	{
+		PlayerCharacter->myDiscardEnemyShootsDelegate.AddDynamic(this, &ABoss::OnBomb);
+	}
 	
 }
 
@@ -271,6 +277,11 @@ void ABoss::BugSpawn()
 float ABoss::GetHp()
 {
 	return this->Hp;
+}
+
+void ABoss::OnBomb()
+{
+	this->Hp -= BombDmg;
 }
 
 void ABoss::SpawnBug(FVector Location, UMoveBehaviour* Movement) const

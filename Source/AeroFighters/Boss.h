@@ -60,9 +60,13 @@ private:
 	UPROPERTY()
 		AActor* Position;
 
+	UFUNCTION()
+		virtual void OnBomb();
+
 	float Hp;
 	float LaserDmg;
 	float MissileDmg;
+	float BombDmg;
 	bool b_Enraged;
 
 	bool b_LaserCircle;
