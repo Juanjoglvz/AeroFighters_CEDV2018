@@ -12,6 +12,7 @@ TArray<TTuple<FString, FString>> ARecordsManager::RecordsScores;
 ARecordsManager::ARecordsManager() : Super(), CurrentScore(0)
 {
 	RecordsText = FString("");
+	Name = FString("Default");
 }
 
 // Called when the game starts or when spawned
@@ -22,9 +23,6 @@ void ARecordsManager::BeginPlay()
 	ARecordsManager::RecordsScores.Empty();
 
 	MyIncreaseScore.BindLambda([this](int score) { OnScore(score); });
-
-	// Bind delegate with the corresponding action
-	MyRecordsDelegate.BindLambda([this]() { WriteJsonFile();  });
 
 	// Load JSON data
 	ReadJsonFile();
@@ -101,7 +99,7 @@ void ARecordsManager::ReadJsonFile()
 void ARecordsManager::WriteJsonFile()
 {
 	// First of all, add the current punctuation to the array
-	ARecordsManager::RecordsScores.Emplace(MakeTuple(FString("Ivan"), FString::FromInt(CurrentScore)));
+	ARecordsManager::RecordsScores.Emplace(MakeTuple(Name, FString::FromInt(CurrentScore)));
 
 	// Sort the array
 	RecordsScores.Sort(ARecordsManager::ConstPredicate);

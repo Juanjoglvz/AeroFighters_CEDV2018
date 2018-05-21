@@ -4,3 +4,7 @@ Saved/*
 AeroFighters.sln
 .vs/*
 Content/InfinityBladeEffects/*
+
+Content/Data/Records\.json
+
+Documentacion/*

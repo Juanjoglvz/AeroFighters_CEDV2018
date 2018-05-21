@@ -49,8 +49,8 @@ protected:
 	// Function called when character releases the Shooting key
 	void StopShooting();
 
-	UFUNCTION(BlueprintCallable, Category="Overlap")
-		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor);
+	UFUNCTION()
+		void OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	TSubclassOf<class AEnemyProjectile> ProjectileClass;
 

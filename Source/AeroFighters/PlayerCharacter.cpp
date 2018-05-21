@@ -62,17 +62,27 @@ APlayerCharacter::APlayerCharacter() :
 	//Take control of player
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 
-	// Add OnHit function to OnActorHit event
-	GetCapsuleComponent()->bGenerateOverlapEvents = true;
-	GetCapsuleComponent()->SetCollisionProfileName(TEXT("OverlapAll"));
+	// Add BoxCollision
+	auto BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
+
+	BoxCollision->SetCollisionProfileName(TEXT("OverlapAll"));
+	BoxCollision->SetupAttachment(RootComponent);
+	BoxCollision->bGenerateOverlapEvents = true;
+	StaticMeshComponent->SetupAttachment(RootComponent);
+
+	BoxCollision->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacter::OnOverlap);
 }
 
 void APlayerCharacter::IncreaseBombs()
 {
 	if (NumberOfBombsAvailable < MaxNumberOfBombs)
+	{
 		NumberOfBombsAvailable++;
-	else if (RecordsManagerReference.IsValid()) // Increase Score
+		pWBombText->SetText(FText::AsNumber(NumberOfBombsAvailable));
+	} // Increase Score
+	else if (RecordsManagerReference.IsValid()) {
 		RecordsManagerReference.Get()->MyIncreaseScore.ExecuteIfBound(1000);
+	}
 }
 
 void APlayerCharacter::IncreasePower()
@@ -188,8 +198,6 @@ void APlayerCharacter::BeginPlay()
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
-	GEngine->AddOnScreenDebugMessage(3, 1.0, FColor::Black, b_IsVulnerable ? FString(TEXT("Vulnerable")) : FString(TEXT("Invulnerable")));
 
 	VulnerableTimer += DeltaTime;
 	ShowAndHideTimer += DeltaTime; 
@@ -429,12 +437,19 @@ void APlayerCharacter::Shoot(float DeltaTime)
 	}
 }
 
-void APlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor)
+void APlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+
 {
 	if (OtherActor)
 	{
 		if (OtherActor->GetClass()->IsChildOf(AEnemyProjectile::StaticClass()))
 		{
+			// If player is invulnerable and a projectile impacts with the player, destroy the projectile
+			if (!b_IsVulnerable)
+			{
+				OtherActor->Destroy();
+			}
+
 			if (NumberOfLives > 0 && b_IsVulnerable)
 			{
 				NumberOfLives--;
@@ -448,12 +463,10 @@ void APlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 				crashAudioComponent->Play();
 				OtherActor->Destroy();
 			}
-			else if (NumberOfLives == 0 && b_IsVulnerable){
-			    // Save the punctuation and go main menu
-			    RecordsManagerReference->MyRecordsDelegate.ExecuteIfBound(); 
-				//OtherActor->Destroy();
-				//this->Destroy();
-			    	crashAudioComponent->Play();
+			else if (NumberOfLives == 0 && b_IsVulnerable) {
+				OtherActor->Destroy();
+
+				crashAudioComponent->Play();
 				if (pWGameEnd)
 				{
 					pWGameEnd->AddToViewport();
@@ -463,7 +476,6 @@ void APlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 					if (pWGameScore)
 						pWGameScore->AddToViewport();
 				}
-				//UGameplayStatics::OpenLevel(GetWorld(), FName("MainMenu"));
 			}
 			if (pWHealthText != nullptr)
 				pWHealthText->SetText(FText::AsNumber(NumberOfLives));
