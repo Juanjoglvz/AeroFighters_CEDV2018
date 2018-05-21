@@ -150,6 +150,8 @@ void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
+	GEngine->AddOnScreenDebugMessage(3, 1.0, FColor::Black, b_IsVulnerable ? FString(TEXT("Vulnerable")) : FString(TEXT("Invulnerable")));
+
 	VulnerableTimer += DeltaTime;
 	ShowAndHideTimer += DeltaTime;
 
